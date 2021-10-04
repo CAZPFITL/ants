@@ -7,9 +7,9 @@ export default class Ant {
         this.id = Ants.idProvider
         this.posX = posX ?? 0
         this.posY = posY ?? 0
-        this.stepSize = 10
+        this.walkedPath = [[0,0]]
     }
-
+    
     /**
      * Set a new coordinates position for "this" ant.
      * @param {Position X} posX 
@@ -18,10 +18,11 @@ export default class Ant {
     newPosition(posX,posY) {
         this.posX = posX
         this.posY = posY
+        this.walkedPath.push([posX,posY])
     }
 
     // TODO: determinar en base a una probabilidad que camino tomar (harcodear la probabilidad).
     move(){
-        this.newPosition(Ants.counters.stepper * this.stepSize, 0)
+        this.newPosition(Ants.Helpers.getStepSize(Ants.counters.stepper), 0)
     }
 }

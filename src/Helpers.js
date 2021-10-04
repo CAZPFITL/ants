@@ -9,7 +9,7 @@ export default class Helpers {
     static createGlobal(App) {
         window.Ants = new App()
     }
-
+    
     /**
      * returns a random number
      * @param {Max Limit} max 
@@ -17,6 +17,10 @@ export default class Helpers {
      */
     static getRandomInt(max) {
         return Math.floor(Math.random() * max);
+    }
+
+    static getStepSize(num) {
+        return Ants.counters.stepSize * num
     }
 
     /**
@@ -55,5 +59,12 @@ export default class Helpers {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         return canvas
+    }
+
+    //TODO: add map chords coordenates
+    static getMapCoords() {
+        let array = Ants.delunator.mapCoords
+        let mapTopX = Ants.canvas.width
+        let mapTopy = Ants.canvas.height
     }
 }

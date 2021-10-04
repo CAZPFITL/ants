@@ -1,3 +1,4 @@
+import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 import State from './State.js'
 import Ant from './Ant.js'
 import Helpers from './Helpers.js'
@@ -16,8 +17,24 @@ export default class AntsApp {
             stepper: 0,
             cycles: 30,
             cyclesTop: 300,
-            stepperLimit: 100
+            stepperLimit: 100,
+            stepSize: 10
         }
+        this.delunator = {
+            mapCoords: [],
+            baseClass: Delaunator,
+            allTrianglesCoords: [],
+            showAllTriangles: ()=>{
+                for (let i = 0; i < triangles.length; i += 3) {
+                    this.delunator.allTrianglesCoords.push([
+                        points[triangles[i]],
+                        points[triangles[i + 1]],
+                        points[triangles[i + 2]]
+                    ]);
+                }
+            }
+        }
+        this.Helpers = Helpers
     }
 
     /**
@@ -28,6 +45,7 @@ export default class AntsApp {
         Ants.state.add(Ants)
         Ants.state.changeState('loading')
         Ants.state.changeState('create canvas')
+        Ants.state.changeState('request delunator')
         Ants.state.changeState('request animation')
         Ants.state.changeState('request ants')
         Ants.state.changeState('walking ants')
@@ -37,7 +55,7 @@ export default class AntsApp {
      * Here you can process any state change from the app, reading "this.state.name" // create canvas -> createCanvas()
      */
     notification() {
-        let funct = Helpers.getStateFunction()
+        let funct = this.Helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
         }
@@ -47,9 +65,18 @@ export default class AntsApp {
      * Create canvas in DOM and Ants Global
      */
     createCanvas(This) {
-        let canvas = Helpers.getCanvas()
+        let canvas = this.Helpers.getCanvas()
         document.getElementsByTagName('body')[0].prepend(canvas)
         This.canvas = canvas
+    }
+
+    /**
+     * Request Delunator Frame
+     * @param {drawing function} draw 
+     */
+    requestDelunator() {
+        Ants.Helpers.getMapCoords()
+        this.delunator.instance = new this.delunator.baseClass(this.delunator.mapCoords)
     }
 
     /**
@@ -113,7 +140,7 @@ export default class AntsApp {
     }
     
     stepProcess() {
-        console.log(Ants.counters.stepper)
+        //console.log(Ants.counters.stepper)
         Ants.ants.forEach(ant => {
             ant.move()
         })
