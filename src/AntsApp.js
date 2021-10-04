@@ -11,6 +11,13 @@ export default class AntsApp {
         this.state = new State()
         this.ants = []
         this.idProvider = 0
+        this.counters = {
+            counter: 0,
+            stepper: 0,
+            cycles: 30,
+            cyclesTop: 300,
+            stepperLimit: 100
+        }
     }
 
     /**
@@ -31,7 +38,7 @@ export default class AntsApp {
      */
     notification() {
         let funct = Helpers.getStateFunction()
-        if(Ants[funct]) {
+        if (Ants[funct]) {
             Ants[funct](this)
         }
     }
@@ -50,7 +57,7 @@ export default class AntsApp {
      * @param {drawing function} draw 
      */
     requestAnimation() {
-        window.requestAnimationFrame(() => Ants.draw(Ants))
+        window.requestAnimationFrame(Ants.draw)
     }
 
     /**
@@ -58,7 +65,7 @@ export default class AntsApp {
      * @param {this parameter} This 
      */
     requestAnts(This) {
-        This.createAnt(Helpers.getRandomInt(This.canvas.width), Helpers.getRandomInt(This.canvas.height))
+        This.createAnt(0, 0)
     }
 
     /**
@@ -91,15 +98,37 @@ export default class AntsApp {
     }
 
     /**
+     * Feeds the stepper and gets a stepProcess method.
+     */
+    step() {
+        Ants.counters.counter++
+        if (Ants.counters.counter % Ants.counters.cycles == 0) {
+            if (Ants.counters.stepper === Ants.counters.stepperLimit) {
+                Ants.counters.stepper = 0
+            } else {
+                Ants.counters.stepper++
+            }
+            Ants.stepProcess()
+        }
+    }
+    
+    stepProcess() {
+        console.log(Ants.counters.stepper)
+        Ants.ants.forEach(ant => {
+            ant.move()
+        })
+    }
+
+    /**
      * draw
      */
-    draw(This) {
+    draw() {
         // this.antPng = new Image();
         // this.antPng.src = './src/ant.png'
 
-        This.drawNewCanvas(This)
-        This.drawAntsCollection(This)
-
-        This.requestAnimation()
+        Ants.step()
+        Ants.drawNewCanvas(Ants)
+        Ants.drawAntsCollection(Ants)
+        Ants.requestAnimation()
     }
 }
