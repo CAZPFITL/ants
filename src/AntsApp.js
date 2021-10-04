@@ -30,7 +30,7 @@ export default class AntsApp {
         Ants.state.changeState('create canvas')
         Ants.state.changeState('request animation')
         Ants.state.changeState('request ants')
-        Ants.state.changeState('main')
+        Ants.state.changeState('walking ants')
     }
 
     /**
