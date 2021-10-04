@@ -2,12 +2,21 @@
  * Little strong and smart ant
  */
 export default class Ant {
-    constructor(posX, posY) {
+    constructor(posX, posY, trace) {
         Ants.idProvider++
         this.id = Ants.idProvider
+        this.name = 'Ant #' + this.id
         this.posX = posX ?? 0
         this.posY = posY ?? 0
         this.walkedPath = [[0,0]]
+        this.trace = trace ?? 'transparent'
+    }
+    
+    /**
+     * listen on app state change
+     */
+    notification() {
+        console.log(this.name + ' says: what is that smell...')
     }
     
     /**
@@ -21,7 +30,8 @@ export default class Ant {
         this.walkedPath.push([posX,posY])
     }
 
-    // TODO: determinar en base a una probabilidad que camino tomar (harcodear la probabilidad).
+    // TODO: calc the path
+    // TODO: connect this with the explore state
     move(){
         this.newPosition(Ants.Helpers.getStepSize(Ants.counters.stepper), 0)
     }

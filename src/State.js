@@ -11,6 +11,7 @@ export default class State {
      */
     add(Observer) {
         this.observers.push(Observer)
+        Observer.observable = this
     }
     
     /**
@@ -27,7 +28,7 @@ export default class State {
      */
     notify(showItemsNotified = false) {
         this.observers.forEach(item => {
-            showItemsNotified ? console.log('item notified:',item) : ''
+            showItemsNotified ? console.log('item notified:',item.name) : ''
             item.notification ? item.notification() : console.log(item.name + ' Notified, \nbut no notification function was found in the item')
         })
     }
