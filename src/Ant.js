@@ -102,5 +102,7 @@ export default class Ant {
             this.walk()
             // this.search()
         }
+
+        // TODO: IF Panic search path
     }
 }

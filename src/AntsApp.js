@@ -18,8 +18,8 @@ export default class AntsApp {
         this.counters = {
             counter: 0,
             stepper: 0,
-            cycles: 30,
-            cyclesTop: 300,
+            cycles: 1,
+            cyclesTop: 10,
             stepperLimit: 100,
             stepSize: 10
         }
