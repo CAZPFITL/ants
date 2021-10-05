@@ -85,7 +85,7 @@ export default class Helpers {
         //NOTE: avoids a big and slow calculations
         if (Ants.counters.counter === Ants.counters.counterLimit) {
             Ants.counters.counter = 0
-        } 
+        }
     }
 
     /**
@@ -108,7 +108,10 @@ export default class Helpers {
      * Draw all ants in the board
      */
     static drawAntsCollection() {
-        //Ants.Helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB') --> // WARNING Low performance
+        if (Ants.counters.path) {
+            Ants.Helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw ), '#BBBBBB')
+        }
+
         Ants.anthill.ants.forEach((ant) => {
             Ants.ctx.fillStyle = ant.color
             Ants.ctx.fillRect(

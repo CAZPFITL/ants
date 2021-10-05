@@ -20,7 +20,9 @@ export default class AntsApp {
             counter: 0,
             counterLimit: 5,
             stepSize: 5,
-            maxPath: 0.5
+            maxPath: 0.5,
+            maxDraw: 0.15,
+            path: true
         }
     }
 
