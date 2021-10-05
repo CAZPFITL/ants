@@ -18,8 +18,8 @@ export default class Anthill {
         this.ants = []
         this.totalAnts = this.ants.length
         this.antsColors = {
-            worker: '#CCCCCC',
-            soldier: '#F0E4BD'
+            worker: '#000000',
+            soldier: '#e01e01'
         }
     }
 }

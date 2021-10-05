@@ -11,9 +11,8 @@ export default class Ant {
         this.name = job + ' ant #' + this.id
         this.job = job
         this.age = age
-        this.walkedPath = [[0, 0]]
+        this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
-        this.trace = trace ?? 'transparent'
         this.data = {
             idealConditions: {
                 temperature: {
@@ -68,7 +67,8 @@ export default class Ant {
      * @param {Position Y} posY 
      */
     walk() {
-        this.walkedPath.push(this.actualPosition)
+
+        !Ants.world.walkedPathTrace.includes(this.actualPosition) ? Ants.world.walkedPathTrace.push(this.actualPosition) : ''
 
         let posiblePaths = []
         let step = Ants.counters.stepSize
@@ -91,6 +91,7 @@ export default class Ant {
         let x = nextMove === 'left' ?
             (this.actualPosition[0] - 1) : nextMove === 'right' ?
                 (this.actualPosition[0] + 1) : this.actualPosition[0]
+        
         let y = nextMove === 'down' ?
             (this.actualPosition[1] + 1) : nextMove === 'up' ?
                 (this.actualPosition[1] - 1) : this.actualPosition[1]

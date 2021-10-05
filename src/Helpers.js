@@ -110,11 +110,9 @@ export default class Helpers {
      * Draw all ants in the board
      */
     static drawAntsCollection() {
+        Ants.Helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB')
         Ants.anthill.ants.forEach((ant) => {
-            Ants.Helpers.drawPath(ant.walkedPath, ant.trace)
-        })
-        Ants.anthill.ants.forEach((ant) => {
-            Ants.ctx.fillStyle = "#333333"
+            Ants.ctx.fillStyle = ant.color
             Ants.ctx.fillRect(
                 ant.actualPosition[0] * Ants.counters.stepSize,
                 ant.actualPosition[1] * Ants.counters.stepSize,
