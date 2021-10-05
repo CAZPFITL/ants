@@ -20,8 +20,8 @@ export default class AntsApp {
             stepper: 0,
             cycles: 1,
             cyclesTop: 10,
-            stepperLimit: 100,
-            stepSize: 10
+            stepperLimit: 10,
+            stepSize: 5
         }
     }
 
