@@ -113,7 +113,11 @@ export default class Helpers {
         Ants.anthill.ants.forEach((ant) => {
             Ants.Helpers.drawPath(ant.walkedPath, ant.trace)
             Ants.ctx.fillStyle = "#333333"
-            Ants.ctx.fillRect(ant.actualPosition[0], ant.actualPosition[1], 10, 10)
+            Ants.ctx.fillRect(
+                ant.actualPosition[0] * Ants.counters.stepSize,
+                ant.actualPosition[1] * Ants.counters.stepSize,
+                Ants.counters.stepSize,
+                Ants.counters.stepSize)
         })
     }
 
@@ -133,7 +137,11 @@ export default class Helpers {
     static drawPath(path, color) {
         path.forEach((step) => {
             Ants.ctx.fillStyle = color
-            Ants.ctx.fillRect(step[0], step[1], 10, 10)
+            Ants.ctx.fillRect(
+                step[0] * Ants.counters.stepSize, 
+                step[1] * Ants.counters.stepSize, 
+                Ants.counters.stepSize, 
+                Ants.counters.stepSize)
         })
     }
 

@@ -71,6 +71,7 @@ export default class Ant {
         this.walkedPath.push(this.actualPosition)
 
         let posiblePaths = []
+        let step = Ants.counters.stepSize
 
         if (this.actualPosition[0] != 0) {
             posiblePaths.push('left')
@@ -87,12 +88,14 @@ export default class Ant {
 
         let nextMove = posiblePaths[Ants.Helpers.getRandomInt(posiblePaths.length)]
 
-        console.log(nextMove)
+        let x = nextMove === 'left' ?
+            (this.actualPosition[0] - 1) : nextMove === 'right' ?
+                (this.actualPosition[0] + 1) : this.actualPosition[0]
+        let y = nextMove === 'down' ?
+            (this.actualPosition[1] + 1) : nextMove === 'up' ?
+                (this.actualPosition[1] - 1) : this.actualPosition[1]
 
-        let x = nextMove === 'left' ? (this.actualPosition[0] / 10) - 1 : nextMove === 'right' ? (this.actualPosition[0] / 10) + 1 : (this.actualPosition[0] / 10)
-        let y = nextMove === 'down' ? (this.actualPosition[1] / 10) + 1 : nextMove === 'up' ? (this.actualPosition[1] / 10) - 1 : (this.actualPosition[1] / 10)
-
-        this.actualPosition = [Ants.Helpers.getStepSize(x), Ants.Helpers.getStepSize(y)]
+        this.actualPosition = [x, y]
     }
 
     cycle() {
