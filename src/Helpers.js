@@ -162,7 +162,8 @@ export default class Helpers {
      */
     static createCanvas() {
         let canvas = Ants.Helpers.getCanvas()
-        Ants.canvasBounds = [Math.trunc(canvas.width / Ants.counters.stepSize), Math.trunc(canvas.height / Ants.coAnts.canvasBounds = [Math.trunc(canvas.width / Ants.counters.stepSize)]
+        let step = Ants.counters.stepSize
+        Ants.canvasBounds = [Math.trunc(canvas.width / step), Math.trunc(canvas.height / step)]
         document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.canvas = canvas
         Ants.Helpers.requestAnimation()
