@@ -21,7 +21,8 @@ export default class AntsApp {
             cycles: 1,
             cyclesTop: 10,
             stepperLimit: 10,
-            stepSize: 5
+            stepSize: 5,
+            maxPath: 50000
         }
     }
 
@@ -48,6 +49,7 @@ export default class AntsApp {
 
     requestLoad() {
         this.Helpers.createCanvas()
+        Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * 10) * .15
     }
 
     /**
@@ -61,10 +63,15 @@ export default class AntsApp {
     requestWorkerAnt() {
         Ants.Helpers.createAnt(0, 0, Ants.anthill.antsColors.worker, 'worker')
     }
-
+    
     welcomeToAnts() {
         this.world = new World('sunny')
         this.anthill = new Anthill()
-        Ants.requestWorkerAnt()
+    }
+    
+    showOff() {
+        for (let i = 0; i < 20; i++) {
+            Ants.Helpers.createAnt(Ants.Helpers.getRandomInt(Ants.canvasBounds[0]), Ants.Helpers.getRandomInt(Ants.canvasBounds[1]), Ants.anthill.antsColors.worker, 'worker')
+        }
     }
 }

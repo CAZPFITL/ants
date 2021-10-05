@@ -68,35 +68,32 @@ export default class Ant {
      */
     walk() {
 
-        !Ants.world.walkedPathTrace.includes(this.actualPosition) ? Ants.world.walkedPathTrace.push(this.actualPosition) : ''
-
+        //DESCRIPTION: =FIRST FILTER=
+        //NOTE: keeps the ants on the map 
         let posiblePaths = []
-        let step = Ants.counters.stepSize
+        if (this.actualPosition[0] != 0) { posiblePaths.push('left') }
+        if (this.actualPosition[1] != 0) { posiblePaths.push('up') }
+        if (this.actualPosition[0] != Ants.canvasBounds[0]) { posiblePaths.push('right') }
+        if (this.actualPosition[1] != Ants.canvasBounds[1]) { posiblePaths.push('down') }
 
-        if (this.actualPosition[0] != 0) {
-            posiblePaths.push('left')
-        }
-        if (this.actualPosition[1] != 0) {
-            posiblePaths.push('up')
-        }
-        if (this.actualPosition[0] != Ants.canvasBounds[0]) {
-            posiblePaths.push('right')
-        }
-        if (this.actualPosition[1] != Ants.canvasBounds[1]) {
-            posiblePaths.push('down')
-        }
-
+        //NOTE: KEEPS THE ANTS IN THE MAP
         let nextMove = posiblePaths[Ants.Helpers.getRandomInt(posiblePaths.length)]
-
-        let x = nextMove === 'left' ?
-            (this.actualPosition[0] - 1) : nextMove === 'right' ?
-                (this.actualPosition[0] + 1) : this.actualPosition[0]
-        
-        let y = nextMove === 'down' ?
-            (this.actualPosition[1] + 1) : nextMove === 'up' ?
-                (this.actualPosition[1] - 1) : this.actualPosition[1]
-
+        let x = nextMove === 'left' ? (this.actualPosition[0] - 1) : nextMove === 'right' ? (this.actualPosition[0] + 1) : this.actualPosition[0]
+        let y = nextMove === 'down' ? (this.actualPosition[1] + 1) : nextMove === 'up' ? (this.actualPosition[1] - 1) : this.actualPosition[1]
         this.actualPosition = [x, y]
+
+        //NOTE: KEEPS THE MAX PATH ON THE LIMIT
+        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
+
+        //NOTE: SAVE MARK STEP ONLY IF IT HASN'T
+        for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
+            if (Ants.world.walkedPathTrace[i][0] === this.actualPosition[0] && Ants.world.walkedPathTrace[i][1] === this.actualPosition[1]) {
+                break;
+            } else {
+                Ants.world.walkedPathTrace.push(this.actualPosition)
+                break;
+            }
+        }
     }
 
     cycle() {
