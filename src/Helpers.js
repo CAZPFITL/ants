@@ -44,39 +44,21 @@ export default class Helpers {
      * @returns processed state
      */
     static getStateFunction() {
-        let func = Ants.state.name.split(' ')
+        let func = Ants.state.state.split(' ')
         func[1] = Helpers.capitalize(func[1])
         return func.join('')
     }
 
-    /**
-     * returns a brand new canvas for the ants
-     * @returns canvas created
-     */
-    static getCanvas() {
-        let canvas = document.createElement('canvas')
-        canvas.id = 'AntsApp'
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        return canvas
-    }
-
-    //TODO: add map chords coordenates
-    static getMapCoords() {
-        let array = Ants.delunator.mapCoords
-        let mapTopX = Ants.canvas.width
-        let mapTopy = Ants.canvas.height
-    }
 
     /**
      * New Ant data push and position
      * @param {Position X} posX 
      * @param {Position Y} posY 
      */
-    static createAnt(posX, posY, trace) {
-        let babyAnt = new Ants.antClass(posX, posY, trace)
-        Ants.ants.push(babyAnt)
-        Ants.state.add(babyAnt)
+    static createAnt(posX, posY, trace, job) {
+        let babyAnt = new Ants.antClass(posX, posY, trace, job)
+        Ants.world.state.add(babyAnt)
+        Ants.anthill.ants.push(babyAnt)
     }
 
     /**
@@ -110,19 +92,8 @@ export default class Helpers {
      * Moves every ant (runs move method on every ant on map)
      */
     static stepProcess() {
-        Ants.ants.forEach(ant => {
-            ant.move()
-        })
-    }
-
-    /**
-     * Draw all ants in the board
-     */
-    static drawAntsCollection() {
-        Ants.ants.forEach((ant) => {
-            Ants.Helpers.drawPath(ant.walkedPath, ant.trace)
-            Ants.ctx.fillStyle = "#333333"
-            Ants.ctx.fillRect(ant.posX, ant.posY, 10, 10)
+        Ants.anthill.ants.forEach(ant => {
+            ant.cycle()
         })
     }
 
@@ -133,6 +104,17 @@ export default class Helpers {
     static drawNewCanvas() {
         Ants.ctx = Ants.canvas.getContext('2d')
         Ants.ctx.clearRect(0, 0, Ants.canvas.width, Ants.canvas.height);
+    }
+
+    /**
+     * Draw all ants in the board
+     */
+    static drawAntsCollection() {
+        Ants.anthill.ants.forEach((ant) => {
+            Ants.Helpers.drawPath(ant.walkedPath, ant.trace)
+            Ants.ctx.fillStyle = "#333333"
+            Ants.ctx.fillRect(ant.actualPosition[0], ant.actualPosition[1], 10, 10)
+        })
     }
 
     /**
@@ -153,5 +135,28 @@ export default class Helpers {
             Ants.ctx.fillStyle = color
             Ants.ctx.fillRect(step[0], step[1], 10, 10)
         })
+    }
+
+    /**
+     * returns a brand new canvas for the ants
+     * @returns canvas created
+     */
+    static getCanvas() {
+        let canvas = document.createElement('canvas')
+        canvas.id = 'AntsApp'
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        return canvas
+    }
+
+    /**
+     * Create canvas in DOM and Ants Global
+     */
+    static createCanvas() {
+        let canvas = Ants.Helpers.getCanvas()
+        Ants.canvasBounds = [Math.trunc(canvas.width / 10), Math.trunc(canvas.height / 10)]
+        document.getElementsByTagName('body')[0].prepend(canvas)
+        Ants.canvas = canvas
+        Ants.Helpers.requestAnimation()
     }
 }

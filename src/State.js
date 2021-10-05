@@ -1,7 +1,8 @@
 export default class State {
-    constructor() {
+    constructor(app) {
         this.observers = []
-        this.name = ''
+        this.parentStateOwner = app
+        this.state = ''
         this.showNotifications = false
     }
 
@@ -11,7 +12,7 @@ export default class State {
      */
     add(Observer) {
         this.observers.push(Observer)
-        Observer.observable = this
+        Observer.observable = this.parentStateOwner
     }
     
     /**
@@ -26,10 +27,9 @@ export default class State {
      * Notify all the observers
      * @param {show items notified (bool)} showItemsNotified 
      */
-    notify(showItemsNotified = false) {
+    notify() {
         this.observers.forEach(item => {
-            showItemsNotified ? console.log('item notified:',item.name) : ''
-            item.notification ? item.notification() : console.log(item.name + ' Notified, \nbut no notification function was found in the item')
+            item.notification()
         })
     }
 
@@ -38,8 +38,7 @@ export default class State {
     * @param {State to be applied} state 
     */
     changeState(state) {
-        this.name = state
-        console.log('New state "' + Ants.state.name + '":')
+        this.state = state
         this.notify(this.showNotifications)
     }
 }
