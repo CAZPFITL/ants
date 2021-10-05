@@ -16,13 +16,11 @@ export default class AntsApp {
         this.world
         this.anthill
         this.counters = {
+            speed: 1,
             counter: 0,
-            stepper: 0,
-            cycles: 1,
-            cyclesTop: 10,
-            stepperLimit: 10,
+            counterLimit: 5,
             stepSize: 5,
-            maxPath: 50000
+            maxPath: 0.5
         }
     }
 
@@ -49,7 +47,7 @@ export default class AntsApp {
 
     requestLoad() {
         this.Helpers.createCanvas()
-        Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * 10) * .15
+        Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * Ants.counters.stepSize) * Ants.counters.maxPath
     }
 
     /**

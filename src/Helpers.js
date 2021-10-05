@@ -68,9 +68,9 @@ export default class Helpers {
         // this.antPng = new Image();
         // this.antPng.src = './src/ant.png'
         Ants.Helpers.step()
-        Ants.Helpers.drawNewCanvas()
+        Ants.Helpers.clearCanvas()
         Ants.Helpers.drawAntsCollection()
-        Ants.Helpers.requestAnimation()
+        Ants.Helpers.requestAnimation(Ants.Helpers.draw)
     }
 
     /**
@@ -78,14 +78,14 @@ export default class Helpers {
      */
     static step() {
         Ants.counters.counter++
-        if (Ants.counters.counter % Ants.counters.cycles == 0) {
-            if (Ants.counters.stepper === Ants.counters.stepperLimit) {
-                Ants.counters.stepper = 0
-            } else {
-                Ants.counters.stepper++
-            }
+        //NOTE: stepProcess At Speed Selected
+        if (Ants.counters.counter % Ants.counters.speed === 0) {
             Ants.Helpers.stepProcess()
         }
+        //NOTE: avoids a big and slow calculations
+        if (Ants.counters.counter === Ants.counters.counterLimit) {
+            Ants.counters.counter = 0
+        } 
     }
 
     /**
@@ -99,10 +99,8 @@ export default class Helpers {
 
     /**
      * Renews the canvas on every draw loop
-     * @param {this parameter} This 
      */
-    static drawNewCanvas() {
-        Ants.ctx = Ants.canvas.getContext('2d')
+    static clearCanvas() {
         Ants.ctx.clearRect(0, 0, Ants.canvas.width, Ants.canvas.height);
     }
 
@@ -110,7 +108,7 @@ export default class Helpers {
      * Draw all ants in the board
      */
     static drawAntsCollection() {
-        Ants.Helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB')
+        //Ants.Helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB') --> // WARNING Low performance
         Ants.anthill.ants.forEach((ant) => {
             Ants.ctx.fillStyle = ant.color
             Ants.ctx.fillRect(
@@ -138,9 +136,9 @@ export default class Helpers {
         path.forEach((step) => {
             Ants.ctx.fillStyle = color
             Ants.ctx.fillRect(
-                step[0] * Ants.counters.stepSize, 
-                step[1] * Ants.counters.stepSize, 
-                Ants.counters.stepSize, 
+                step[0] * Ants.counters.stepSize,
+                step[1] * Ants.counters.stepSize,
+                Ants.counters.stepSize,
                 Ants.counters.stepSize)
         })
     }
@@ -166,6 +164,7 @@ export default class Helpers {
         Ants.canvasBounds = [Math.trunc(canvas.width / step), Math.trunc(canvas.height / step)]
         document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.canvas = canvas
+        Ants.ctx = Ants.canvas.getContext('2d')
         Ants.Helpers.requestAnimation()
     }
 }
