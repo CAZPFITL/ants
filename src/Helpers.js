@@ -49,7 +49,6 @@ export default class Helpers {
         return func.join('')
     }
 
-
     /**
      * New Ant data push and position
      * @param {Position X} posX 
