@@ -82,8 +82,8 @@ export default class Ant {
         let y = nextMove === 'down' ? (this.actualPosition[1] + 1) : nextMove === 'up' ? (this.actualPosition[1] - 1) : this.actualPosition[1]
         this.actualPosition = [x, y]
 
-        //NOTE: KEEPS THE MAX PATH ON THE LIMIT
-        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
+        //NOTE: KEEPS THE GLOBAL MAX PATH ON THE LIMIT
+        // if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
 
         //NOTE: SAVE MARK STEP ONLY IF IT HASN'T
         for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
