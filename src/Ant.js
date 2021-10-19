@@ -11,6 +11,7 @@ export default class Ant {
         this.name = job + ' ant #' + this.id
         this.job = job
         this.age = age
+        this.outOfBounds = false
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
         this.data = {
@@ -80,10 +81,12 @@ export default class Ant {
         let nextMove = posiblePaths[Ants.Helpers.getRandomInt(posiblePaths.length)]
         let x = nextMove === 'left' ? (this.actualPosition[0] - 1) : nextMove === 'right' ? (this.actualPosition[0] + 1) : this.actualPosition[0]
         let y = nextMove === 'down' ? (this.actualPosition[1] + 1) : nextMove === 'up' ? (this.actualPosition[1] - 1) : this.actualPosition[1]
-        this.actualPosition = [x, y]
+        this.outOfBounds = (this.actualPosition[0] > Ants.canvasBounds[0] && this.actualPosition[1] > Ants.canvasBounds[1]) ? true : false;
+        this.actualPosition = this.outOfBounds ? [0, 0] : [x, y]
+
 
         //NOTE: KEEPS THE GLOBAL MAX PATH ON THE LIMIT
-        // if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
+        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
 
         //NOTE: SAVE MARK STEP ONLY IF IT HASN'T
         for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
@@ -94,6 +97,7 @@ export default class Ant {
                 break;
             }
         }
+
     }
 
     cycle() {

@@ -41,3 +41,29 @@ import AntsApp from './src/AntsApp.js'
 AntsApp.init()
 
 tf.tensor([1, 2, 3, 4]).print()
+
+const values = []
+
+for (let index = 0; index < 100; index++) {
+    values[index] = Math.floor(Math.random() * 100)
+}
+
+const shape = [10,2,5];
+
+const tens = tf.tensor3d(values, shape)
+
+//console.log(tens.data())
+//console.log(tens.dataSync())
+//console.log(tens.get())
+//tens.print()
+
+//const vtense = tf.variable(tens)
+//console.log(vtense)
+
+const a = tf.tensor3d(values, shape)
+const b = tf.tensor3d(values, shape)
+const c = a.add(b)
+
+a.print()
+b.print()
+c.print()

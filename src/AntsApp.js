@@ -49,21 +49,10 @@ export default class AntsApp {
 
     requestLoad() {
         this.Helpers.createCanvas()
+        window.addEventListener('resize', ()=>Ants.Helpers.getCanvas());
         Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * Ants.counters.stepSize) * Ants.counters.maxPath
     }
 
-    /**
-     * creates a new Ant()
-     * @param {this parameter} This 
-     */
-    requestSoldierAnt() {
-        Ants.Helpers.createAnt(0, 0, Ants.anthill.antsColors.soldier, 'soldier')
-    }
-
-    requestWorkerAnt() {
-        Ants.Helpers.createAnt(0, 0, Ants.anthill.antsColors.worker, 'worker')
-    }
-    
     welcomeToAnts() {
         this.world = new World('sunny')
         this.anthill = new Anthill()
