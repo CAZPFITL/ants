@@ -48,17 +48,27 @@ export default class Canvas extends Screen {
      * Draw all ants in the board
      */
     static drawAntsCollection() {
+        let step; 
+
+        
         if (Ants.counters.path) {
             Ants.Helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw ), '#BBBBBB')
         }
 
+        Ants.Helpers.drawAnthill('#693a006b')
+        
         Ants.anthill.ants.forEach((ant) => {
             Ants.ctx.fillStyle = ant.color
+            if ( ant.job === 'queen' ) {
+                step = Ants.counters.stepSize * 2
+            } else {
+                step = Ants.counters.stepSize
+            }
             Ants.ctx.fillRect(
-                ant.actualPosition[0] * Ants.counters.stepSize,
-                ant.actualPosition[1] * Ants.counters.stepSize,
-                Ants.counters.stepSize,
-                Ants.counters.stepSize)
+                ant.actualPosition[0] * step,
+                ant.actualPosition[1] * step,
+                step,
+                step)
         })
     }
 
@@ -71,11 +81,25 @@ export default class Canvas extends Screen {
     }
 
     /**
+     * draws home
+     * @param {home color} color 
+     */
+    static drawAnthill(color) {
+        let step = Ants.counters.stepSize * 6; 
+        Ants.ctx.fillStyle = color
+        Ants.ctx.fillRect(
+            0 * step, //change by random then save it in anthill, then spawn every ant from there
+            0 * step,
+            step,
+            step)
+    }
+    /**
      * draws all the traces for the ant
      * @param {trace path} path 
      * @param {trace color} color 
      */
     static drawPath(path, color) {
+
         path.forEach((step) => {
             Ants.ctx.fillStyle = color
             Ants.ctx.fillRect(

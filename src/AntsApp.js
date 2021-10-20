@@ -64,6 +64,7 @@ export default class AntsApp {
     welcomeToAnts() {
         this.world = new World('sunny')
         this.anthill = new Anthill()
-        this.anthill.createWorker()
+        this.anthill.createQueen()
+        this.anthill.createWorker(2)
     }
 }

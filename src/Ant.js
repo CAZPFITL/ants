@@ -101,7 +101,7 @@ export default class Ant {
     }
 
     cycle() {
-        if (this.state.state === 'sleep') {
+        if (this.state.state === 'sleep' || this.job === 'queen') {
             return
         } else if (this.state.state === 'explore') {
             this.walk()
