@@ -1,9 +1,5 @@
 import State from './State.js'
 
-/**
- * Little strong and smart ant
- * TODO: add to oobservers any closer ant and remove it when if goes away
- */
 export default class Ant {
     constructor(posX, posY, trace, job, age = 0) {
         Ants.anthill.idProvider++
@@ -14,6 +10,11 @@ export default class Ant {
         this.outOfBounds = false
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
+        this.scanner = () => {
+            console.log(`
+
+            `)
+        }
         this.data = {
             idealConditions: {
                 temperature: {

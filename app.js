@@ -7,6 +7,10 @@ import AntsApp from './src/AntsApp.js';
  * License: MIT
  * Description: this application let you play with ants and neural networks, letting our little friend, learn how to find things
  * TODO: ANTS REPRODUCTION PENDING (QUEEN ANT)
+ * TODO: add to oobservers any closer ant and remove it when if goes away
+ * 
+ *
+ *
  * 
  * GENERAL POINTS:
  * -points of food source like trees, garbasge bins, kitchens, etc.
@@ -40,4 +44,4 @@ import AntsApp from './src/AntsApp.js';
  *      -Lucy in Disguise - The Trigger
  *      -LukeArcher - Breathing Space
  */
-AntsApp.init('v0.2.3');
+AntsApp.init('v0.2.5');

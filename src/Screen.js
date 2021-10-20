@@ -14,11 +14,21 @@ export default class Screen {
                 processRequest('start', `
                 <div class="wrapper">
                     <div class="screen-controls">
-                        <span>Speed:</span>
-                        <div class="slider-wrapper">
-                            <span>min</span>
-                            ${drawSlider(0, 119, 120 - Ants.counters.speed)}
-                            <span>max</span>
+                        <div class="box">
+                            <span>Speed:</span>
+                            <div class="slider-wrapper">
+                                <span>min</span>
+                                ${drawSlider(0, 119, 120 - Ants.counters.speed, 'Ants.counters.speed = 120 - this.value')}
+                                <span>max</span>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <span>draw path:</span>
+                            <div class="slider-wrapper">
+                                <span>min</span>
+                                ${drawSlider(1, 100, Ants.counters.maxDraw * 100, 'Ants.counters.maxDraw = this.value / 100')}
+                                <span>max</span>
+                            </div>
                         </div>
                     </div>
                     <div class="controls">

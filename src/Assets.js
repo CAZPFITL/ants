@@ -39,8 +39,8 @@ export const processRequest = (className, htmlContent) => {
     screen.innerHTML = htmlContent
 }
 
-export const drawSlider = (min = 0, max = 100, value) => {
-    return (`<input type="range" min="${min}" max="${max}" value="${value}" class="slider" id="myRange" oninput="Ants.counters.speed = 120 - this.value">`);
+export const drawSlider = (min = 0, max = 100, value, callback) => {
+    return (`<input type="range" min="${min}" max="${max}" value="${value}" class="slider" id="myRange" oninput="${callback}">`);
 }
 
 export const isMobile = (() => { return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) })();
