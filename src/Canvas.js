@@ -19,7 +19,6 @@ export default class Canvas {
         //NOTE: stepProcess At Speed Selected
         if (Ants.counters.counter % Ants.counters.speed === 0) {
             Ants.Helpers.stepProcess()
-            console.log(Ants.anthill.ants.length)
         }
         //NOTE: avoids a big and slow calculations
         if (Ants.counters.counter === Ants.counters.counterLimit) {

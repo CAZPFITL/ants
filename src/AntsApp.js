@@ -4,6 +4,8 @@ import Anthill from './Anthill.js'
 import World from './World.js'
 import Helpers from './Helpers.js'
 
+window.speed = 10
+
 /**
  * Ants app
  */
@@ -16,12 +18,12 @@ export default class AntsApp {
         this.world
         this.anthill
         this.counters = {
-            speed: 1,
+            speed: window.speed,
             counter: 0,
-            counterLimit: 5,
+            counterLimit: window.speed,
             stepSize: 5,
-            maxPath: 0.5,
-            maxDraw: 0.15,
+            maxPath: 0.5,//0% of the screen
+            maxDraw: 0.15,//% of the maxPath
             path: true
         }
     }
@@ -60,8 +62,8 @@ export default class AntsApp {
     }
     
     showOff() {
-        for (let i = 0; i < 20; i++) {
-            Ants.Helpers.createAnt(Ants.Helpers.getRandomInt(Ants.canvasBounds[0]), Ants.Helpers.getRandomInt(Ants.canvasBounds[1]), Ants.anthill.antsColors.worker, 'worker')
+        for (let i = 0; i < 5; i++) {
+            Ants.Helpers.createAnt(i, i, Ants.anthill.antsColors.worker, 'worker')
         }
     }
 }
