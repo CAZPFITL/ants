@@ -52,7 +52,10 @@ canvas {
 	display: flex;
 	width: 100%;
 	height: 100vh;
+	height: auto;
 	margin: auto;
+	border: 1px solid #333333;
+
 }
 
 #screen {
@@ -67,212 +70,6 @@ canvas {
 	height: 100%;
 	position: relative;
 }
-
-
-}
-
-body #screen {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0 0;
-	display: flex;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-	margin: 0;
-}
-
-canvas {
-	display: flex;
-	width: 100%;
-	height: 100vh;
-	margin: auto;
-}
-
-#screen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: 20px 20px;
-}
-
-#screen .wrapper {
-	display: block;
-	height: 100%;
-	position: relative;
-}
-
-
-}
-
-body #screen {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0 0;
-	display: flex;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-	margin: 0;
-}
-
-canvas {
-	display: flex;
-	width: 100%;
-	height: 100vh;
-	margin: auto;
-}
-
-#screen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: 20px 20px;
-}
-
-#screen .wrapper {
-	display: block;
-	height: 100%;
-	position: relative;
-}
-
-
-}
-
-body #screen {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0 0;
-	display: flex;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-	margin: 0;
-}
-
-canvas {
-	display: flex;
-	width: 100%;
-	height: 100vh;
-	margin: auto;
-}
-
-#screen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: 20px 20px;
-}
-
-#screen .wrapper {
-	display: block;
-	height: 100%;
-	position: relative;
-}
-
-
-}
-
-body #screen {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0 0;
-	display: flex;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-	margin: 0;
-}
-
-canvas {
-	display: flex;
-	width: 100%;
-	height: 100vh;
-	margin: auto;
-}
-
-#screen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: 20px 20px;
-}
-
-#screen .wrapper {
-	display: block;
-	height: 100%;
-	position: relative;
-}
-
-
-}
-
-body #screen {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0 0;
-	display: flex;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-	margin: 0;
-}
-
-canvas {
-	display: flex;
-	width: 100%;
-	height: 100vh;
-	margin: auto;
-}
-
-#screen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: 20px 20px;
-}
-
-#screen .wrapper {
-	display: block;
-	height: 100%;
-	position: relative;
-}
-
 
 /*
 * Start screen
@@ -284,6 +81,7 @@ canvas {
 	display: flex;
 	flex-wrap: wrap;
 	opacity: 0.6;
+	max-width: 190px;
 }
 
 .start #screen .wrapper .controls.mobile {
@@ -340,7 +138,7 @@ canvas {
 }
 
 .start #screen {
-	border: 1px solid #333333;
+	/* border: 1px solid #333333; */
 	padding: 20px 20px 10px;
 	display: flex;
 	flex-direction: column;

@@ -23,7 +23,7 @@ export default class Screen {
                             </div>
                         </div>
                         <div class="box">
-                            <span>draw path:</span>
+                            <span>draw path: (use wisely)</span>
                             <div class="slider-wrapper">
                                 <span>min</span>
                                 ${drawSlider(1, 100, Ants.counters.maxDraw * 100, 'Ants.counters.maxDraw = this.value / 100')}
@@ -32,12 +32,45 @@ export default class Screen {
                         </div>
                     </div>
                     <div class="controls">
-                        <div onclick="Snake.helpers.processKeyDown({key:'ArrowUp'});" class="button up">${arrows.up}</div>
+                        <div 
+                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + ${Ants.counters.stepSize})" class="button up">
+                            ${arrows.up}
+                        </div>
+
                         <div class="middle">
-                            <div onclick="Snake.helpers.processKeyDown({key:'ArrowLeft'});" class="button left">${arrows.left}</div>
-                            <div onclick="Snake.helpers.processKeyDown({key:'ArrowRight'});" class="button right">${arrows.right}</div>
+                            <div 
+                                onclick="Ants.camera.moveTo(Ants.camera.lookAt[0] - ${Ants.counters.stepSize}, Ants.camera.lookAt[1])" class="button left">
+                                ${arrows.left}
                             </div>
-                            <div onclick="Snake.helpers.processKeyDown({key:'ArrowDown'});" class="button down">${arrows.down}</div>
+
+                            <div 
+                                onclick="Ants.camera.moveTo(Ants.camera.lookAt[0] + ${Ants.counters.stepSize}, Ants.camera.lookAt[1])" class="button right">
+                                ${arrows.right}
+                            </div>
+
+                        </div>
+
+                        <div 
+                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - ${Ants.counters.stepSize})" class="button down">
+                            ${arrows.down}
+                        </div>
+
+                        <div class="button"></div>
+
+
+                        <div class="middle">
+                            <div 
+                                onclick="Ants.camera.zoomTo(Ants.camera.distance - 50)" class="button left">
+                                ${arrows.zoomIn}
+                            </div>
+
+                            <div 
+                                onclick="Ants.camera.zoomTo(Ants.camera.distance + 50)" class="button right">
+                                ${arrows.zoomOut}
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
                 `)

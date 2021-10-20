@@ -58,7 +58,7 @@ export default class AntsApp {
         this.Helpers.createCanvas()
         this.Helpers.fullScreenFunctionality()
         window.addEventListener('resize', ()=>Ants.Helpers.getCanvas());
-        Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * Ants.counters.stepSize) * Ants.counters.maxPath
+        Ants.counters.maxPath = Math.trunc(Ants.Helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
     }
 
     welcomeToAnts() {

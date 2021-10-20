@@ -63,6 +63,7 @@ export default class Helpers extends Canvas {
         return Math.floor(Math.random() * max);
     }
 
+    
     static getStepSize(num) {
         return Ants.counters.stepSize * num
     }
