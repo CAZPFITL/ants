@@ -41,7 +41,6 @@ export default class Ant {
             },
         }
         this.state = new State(this)
-        this.notification()
     }
 
     /**
@@ -56,10 +55,11 @@ export default class Ant {
     /**
      * listen on app state change
      */
-    notification() {
+    notification(message) {
         let antState = this.getTask(Ants.world.state.state)
         this.state.changeState(antState)
-        console.log(this.name + ' says: let`s ' + antState)
+        console.log(message)
+        console.log(`"${this.name}" says: -let's ${antState}`)
     }
 
     /**

@@ -23,7 +23,7 @@ export default class Canvas extends Screen {
             Ants.Helpers.drawAntsCollection()
         }
         //NOTE: avoids a big and slow calculations
-        if (Ants.counters.counter === 60) {
+        if (Ants.counters.counter === 120) {
             Ants.counters.counter = 0
         }
     }

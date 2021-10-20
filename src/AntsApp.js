@@ -10,8 +10,8 @@ window.speed = 10
  * Ants app
  */
 export default class AntsApp {
-    constructor() {
-        this.name = 'Ants App v0.0.5'
+    constructor(_v) {
+        this.name = `Ants App ${_v}`
         this.state = new State(this)
         this.Helpers = Helpers
         this.antClass = Ant
@@ -64,12 +64,6 @@ export default class AntsApp {
     welcomeToAnts() {
         this.world = new World('sunny')
         this.anthill = new Anthill()
-        this.showOff()
-    }
-    
-    showOff() {
-        for (let i = 0; i < 1; i++) {
-            Ants.Helpers.createAnt(i, i, Ants.anthill.antsColors.worker, 'worker')
-        }
+        this.anthill.createWorker()
     }
 }

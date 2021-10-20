@@ -396,6 +396,7 @@ canvas {
 	-webkit-transition: .2s;
 	transition: opacity .2s;
 	margin: 0 5px;
+	max-width: 150px;
 }
 
 .slider:hover {

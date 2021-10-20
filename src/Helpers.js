@@ -1,4 +1,6 @@
 import Canvas from './Canvas.js';
+import { greetings } from './Assets.js';
+
 /**
  * This is an abstract class containing all game helpers methods
  */
@@ -98,6 +100,7 @@ export default class Helpers extends Canvas {
      */
     static createAnt(posX, posY, trace, job) {
         let babyAnt = new Ants.antClass(posX, posY, trace, job)
+        babyAnt.notification(`new ant created: \n"${babyAnt.name}" says: -${greetings[Ants.Helpers.getRandomInt(greetings.length - 1)]}`)
         Ants.world.state.add(babyAnt)
         Ants.anthill.ants.push(babyAnt)
     }

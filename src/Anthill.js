@@ -22,4 +22,11 @@ export default class Anthill {
             soldier: '#e01e01'
         }
     }
+
+    /**
+     * Creates a new worker ant
+     */
+    createWorker() {
+        Ants.Helpers.createAnt(0, 0, Ants.anthill.antsColors.worker, 'worker')
+    }
 }

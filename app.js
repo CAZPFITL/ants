@@ -1,4 +1,4 @@
-import AntsApp from './src/AntsApp.js'
+import AntsApp from './src/AntsApp.js';
 
 /**
  * App initialization.
@@ -36,6 +36,6 @@ import AntsApp from './src/AntsApp.js'
  *  -seventh task: once the ant gets 150 days of life it goes to the graveyard to die and it gets filtered from anthill 
  * 
  *  --AT THIS POINT IF THE MAP HASN'T BEEN SCANNED THE FIRST TASK WILL CONTINUE--
- * 
+ *  posible music: Lucy in Disguise - The Trigger
  */
-AntsApp.init()
+AntsApp.init('v0.2.2');
