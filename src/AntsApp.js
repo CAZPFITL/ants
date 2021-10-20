@@ -18,13 +18,18 @@ export default class AntsApp {
         this.world
         this.anthill
         this.counters = {
-            speed: window.speed,
-            counter: 0,
-            counterLimit: window.speed,
-            stepSize: 5,
-            maxPath: 0.5,//0% of the screen
-            maxDraw: 0.15,//% of the maxPath
-            path: true
+            speed: 60, // 1 - 60
+            counter: 0, //control
+            stepSize: 10, // pixel size
+            maxPath: 0.5, //0% of the screen
+            maxDraw: 0.95, //% of the maxPath
+            directionCounters: {
+                c1: 0,
+                c2: 0,
+                c3: 0,
+                c4: 0,
+            },
+            path: true,
         }
     }
 
@@ -42,15 +47,16 @@ export default class AntsApp {
      */
     notification() {
         console.log('New ' + this.name + ' state: ' + this.state.state)
-
         let funct = this.Helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
         }
+        this.Helpers.drawScreen(Ants.state.state)
     }
 
     requestLoad() {
         this.Helpers.createCanvas()
+        this.Helpers.fullScreenFunctionality()
         window.addEventListener('resize', ()=>Ants.Helpers.getCanvas());
         Ants.counters.maxPath = Math.trunc((this.canvasBounds[0] * this.canvasBounds[1]) * Ants.counters.stepSize) * Ants.counters.maxPath
     }
@@ -62,7 +68,7 @@ export default class AntsApp {
     }
     
     showOff() {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 1; i++) {
             Ants.Helpers.createAnt(i, i, Ants.anthill.antsColors.worker, 'worker')
         }
     }

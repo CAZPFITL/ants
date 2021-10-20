@@ -1,4 +1,6 @@
-export default class Canvas {
+import Screen from './Screen.js'
+
+export default class Canvas extends Screen {
     /**
      * draw
      */
@@ -6,8 +8,6 @@ export default class Canvas {
         // this.antPng = new Image();
         // this.antPng.src = './src/ant.png'
         Ants.Helpers.step()
-        Ants.Helpers.clearCanvas()
-        Ants.Helpers.drawAntsCollection()
         Ants.Helpers.requestAnimation(Ants.Helpers.draw)
     }
 
@@ -19,9 +19,11 @@ export default class Canvas {
         //NOTE: stepProcess At Speed Selected
         if (Ants.counters.counter % Ants.counters.speed === 0) {
             Ants.Helpers.stepProcess()
+            Ants.Helpers.clearCanvas()
+            Ants.Helpers.drawAntsCollection()
         }
         //NOTE: avoids a big and slow calculations
-        if (Ants.counters.counter === Ants.counters.counterLimit) {
+        if (Ants.counters.counter === 60) {
             Ants.counters.counter = 0
         }
     }
@@ -110,14 +112,28 @@ export default class Canvas {
     }
 
     /**
+     * Screen contains the game controls
+     * @returns On game Screen
+     */
+     static getScreen() {
+        let screen = document.createElement('div')
+        screen.id = 'screen'
+        screen.width = window.innerWidth
+        screen.height = window.innerHeight
+        return screen
+    }
+
+    /**
      * Create canvas in DOM and Ants Global
      */
     static createCanvas() {
-        let canvas = Ants.Helpers.getCanvas()
         let step = Ants.counters.stepSize
+        let canvas = Ants.Helpers.getCanvas()
+        let screen = Ants.Helpers.getScreen()
         Ants.canvasBounds = [Math.trunc(canvas.width / step), Math.trunc(canvas.height / step)]
-        document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.ctx = Ants.canvas.getContext('2d')
+        document.getElementsByTagName('body')[0].prepend(screen)
+        document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.Helpers.requestAnimation()
     }
 }
