@@ -9,8 +9,8 @@ export default class Helpers extends Canvas {
      * Creates Ants on window global variable
      * @param {AppClass} App 
      */
-    static createGlobal(App) {
-        window.Ants = new App()
+    static createGlobal(App, _v) {
+        window.Ants = new App(_v)
         Ants.state.add(Ants)
     }
 

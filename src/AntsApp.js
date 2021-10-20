@@ -36,8 +36,8 @@ export default class AntsApp {
     /**
      * Initializates the application
      */
-    static init() {
-        Helpers.createGlobal(this)
+    static init(_v) {
+        Helpers.createGlobal(this, _v)
         Ants.state.changeState('request load', Ants)
         Ants.state.changeState('welcome to Ants', Ants)
     }
