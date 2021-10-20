@@ -47,11 +47,4 @@
  posible music: 
     *Lucy in Disguise - The Trigger
     *LukeArcher - Breathing Space
-
-## Camera methods
-
-| Method      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
  
