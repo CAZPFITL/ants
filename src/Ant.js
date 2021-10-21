@@ -59,8 +59,8 @@ export default class Ant {
     notification(message) {
         let antState = this.getTask(Ants.world.state.state)
         this.state.changeState(antState)
-        console.log(message)
-        console.log(`"${this.name}" says: -let's ${antState}`)
+        Ants.messages.processMessage(message)
+        Ants.messages.processMessage(`--${this.name} says: let's ${antState}`)
     }
 
     /**
@@ -98,6 +98,13 @@ export default class Ant {
                 break;
             }
         }
+
+    }
+
+    /**
+     * smells 3 steps on every direction
+     */
+    smell() {
 
     }
 

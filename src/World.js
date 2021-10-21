@@ -30,7 +30,7 @@ export default class Wold {
     }
 
     setWeather(weather) {
-        console.log('weather conditions: ' + weather)
+        Ants.messages.processMessage('= W E A T H E R - B R O A D C A S T = >> ' + weather)
         this.weather = weather
         this.state.changeState(weather)
     }

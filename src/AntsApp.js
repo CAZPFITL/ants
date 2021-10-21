@@ -3,6 +3,7 @@ import Ant from './Ant.js'
 import Anthill from './Anthill.js'
 import World from './World.js'
 import Helpers from './Helpers.js'
+import Messages from './Messages.js'
 
 window.speed = 10
 
@@ -13,6 +14,7 @@ export default class AntsApp {
     constructor(_v) {
         this.name = `Ants App ${_v}`
         this.state = new State(this)
+        this.messages = new Messages()
         this.Helpers = Helpers
         this.antClass = Ant
         this.world
@@ -47,7 +49,7 @@ export default class AntsApp {
      * Here you can process any state change from the app, reading "this.state.name" // create canvas -> createCanvas()
      */
     notification() {
-        console.log('New ' + this.name + ' state: ' + this.state.state)
+        Ants.messages.processMessage('New ' + this.name + ' state: ' + this.state.state)
         let funct = this.Helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
