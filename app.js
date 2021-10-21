@@ -1,4 +1,4 @@
-import AntsApp from './src/AntsApp.js'
+import AntsApp from './src/AntsApp.js';
 
 /**
  * App initialization.
@@ -7,6 +7,10 @@ import AntsApp from './src/AntsApp.js'
  * License: MIT
  * Description: this application let you play with ants and neural networks, letting our little friend, learn how to find things
  * TODO: ANTS REPRODUCTION PENDING (QUEEN ANT)
+ * TODO: add to oobservers any closer ant and remove it when if goes away
+ * 
+ *
+ *
  * 
  * GENERAL POINTS:
  * -points of food source like trees, garbasge bins, kitchens, etc.
@@ -36,34 +40,8 @@ import AntsApp from './src/AntsApp.js'
  *  -seventh task: once the ant gets 150 days of life it goes to the graveyard to die and it gets filtered from anthill 
  * 
  *  --AT THIS POINT IF THE MAP HASN'T BEEN SCANNED THE FIRST TASK WILL CONTINUE--
- * 
+ *  posible music: 
+ *      -Lucy in Disguise - The Trigger
+ *      -LukeArcher - Breathing Space
  */
-AntsApp.init()
-
-tf.tensor([1, 2, 3, 4]).print()
-
-const values = []
-
-for (let index = 0; index < 100; index++) {
-    values[index] = Math.floor(Math.random() * 100)
-}
-
-const shape = [10,2,5];
-
-const tens = tf.tensor3d(values, shape)
-
-//console.log(tens.data())
-//console.log(tens.dataSync())
-//console.log(tens.get())
-//tens.print()
-
-//const vtense = tf.variable(tens)
-//console.log(vtense)
-
-const a = tf.tensor3d(values, shape)
-const b = tf.tensor3d(values, shape)
-const c = a.add(b)
-
-a.print()
-b.print()
-c.print()
+AntsApp.init('v0.2.9');

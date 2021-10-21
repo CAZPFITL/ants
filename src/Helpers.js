@@ -1,4 +1,5 @@
 import Canvas from './Canvas.js';
+
 /**
  * This is an abstract class containing all game helpers methods
  */
@@ -7,9 +8,50 @@ export default class Helpers extends Canvas {
      * Creates Ants on window global variable
      * @param {AppClass} App 
      */
-    static createGlobal(App) {
-        window.Ants = new App()
+    static createGlobal(App, _v) {
+        window.Ants = new App(_v)
         Ants.state.add(Ants)
+    }
+
+    /**
+     * This functions gives to Snake the fullscreen functionality
+     */
+    static fullScreenFunctionality() {
+        // Iniciar pantalla completa
+        Ants.fullScreen = () => {
+            Ants.isFull = !Ants.isFull
+            var docElm = document.documentElement
+            //W3C   
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen()
+            }
+            //FireFox   
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen()
+            }
+            // Chrome, etc.   
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen()
+            }
+            //IE11   
+            else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen()
+            }
+        }
+
+        // Salir de pantalla completa
+        Ants.normalScreen = () => {
+            Ants.isFull = !Ants.isFull
+            if (document.exitFullscreen) {
+                document.exitFullscreen()
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen()
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen()
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen()
+            }
+        }
     }
 
     /**
@@ -20,6 +62,7 @@ export default class Helpers extends Canvas {
     static getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
+
 
     static getStepSize(num) {
         return Ants.counters.stepSize * num
@@ -50,14 +93,35 @@ export default class Helpers extends Canvas {
         return func.join('')
     }
 
-    /**
-     * New Ant data push and position
-     * @param {Position X} posX 
-     * @param {Position Y} posY 
-     */
-    static createAnt(posX, posY, trace, job) {
-        let babyAnt = new Ants.antClass(posX, posY, trace, job)
-        Ants.world.state.add(babyAnt)
-        Ants.anthill.ants.push(babyAnt)
+    static Move(direction) {
+        switch (direction) {
+            case 'up':
+                Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - Ants.counters.stepSize);
+                break;
+            case 'down':
+                Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + Ants.counters.stepSize);
+                break;
+            case 'left':
+                Ants.camera.moveTo(Ants.camera.lookAt[0] - Ants.counters.stepSize, Ants.camera.lookAt[1])
+                break;
+            case 'right':
+                Ants.camera.moveTo(Ants.camera.lookAt[0] + Ants.counters.stepSize, Ants.camera.lookAt[1])
+                break;
+            case 'zoomIn':
+                Ants.camera.zoomTo(Ants.camera.distance - 50)
+                break;
+            case 'zoomOut':
+                Ants.camera.zoomTo(Ants.camera.distance + 50)
+                break;
+        
+            default:
+                break;
+        }
+    }
+    static startAutoMove(direction) {
+        Ants.refreshInterval = setInterval(()=>Ants.Helpers.Move(direction), 20);
+    }
+    static stopAutoMove(direction) {
+        clearInterval(Ants.refreshInterval);
     }
 }

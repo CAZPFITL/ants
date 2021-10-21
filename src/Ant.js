@@ -1,9 +1,5 @@
 import State from './State.js'
 
-/**
- * Little strong and smart ant
- * TODO: add to oobservers any closer ant and remove it when if goes away
- */
 export default class Ant {
     constructor(posX, posY, trace, job, age = 0) {
         Ants.anthill.idProvider++
@@ -14,6 +10,11 @@ export default class Ant {
         this.outOfBounds = false
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
+        this.scanner = () => {
+            console.log(`
+
+            `)
+        }
         this.data = {
             idealConditions: {
                 temperature: {
@@ -41,7 +42,6 @@ export default class Ant {
             },
         }
         this.state = new State(this)
-        this.notification()
     }
 
     /**
@@ -56,10 +56,11 @@ export default class Ant {
     /**
      * listen on app state change
      */
-    notification() {
+    notification(message) {
         let antState = this.getTask(Ants.world.state.state)
         this.state.changeState(antState)
-        console.log(this.name + ' says: let`s ' + antState)
+        console.log(message)
+        console.log(`"${this.name}" says: -let's ${antState}`)
     }
 
     /**
@@ -101,7 +102,7 @@ export default class Ant {
     }
 
     cycle() {
-        if (this.state.state === 'sleep') {
+        if (this.state.state === 'sleep' || this.job === 'queen') {
             return
         } else if (this.state.state === 'explore') {
             this.walk()
