@@ -12,7 +12,9 @@ export default class Screen {
 
             case 'welcome to Ants':
                 processRequest('start', `
-                <div class="wrapper">
+                <div 
+                    class="wrapper" 
+                    onmouseup="Ants.move = false">
                     <div class="screen-controls">
                         <div class="box">
                             <span>Speed:</span>
@@ -32,53 +34,47 @@ export default class Screen {
                         </div>
                     </div>
                     <div class="controls">
-                        <div 
-                            onmousedown="Ants.Helpers.Move('up'); setTimeout(()=>{Ants.Helpers.startAutoMove('up')}, 400);"
-                            onmouseup="Ants.Helpers.stopAutoMove()"
-                            class="button up">
-                            ${arrows.up}
+                        <div class="button up">
+                            <div onmousedown="Ants.Helpers.Move('up'); setTimeout(()=>{Ants.Helpers.startAutoMove('up')}, 1000);">
+                                ${arrows.up}
+                            </div>
                         </div>
 
                         <div class="middle">
-                            <div 
-                                onmousedown="Ants.Helpers.Move('left'); setTimeout(()=>{Ants.Helpers.startAutoMove('left')}, 400);"
-                                onmouseup="Ants.Helpers.stopAutoMove()"
-                                class="button left">
-                                ${arrows.left}
+                            <div class="button left">
+                                <div onmousedown="Ants.Helpers.Move('left'); setTimeout(()=>{Ants.Helpers.startAutoMove('left')}, 1000);">
+                                    ${arrows.left}
+                                </div>
                             </div>
 
-                            <div 
-                                onmousedown="Ants.Helpers.Move('right'); setTimeout(()=>{Ants.Helpers.startAutoMove('right')}, 400);"
-                                onmouseup="Ants.Helpers.stopAutoMove()"                                
-                                class="button right">
-                                ${arrows.right}
+                            <div class="button right">
+                                <div onmousedown="Ants.Helpers.Move('right'); setTimeout(()=>{Ants.Helpers.startAutoMove('right')}, 1000);">
+                                    ${arrows.right}
+                                </div>
                             </div>
 
                         </div>
 
-                        <div 
-                            onmousedown="Ants.Helpers.Move('down'); setTimeout(()=>{Ants.Helpers.startAutoMove('down')}, 400);"
-                            onmouseup="Ants.Helpers.stopAutoMove()"     
-                            class="button down">
-                            ${arrows.down}
+                        <div class="button down">   
+                            <div onmousedown="Ants.Helpers.Move('down'); setTimeout(()=>{Ants.Helpers.startAutoMove('down')}, 1000);">
+                                ${arrows.down}
+                            </div>
                         </div>
 
                         <div class="button"></div>
 
 
                         <div class="middle">
-                            <div 
-                                onmousedown="Ants.Helpers.Move('zoomIn'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomIn')}, 400);"
-                                onmouseup="Ants.Helpers.stopAutoMove()"
-                                class="button left">
-                                ${arrows.zoomIn}
+                            <div class="button left">
+                                <div onmousedown="Ants.Helpers.Move('zoomIn'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomIn')}, 1000);">
+                                    ${arrows.zoomIn}
+                                </div>
                             </div>
 
-                            <div 
-                                onmousedown="Ants.Helpers.Move('zoomOut'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomOut')}, 400);"
-                                onmouseup="Ants.Helpers.stopAutoMove()"
-                                class="button right">
-                                ${arrows.zoomOut}
+                            <div class="button right">
+                                <div onmousedown="Ants.Helpers.Move('zoomOut'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomOut')}, 1000);">
+                                    ${arrows.zoomOut}
+                                </div>
                             </div>
 
                         </div>

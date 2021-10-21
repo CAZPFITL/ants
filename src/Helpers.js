@@ -94,6 +94,7 @@ export default class Helpers extends Canvas {
     }
 
     static Move(direction) {
+        Ants.move = true
         switch (direction) {
             case 'up':
                 Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - Ants.counters.stepSize);
@@ -113,15 +114,28 @@ export default class Helpers extends Canvas {
             case 'zoomOut':
                 Ants.camera.zoomTo(Ants.camera.distance + 50)
                 break;
-        
+
             default:
                 break;
         }
     }
+
     static startAutoMove(direction) {
-        Ants.refreshInterval = setInterval(()=>Ants.Helpers.Move(direction), 20);
+        if (Ants.move) {
+            let interval = setInterval(() => Ants.move ? Ants.Helpers.Move(direction) : clearInterval(interval), 20)
+        }
     }
-    static stopAutoMove(direction) {
-        clearInterval(Ants.refreshInterval);
+
+    static debounce_leading(func, timeout = 500) {
+        let timer;
+        return (...args) => {
+            if (!timer) {
+                func.apply(this, args);
+            }
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                timer = undefined;
+            }, timeout);
+        };
     }
 }
