@@ -20,7 +20,7 @@ export default class AntsApp {
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
-            stepSize: 10, // pixel size
+            stepSize: 20, // pixel size
             maxPath: 0.5, //0% of the screen
             maxDraw: 0.95, //% of the maxPath
             directionCounters: {

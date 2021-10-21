@@ -10,6 +10,7 @@ export default class Anthill {
             min: 10,
             count: 500
         }
+        this.size = 12
         this.idealConditions = {
             temperature: {
                 minC: 23.8,
