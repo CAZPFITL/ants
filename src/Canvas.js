@@ -18,7 +18,6 @@ export default class Canvas extends Screen {
         Ants.counters.counter++
         //NOTE: stepProcess At Speed Selected
         if (Ants.counters.counter % Ants.counters.speed === 0) {
-            // Draw stuff at cycle
             Ants.anthill.ants.forEach(ant => {
                 ant.cycle()
             })
@@ -35,32 +34,26 @@ export default class Canvas extends Screen {
     static drawCollection() {
         let step;
         Ants.camera.end();
-
         Ants.Helpers.clearCanvas()
-
         Ants.camera.begin();
-
         Ants.Helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-
         Ants.Helpers.drawAnthill('#693a00')
-
         Ants.anthill.ants.forEach((ant) => {
             Ants.camera.context.fillStyle = ant.color
+            step = Ants.counters.stepSize
             if (ant.job === 'queen') {
-                step = Ants.counters.stepSize * 2
+                Ants.camera.context.fillRect(
+                    ant.actualPosition[0] * step - step * 2,
+                    ant.actualPosition[1] * step - step * 2,
+                    step * 4,
+                    step * 4)
             } else {
-                step = Ants.counters.stepSize
-                let antPng = new Image();
-                antPng.src = '/src/ant2.png'
-                antPng.width = step
-                antPng.height = step
-                Ants.camera.context.drawImage(antPng, ant.actualPosition[0] * step, ant.actualPosition[1] * step, step, step);
+                Ants.camera.context.fillRect(
+                    ant.actualPosition[0] * step,
+                    ant.actualPosition[1] * step,
+                    step,
+                    step)
             }
-            Ants.camera.context.fillRect(
-                ant.actualPosition[0] * step,
-                ant.actualPosition[1] * step,
-                step,
-                step)
         })
 
     }
@@ -72,6 +65,9 @@ export default class Canvas extends Screen {
         Ants.camera.context.clearRect(0, 0, Ants.canvas.width, Ants.canvas.height);
     }
 
+    /**
+     * Draws board background
+     */
     static drawBoard() {
         Ants.camera.context.fillStyle = 'green'
         Ants.camera.context.fillRect(
@@ -107,10 +103,10 @@ export default class Canvas extends Screen {
         let step = Ants.counters.stepSize * 6;
         Ants.camera.context.fillStyle = color
         Ants.camera.context.fillRect(
-            0, //change by random then save it in anthill, then spawn every ant from there
-            0,
-            step,
-            step)
+            Ants.Helpers.getStepSize(Ants.anthill.position[0]) - Ants.Helpers.getStepSize(Ants.anthill.size / 2), //change by random then save it in anthill, then spawn every ant from there
+            Ants.Helpers.getStepSize(Ants.anthill.position[1]) - Ants.Helpers.getStepSize(Ants.anthill.size / 2),
+            Ants.Helpers.getStepSize(Ants.anthill.size),
+            Ants.Helpers.getStepSize(Ants.anthill.size))
     }
 
     /**
@@ -156,7 +152,6 @@ export default class Canvas extends Screen {
      * Create canvas in DOM and Ants Global
      */
     static createCanvas() {
-        let step = Ants.counters.stepSize
         let canvas = Ants.Helpers.getCanvas()
         let screen = Ants.Helpers.getScreen()
         Ants.camera = new Camera(canvas.getContext('2d'))

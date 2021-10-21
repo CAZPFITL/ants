@@ -10,6 +10,7 @@ export default class Camera {
         this.lookAt = settings.initialPosition || [0, 0];
         this.context = context;
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0;
+        this.autoMove = false;
         this.viewport = {
             left: 0,
             right: 0,

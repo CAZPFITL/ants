@@ -33,25 +33,33 @@ export default class Screen {
                     </div>
                     <div class="controls">
                         <div 
-                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - ${Ants.counters.stepSize})" class="button up">
+                            onmousedown="Ants.Helpers.Move('up'); setTimeout(()=>{Ants.Helpers.startAutoMove('up')}, 400);"
+                            onmouseup="Ants.Helpers.stopAutoMove()"
+                            class="button up">
                             ${arrows.up}
                         </div>
 
                         <div class="middle">
                             <div 
-                                onclick="Ants.camera.moveTo(Ants.camera.lookAt[0] - ${Ants.counters.stepSize}, Ants.camera.lookAt[1])" class="button left">
+                                onmousedown="Ants.Helpers.Move('left'); setTimeout(()=>{Ants.Helpers.startAutoMove('left')}, 400);"
+                                onmouseup="Ants.Helpers.stopAutoMove()"
+                                class="button left">
                                 ${arrows.left}
                             </div>
 
                             <div 
-                                onclick="Ants.camera.moveTo(Ants.camera.lookAt[0] + ${Ants.counters.stepSize}, Ants.camera.lookAt[1])" class="button right">
+                                onmousedown="Ants.Helpers.Move('right'); setTimeout(()=>{Ants.Helpers.startAutoMove('right')}, 400);"
+                                onmouseup="Ants.Helpers.stopAutoMove()"                                
+                                class="button right">
                                 ${arrows.right}
                             </div>
 
                         </div>
 
                         <div 
-                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + ${Ants.counters.stepSize})" class="button down">
+                            onmousedown="Ants.Helpers.Move('down'); setTimeout(()=>{Ants.Helpers.startAutoMove('down')}, 400);"
+                            onmouseup="Ants.Helpers.stopAutoMove()"     
+                            class="button down">
                             ${arrows.down}
                         </div>
 
@@ -60,12 +68,16 @@ export default class Screen {
 
                         <div class="middle">
                             <div 
-                                onclick="Ants.camera.zoomTo(Ants.camera.distance - 50)" class="button left">
+                                onmousedown="Ants.Helpers.Move('zoomIn'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomIn')}, 400);"
+                                onmouseup="Ants.Helpers.stopAutoMove()"
+                                class="button left">
                                 ${arrows.zoomIn}
                             </div>
 
                             <div 
-                                onclick="Ants.camera.zoomTo(Ants.camera.distance + 50)" class="button right">
+                                onmousedown="Ants.Helpers.Move('zoomOut'); setTimeout(()=>{Ants.Helpers.startAutoMove('zoomOut')}, 400);"
+                                onmouseup="Ants.Helpers.stopAutoMove()"
+                                class="button right">
                                 ${arrows.zoomOut}
                             </div>
 
