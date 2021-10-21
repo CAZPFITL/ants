@@ -33,7 +33,7 @@ export default class Screen {
                     </div>
                     <div class="controls">
                         <div 
-                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + ${Ants.counters.stepSize})" class="button up">
+                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - ${Ants.counters.stepSize})" class="button up">
                             ${arrows.up}
                         </div>
 
@@ -51,7 +51,7 @@ export default class Screen {
                         </div>
 
                         <div 
-                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - ${Ants.counters.stepSize})" class="button down">
+                            onclick="Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + ${Ants.counters.stepSize})" class="button down">
                             ${arrows.down}
                         </div>
 

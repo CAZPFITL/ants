@@ -146,8 +146,8 @@ export default class Camera {
                 this.zoomTo(zoomLevel);
             } else {
                 // Your track-pad X and Y positions
-                const x = this.lookAt[0] + (e.deltaX * 2 / Ants.counters.stepSize);
-                const y = this.lookAt[1] + (e.deltaY * 2 / Ants.counters.stepSize);
+                const x = this.lookAt[0] + (e.deltaX * 10 / Ants.counters.stepSize);
+                const y = this.lookAt[1] + (e.deltaY * 10 / Ants.counters.stepSize);
 
                 this.moveTo(x, y);
             }

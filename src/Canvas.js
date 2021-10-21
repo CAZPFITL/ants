@@ -40,8 +40,6 @@ export default class Canvas extends Screen {
 
         Ants.camera.begin();
 
-        Ants.Helpers.drawBoard()
-
         Ants.Helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
 
         Ants.Helpers.drawAnthill('#693a00')
@@ -75,13 +73,12 @@ export default class Canvas extends Screen {
     }
 
     static drawBoard() {
-        console.log(Ants.canvasBounds[0])
         Ants.camera.context.fillStyle = 'green'
         Ants.camera.context.fillRect(
-            0, //change by random then save it in anthill, then spawn every ant from there
             0,
-            Ants.Helpers.getStepSize(Ants.canvasBounds[0]),
-            Ants.Helpers.getStepSize(Ants.canvasBounds[1]))
+            0,
+            Ants.counters.stepSize * (Ants.canvasBounds[0] + 1),
+            Ants.counters.stepSize * (Ants.canvasBounds[1] + 1))
     }
 
     /**
@@ -90,6 +87,7 @@ export default class Canvas extends Screen {
      * @param {trace color} color 
      */
     static drawPath(path, color) {
+        Ants.Helpers.drawBoard()
 
         path.forEach((step) => {
             Ants.camera.context.fillStyle = color
@@ -137,10 +135,6 @@ export default class Canvas extends Screen {
         canvas.width = (Width / step) % 1 === 0 ? Width : Width + step / 2
         canvas.height = (Height / step) % 1 === 0 ? Height : Height + step / 2
 
-        Width = (Width / step) % 1 === 0 ? (Width / step) : (Width / step) + 0.5
-        Height = (Height / step) % 1 === 0 ? (Height / step) : (Height / step) + 0.5
-
-        Ants.canvasBounds = [1800, 1800]
 
         Ants.canvas = canvas
         return canvas
@@ -165,8 +159,7 @@ export default class Canvas extends Screen {
         let step = Ants.counters.stepSize
         let canvas = Ants.Helpers.getCanvas()
         let screen = Ants.Helpers.getScreen()
-        Ants.canvasBounds = [Math.trunc(canvas.width / step), Math.trunc(canvas.height / step)]
-        Ants.camera = new Camera(Ants.canvas.getContext('2d'))
+        Ants.camera = new Camera(canvas.getContext('2d'))
         document.getElementsByTagName('body')[0].prepend(screen)
         document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.Helpers.requestAnimation()
