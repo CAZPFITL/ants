@@ -62,7 +62,7 @@ export default class Canvas extends Screen {
      * Renews the canvas on every draw loop
      */
     static clearCanvas() {
-        Ants.camera.context.clearRect(0, 0, Ants.canvas.width, Ants.canvas.height);
+        Ants.camera.context.clearRect(0, 0, Ants.camera.context.canvas.width, Ants.camera.context.canvas.height);
     }
 
     /**

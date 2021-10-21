@@ -19,7 +19,7 @@ export default class AntsApp {
         this.antClass = Ant
         this.world
         this.anthill
-        this.canvasBounds = [200, 200]
+        this.canvasBounds = [20, 20]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control

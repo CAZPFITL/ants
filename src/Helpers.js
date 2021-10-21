@@ -59,8 +59,8 @@ export default class Helpers extends Canvas {
      * @param {Max Limit} max 
      * @returns 
      */
-    static getRandomInt(max) {
-        return Math.floor(Math.random() * max);
+    static getRandomInt(min = 0, max) {
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
 

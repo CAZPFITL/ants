@@ -9,7 +9,7 @@ export default class Anthill {
             count: 500
         }
         this.size = 10
-        this.position = [50, 50]
+        this.position = [10, 10]
         this.idealConditions = {
             temperature: {
                 minC: 23.8,
@@ -49,7 +49,7 @@ export default class Anthill {
      */
     createAnt(trace, job) {
         let babyAnt = new Ants.antClass(Ants.anthill.position[0], Ants.anthill.position[1], trace, job)
-        babyAnt.notification(`*new ant created!!!: ${babyAnt.name} says: -${Ants.messages.greetings[Ants.Helpers.getRandomInt(Ants.messages.greetings.length - 1)]}`)
+        babyAnt.notification(`*new ant created!!!: ${babyAnt.name} says: -${Ants.messages.greetings[Ants.Helpers.getRandomInt(0, Ants.messages.greetings.length - 1)]}`)
         Ants.world.state.add(babyAnt)
         Ants.anthill.ants.push(babyAnt)
     }
