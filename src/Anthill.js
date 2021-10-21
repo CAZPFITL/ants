@@ -9,7 +9,7 @@ export default class Anthill {
             count: 500
         }
         this.size = 10
-        this.position = [10, 10]
+        this.position = [Ants.canvasBounds[0]/2, Ants.canvasBounds[1]/2]
         this.idealConditions = {
             temperature: {
                 minC: 23.8,
