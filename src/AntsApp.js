@@ -19,6 +19,7 @@ export default class AntsApp {
         this.antClass = Ant
         this.world
         this.anthill
+        this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
         this.canvasBounds = [80, 80]
         this.counters = {
             speed: 60, // 1 - 60
@@ -61,13 +62,12 @@ export default class AntsApp {
         this.Helpers.createCanvas()
         this.Helpers.fullScreenFunctionality()
         window.addEventListener('resize', ()=>Ants.Helpers.getCanvas());
+        // NOTE: maxPath
         Ants.counters.maxPath = Math.trunc(Ants.Helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
     }
 
     welcomeToAnts() {
         this.world = new World('sunny')
-        this.anthill = new Anthill()
-        this.anthill.createQueen()
-        this.anthill.createWorker(2)
+        this.anthill = new Anthill(20, 2)
     }
 }

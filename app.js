@@ -44,4 +44,4 @@ import AntsApp from './src/AntsApp.js';
  *      -Lucy in Disguise - The Trigger
  *      -LukeArcher - Breathing Space
  */
-AntsApp.init('v0.3.21');
+AntsApp.init('v0.3.3');

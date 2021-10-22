@@ -81,31 +81,6 @@ export default class Ant {
     }
 
     /**
-     * check if we are going out bounds in the walking cycle
-     * @returns souldWeThink? | boolean
-     */
-    checkPosition() {
-        let shouldWeThink = false
-        
-        if (this.actualPosition[0] <= 0) {
-            this.think('right'); shouldWeThink = true;
-        } else if (this.actualPosition[1] <= 0) {
-            this.think('down'); shouldWeThink = true;
-        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
-            this.think('left'); shouldWeThink = true;
-        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
-            this.think('up'); shouldWeThink = true;
-        }
-        
-        if (shouldWeThink) {
-            console.log('no')
-            return
-        } else {
-            console.log('ok cool')
-        }
-    }
-
-    /**
      * Gets random direction in bounds
      * @returns random direction
      */
@@ -132,15 +107,14 @@ export default class Ant {
      * @param {Position Y} posY 
      */
     walk() {
-        //NOTE: Walking
-        // console.log('walk')
-        this.checkPosition()
+        //Smells just in case
+        this.smell()
+        //Then move
         this.move(this.directions.directionToDo)
-
-        //NOTE: KEEPS THE GLOBAL MAX PATH ON THE LIMIT
+        //Limits trace
         if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
 
-        //NOTE: SAVE MARK STEP ONLY IF IT HASN'T
+        //Save mark step only if it hasn't
         for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
             if (Ants.world.walkedPathTrace[i][0] === this.actualPosition[0] && Ants.world.walkedPathTrace[i][1] === this.actualPosition[1]) {
                 break;
@@ -149,10 +123,26 @@ export default class Ant {
                 break;
             }
         }
-
     }
 
     /**
+     * check if we are going out bounds in the walking cycle
+     * @returns souldWeThink? | boolean
+     */
+     checkPosition() {
+        if (this.actualPosition[0] <= 0) {
+            this.resetDirection('right')
+        } else if (this.actualPosition[1] <= 0) {
+            this.resetDirection('down')
+        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
+            this.resetDirection('left')
+        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
+            this.resetDirection('up')
+        }
+    }
+
+    /**
+     * This process clamp let the ant check his arounds and check the position, and any other thing she need to check on every step.
      * smells then 3 - 6 (random) steps on one direction
      */
     smell() {
@@ -163,30 +153,35 @@ export default class Ant {
                 this.directions.smelledPath.push([a, b])
             }
         }
-        this.think()
+
+        this.checkPosition()                
     }
 
     /**
-     * No more steps to do let's think what to do next.
+     * No parameters will get a random direction and the ant will smell it
+     * Parameters will change de direction and reset a new random stepsToDo
+     * @param {forced direction} dir
      */
-    think(dir) {
+    resetDirection(dir) {
         this.directions.directionToDo = dir ?? this.getRandomDirection()
         this.directions.stepsToDo = Ants.Helpers.getRandomInt(0, dir ? 3 : 6)
-        console.log('i think ', this.directions.directionToDo)
+        console.log('i think i will go ', this.directions.directionToDo)
+        if (!dir){
+            this.smell()
+        }
     }
 
+    //Adjust the process to the slider of speed.
     cycle() {
         if (this.state.state === 'sleep' || this.job === 'queen') {
             return
         }
         if (this.state.state === 'explore') {
             if (this.directions.stepsToDo < 1) {
-                this.smell()
+                this.resetDirection()
             } else {
                 this.walk()
             }
         }
-
-        // TODO: IF Panic search path RANDOM
     }
 }

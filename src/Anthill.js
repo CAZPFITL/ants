@@ -1,6 +1,6 @@
 
 export default class Anthill {
-    constructor() {
+    constructor(size, initialWorkers) {
         this.idProvider = 0
         this.name = 'Home'
         this.food = {
@@ -8,7 +8,7 @@ export default class Anthill {
             min: 10,
             count: 500
         }
-        this.size = 10
+        this.size = size ?? 10
         this.position = [Ants.canvasBounds[0]/2, Ants.canvasBounds[1]/2]
         this.idealConditions = {
             temperature: {
@@ -25,6 +25,8 @@ export default class Anthill {
             soldier: '#e01e01',
             queen: '#9600bc'
         }
+        this.createQueen()
+        this.createWorker(initialWorkers ?? 2)
     }
 
     /**
