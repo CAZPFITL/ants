@@ -20,7 +20,8 @@ export default class AntsApp {
         this.world
         this.anthill
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
-        this.canvasBounds = [80, 40]
+        this.dataGraph = []
+        this.canvasBounds = [20, 20]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
@@ -29,7 +30,7 @@ export default class AntsApp {
             maxDraw: 0.95, //% of the maxPath
             path: true,
             initialWorkers: 2,
-            homeSize: 20
+            homeSize: 5
         }
     }
 
@@ -55,6 +56,7 @@ export default class AntsApp {
     }
 
     requestLoad() {
+        this.helpers.createDataGraph()
         this.helpers.createCanvas()
         this.helpers.fullScreenFunctionality()
         window.addEventListener('keydown', (e) => Ants.helpers.processKeyDown(e.key));

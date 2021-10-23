@@ -1,4 +1,6 @@
+import Node from './Node.js';
 import Canvas from './Canvas.js';
+import Graph from './Graph.js';
 
 /**
  * This is an abstract class containing all game helpers methods
@@ -172,146 +174,96 @@ export default class helpers extends Canvas {
         }
     }
 
-    static test(initial, final) {
-
-
-        function Node(value) {
-            this.value = value;
-            this.edges = [];
-            this.searched = false;
-            this.parent = null;
-        }
-
-        Node.prototype.addEdge = function (neighbor) {
-            this.edges.push(neighbor);
-            // Both directions!
-            neighbor.edges.push(this);
-        }
-        // const directions = [
-        //     [-1, 0], //up
-        //     [0, 1], //right
-        //     [1, 0], //down
-        //     [0, -1], //left
-        // ]
-        // const rows = new Array(Ants.canvasBounds[0]).fill('');
-        // const testMatrix = rows.map(() => new Array(Ants.canvasBounds[1]).fill(false));
-        
-        let data = []
+    static createDataGraph() {
         for (let x_axis = 0; x_axis < Ants.canvasBounds[0]; x_axis++) {
             for (let y_axis = 0; y_axis < Ants.canvasBounds[1]; y_axis++) {
-                data.push([x_axis, y_axis])
+                Ants.dataGraph.push({
+                    coord: [x_axis, y_axis],
+                    surrounds: [
+                        [(x_axis - 1), y_axis],
+                        [x_axis, (y_axis - 1)],
+                        [(x_axis + 1), y_axis],
+                        [x_axis, (y_axis + 1)],
+                    ]
+                })
             }
         }
+        console.log(Ants.dataGraph)
+    }
 
-        // console.log(testMatrix);
-        var graph = new class Graph {
-            constructor() {
-                this.nodes = [];
-                this.graph = {};
-                this.end = null;
-                this.start = null;
-            }
 
-            reset() {
-                for (var i = 0; i < this.nodes.length; i++) {
-                    this.nodes[i].searched = false;
-                    this.nodes[i].parent = null;
+
+    static findPath(initial, final) {
+        const bounds = Ants.canvasBounds
+        if (!initial || !final || initial[0] < 0 || initial[1] < 0 || final[0] > bounds[0] || final[1] > bounds[1]) {
+            console.error('check your parameters bounds exceeded, or missing initial or final coords')
+            return;
+        } else {
+            let data = Ants.dataGraph
+            var graph = new Graph()
+            var movies = data;
+
+            for (var i = 0; i < movies.length; i++) {
+                var movie = movies[i].coord;
+                var cast = movies[i].surrounds;
+                var movieNode = new Node(movie);
+                graph.addNode(movieNode);
+                console.log('step')
+                // Y
+                for (var j = 0; j < cast.length; j++) {
+                    var actor = cast[j];
+                    var actorNode = graph.getNode(actor);
+                    if (actorNode == undefined) {
+                        actorNode = new Node(actor);
+                        // dropdown.option(actor);
+                    }
+                    graph.addNode(actorNode);
+                    movieNode.addEdge(actorNode);
                 }
             }
 
-            setStart(coords) {
-                this.start = this.graph[String(coords)];
-                return this.start;
-            }
+            function bfs() {
+                graph.reset();
+                const start = graph.setStart(initial);
+                const end = graph.setEnd(final);
+                const queue = [];
+                start.searched = true;
+                queue.push(start);
 
-            setEnd(coords) {
-                this.end = this.graph[String(coords)];
-                return this.end;
-            }
-
-
-            addNode(n) {
-                // Node into array
-                this.nodes.push(n);
-                var title = n.value;
-                // Node into "hash"
-                this.graph[title] = n;
-            }
-
-            getNode(actor) {
-                var n = this.graph[actor];
-                return n;
-            }
-        }
-
-        //NOTE: X AXIX
-        for (var x = 0; x < data[x].length; x++) {
-            var movie = data[x];
-            var movieNode = new Node(movie);
-            graph.addNode(movieNode);
-            
-            //NOTE: Y AXIX
-            for (var y = 0; y < data[y]; y++) {
-                var actor = cast[y];
-                var actorNode = graph.getNode(actor);
-                if (actorNode == undefined) {
-                    actorNode = new Node(actor);
-                }
-                graph.addNode(actorNode);
-                movieNode.addEdge(actorNode);
-            }
-        }
-        // }
-
-        function bfs() {
-            graph.reset();
-            var start = graph.setStart(initial);
-            var end = graph.setEnd(final);
-            var queue = [];
-            console.log(start)
-            console.log(end)
-            start.searched = true;
-            
-            console.log(graph);
-            queue.push(start);
-
-            while (queue.length > 0) {
-                var current = queue.shift();
-                if (current == end) {
-                    console.log("Found " + current.value);
-                    break;
-                }
-                var edges = current.edges;
-                for (var i = 0; i < edges.length; i++) {
-                    var neighbor = edges[i];
-                    if (!neighbor.searched) {
-                        neighbor.searched = true;
-                        neighbor.parent = current;
-                        queue.push(neighbor);
+                while (queue.length > 0) {
+                    let current = queue.shift();
+                    if (current == end) {
+                        console.log("Found " + current.value);
+                        break;
+                    }
+                    let edges = current.edges;
+                    for (let i = 0; i < edges.length; i++) {
+                        var neighbor = edges[i];
+                        if (!neighbor.searched) {
+                            neighbor.searched = true;
+                            neighbor.parent = current;
+                            queue.push(neighbor);
+                        }
                     }
                 }
+
+                const path = [];
+                const simplePath = [];
+                path.push(end);
+                if(typeof end !== 'undefined') {
+                    simplePath.push(end);
+                }
+                let next = end.parent;
+                while (next != null && (next.value[0] !== initial[0] && next.value[1] !== initial[1]) ) {
+                    console.log(next.value[0] == initial[0] && next.value[1] == initial[1])
+                    path.push(next);
+                    simplePath.push(next.value);
+                    next = next.parent;
+                }
+                console.log(simplePath)
             }
 
-            let path = [];
-            path.push(end);
-            let next = end.parent;
-            while (next != null) {
-                path.push(next);
-                next = next.parent;
-            }
-
-            let txt = '';
-            for (let i = path.length - 1; i >= 0; i--) {
-                let n = path[i];
-                txt += n.value
-                if (i != 0) {
-                    txt += ' --> '
-                };
-            }
-            console.log('output:', txt)
+            bfs()
         }
-
-        bfs()
-
     }
 }
