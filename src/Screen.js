@@ -4,18 +4,18 @@ export default class Screen {
     static drawScreen(state) {
         switch (state) {
 
-            case 'pause':
+            case 'pause state':
                 processRequest('pause', `
                 PAUSE
                 `)
                 break;
 
-            case 'play':
+            case 'play state':
                 processRequest('start', `
                 <div 
                     class="wrapper" 
-                    touchend="Ants.move = false"
-                    onmouseup="Ants.move = false">
+                    touchend="Ants.camera.move = false"
+                    onmouseup="Ants.camera.move = false">
                     <div class="screen-controls">
                         <div class="box">
                             <span>Speed:</span>
@@ -37,8 +37,8 @@ export default class Screen {
                     <div class="controls">
                         <div class="button up">
                             <div 
-                                onmousedown="Ants.helpers.moveCamera('up'); setTimeout(()=>{Ants.helpers.startAutoMove('up')}, 1000);"
-                                touchstart="Ants.helpers.moveCamera('up'); setTimeout(()=>{Ants.helpers.startAutoMove('up')}, 1000);">
+                                onmousedown="Ants.camera.moveCamera('up');"
+                                touchstart="Ants.camera.moveCamera('up');">
                                 ${arrows.up}
                             </div>
                         </div>
@@ -46,16 +46,16 @@ export default class Screen {
                         <div class="middle">
                             <div class="button left">
                                 <div 
-                                    onmousedown="Ants.helpers.moveCamera('left'); setTimeout(()=>{Ants.helpers.startAutoMove('left')}, 1000);"
-                                    touchstart="Ants.helpers.moveCamera('left'); setTimeout(()=>{Ants.helpers.startAutoMove('left')}, 1000);">
+                                    onmousedown="Ants.camera.moveCamera('left');"
+                                    touchstart="Ants.camera.moveCamera('left');">
                                     ${arrows.left}
                                 </div>
                             </div>
 
                             <div class="button right">
                                 <div 
-                                    onmousedown="Ants.helpers.moveCamera('right'); setTimeout(()=>{Ants.helpers.startAutoMove('right')}, 1000);"
-                                    touchstart="Ants.helpers.moveCamera('right'); setTimeout(()=>{Ants.helpers.startAutoMove('right')}, 1000);">
+                                    onmousedown="Ants.camera.moveCamera('right');"
+                                    touchstart="Ants.camera.moveCamera('right');">
                                     ${arrows.right}
                                 </div>
                             </div>
@@ -64,8 +64,8 @@ export default class Screen {
 
                         <div class="button down">   
                             <div 
-                                onmousedown="Ants.helpers.moveCamera('down'); setTimeout(()=>{Ants.helpers.startAutoMove('down')}, 1000);"
-                                touchstart="Ants.helpers.moveCamera('down'); setTimeout(()=>{Ants.helpers.startAutoMove('down')}, 1000);">
+                                onmousedown="Ants.camera.moveCamera('down');"
+                                touchstart="Ants.camera.moveCamera('down');">
                                 ${arrows.down}
                             </div>
                         </div>
@@ -76,16 +76,16 @@ export default class Screen {
                         <div class="middle">
                             <div class="button left">
                                 <div 
-                                    onmousedown="Ants.helpers.moveCamera('zoomIn'); setTimeout(()=>{Ants.helpers.startAutoMove('zoomIn')}, 1000);"
-                                    touchstart="Ants.helpers.moveCamera('zoomIn'); setTimeout(()=>{Ants.helpers.startAutoMove('zoomIn')}, 1000);">
+                                    onmousedown="Ants.camera.moveCamera('zoomIn');"
+                                    touchstart="Ants.camera.moveCamera('zoomIn');">
                                     ${arrows.zoomIn}
                                 </div>
                             </div>
 
                             <div class="button right">
                                 <div 
-                                    onmousedown="Ants.helpers.moveCamera('zoomOut'); setTimeout(()=>{Ants.helpers.startAutoMove('zoomOut')}, 1000);"
-                                    touchstart="Ants.helpers.moveCamera('zoomOut'); setTimeout(()=>{Ants.helpers.startAutoMove('zoomOut')}, 1000);">
+                                    onmousedown="Ants.camera.moveCamera('zoomOut');"
+                                    touchstart="Ants.camera.moveCamera('zoomOut');">
                                     ${arrows.zoomOut}
                                 </div>
                             </div>

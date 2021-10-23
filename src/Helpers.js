@@ -73,12 +73,25 @@ export default class helpers extends Canvas {
     }
 
     /**
+     * Process Key Ups
+     * @param {event} e 
+     */
+    static processKeyUp(e) {
+
+    }
+
+    /**
      * Process Key Downs
      * @param {event} e 
      */
     static processKeyDown(e) {
+        console.log(e)
         if (e === 'p') {
-            Ants.state.changeState(Ants.state.state === 'pause' ? 'play' : 'pause')
+            Ants.state.changeState(Ants.state.state === 'pause state' ? 'play state' : 'pause state')
+        } else if (e === 'r') {
+            Ants.world.state.changeState('rainy')
+        } else if (e === 's') {
+            Ants.world.state.changeState('sunny')
         }
     }
 
@@ -105,46 +118,6 @@ export default class helpers extends Canvas {
         let func = Ants.state.state.split(' ')
         func[1] = helpers.capitalize(func[1])
         return func.join('')
-    }
-
-    /**
-     * Moves camera
-     */
-    static moveCamera(direction) {
-        Ants.move = true
-        switch (direction) {
-            case 'up':
-                Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] - Ants.counters.stepSize);
-                break;
-            case 'down':
-                Ants.camera.moveTo(Ants.camera.lookAt[0], Ants.camera.lookAt[1] + Ants.counters.stepSize);
-                break;
-            case 'left':
-                Ants.camera.moveTo(Ants.camera.lookAt[0] - Ants.counters.stepSize, Ants.camera.lookAt[1])
-                break;
-            case 'right':
-                Ants.camera.moveTo(Ants.camera.lookAt[0] + Ants.counters.stepSize, Ants.camera.lookAt[1])
-                break;
-            case 'zoomIn':
-                Ants.camera.zoomTo(Ants.camera.distance - 50)
-                break;
-            case 'zoomOut':
-                Ants.camera.zoomTo(Ants.camera.distance + 50)
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Camera auto move on hold
-     * @param {Let's move the camera faster over there} direction 
-     */
-    static startAutoMove(direction) {
-        if (Ants.move) {
-            let interval = setInterval(() => Ants.move ? Ants.helpers.moveCamera(direction) : clearInterval(interval), 20)
-        }
     }
 
     /**

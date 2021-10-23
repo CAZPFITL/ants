@@ -10,12 +10,12 @@ export default class Canvas extends Screen {
      * draw
      */
     static draw() {
-        if (Ants.state.state === 'pause') {
+        if (Ants.state.state === 'pause state') {
             return;
         }
         Ants.helpers.step()
         Ants.helpers.drawCollection()
-        Ants.helpers.requestAnimation()
+        window.requestAnimationFrame(Ants.helpers.draw)
     }
 
     /**
@@ -162,7 +162,12 @@ export default class Canvas extends Screen {
     static createCanvas() {
         let canvas = Ants.helpers.getCanvas()
         let screen = Ants.helpers.getScreen()
-        Ants.camera = new Camera(canvas.getContext('2d'), { initialPosition: [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2] })
+
+        Ants.camera = new Camera(canvas.getContext('2d'), {
+            initialPosition: [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2],
+            gameScale: Ants.counters.stepSize
+        })
+
         document.getElementsByTagName('body')[0].prepend(screen)
         document.getElementsByTagName('body')[0].prepend(canvas)
         Ants.helpers.requestAnimation()

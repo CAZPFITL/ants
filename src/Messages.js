@@ -1,5 +1,6 @@
 export default class Messages {
     constructor() {
+        this.trace = ` `
         this.log = []
         this.names = [
             'Antony',
@@ -53,14 +54,12 @@ export default class Messages {
      * @param {*} show 
      * @param {*} message 
      */
-    processMessage(message = false, _console = true, log = true) {
-        let trace = "--queen ant #1 says: let's sleep"
-
+    processMessage({message = false, _console = true, log = true, from}) {
         if (!message) {
             return
         }
-        if (message === trace) {
-            console.trace('trace');
+        if (message === this.trace) {
+            console.trace('trace from ', from);
             dieWithHonors;
         }
         _console ? console.log(message) : () => { }

@@ -4,6 +4,7 @@ import Anthill from './Anthill.js'
 import World from './World.js'
 import Helpers from './Helpers.js'
 import Messages from './Messages.js'
+import Settings from './Settings.js'
 
 window.speed = 10
 
@@ -15,6 +16,7 @@ export default class AntsApp {
         this.name = `Ants App ${_v}`
         this.state = new State(this)
         this.messages = new Messages()
+        this.settings = new Settings()
         this.helpers = Helpers
         this.antClass = Ant
         this.world
@@ -52,7 +54,7 @@ export default class AntsApp {
      * Here you can process any state change from the app, reading "this.state.name" // create canvas -> createCanvas()
      */
     notification() {
-        Ants.messages.processMessage('New ' + this.name + ' state: ' + this.state.state)
+        Ants.messages.processMessage({message:'New ' + this.name + ' state: ' + this.state.state, from: 'AntsApp.notification()'})
         let funct = this.helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
@@ -64,6 +66,7 @@ export default class AntsApp {
         this.helpers.createCanvas()
         this.helpers.fullScreenFunctionality()
         window.addEventListener('keydown', (e)=>Ants.helpers.processKeyDown(e.key));
+        window.addEventListener('keyup', (e)=>Ants.helpers.processKeyUp(e.key));
         window.addEventListener('resize', ()=>Ants.helpers.getCanvas());
         // NOTE: maxPath
         Ants.counters.maxPath = Math.trunc(Ants.helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
@@ -74,14 +77,10 @@ export default class AntsApp {
         this.anthill = new Anthill(this.counters.homeSize)
         this.anthill.createQueen()
         this.anthill.createWorker(this.counters.initialWorkers)
-        this.state.changeState('play');
-    }
-
-    pauseState() {
+        this.state.changeState('play state');
     }
     
     playState() {
-        alert('play')
         Ants.helpers.requestAnimation()
     }
 }

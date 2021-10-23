@@ -10,7 +10,9 @@ export default class Camera {
         this.lookAt = settings.initialPosition || [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2]
         this.context = context
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0
-        this.autoMove = false
+        this.move = false
+        this.keysPressed = []
+        this.gameScale = settings.gameScale || 100
         this.viewport = {
             left: 0,
             right: 0,
@@ -129,6 +131,48 @@ export default class Camera {
         obj.y = (y - this.viewport.top) * (this.viewport.scale[1])
         return obj
     }
+    
+    /**
+     * Moves camera
+     */
+    moveCamera(direction, timeout = '') {
+        this.move = true
+        switch (direction) {
+            case 'up':
+                this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale));
+                break;
+            case 'down':
+                this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale));
+                break;
+            case 'left':
+                this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
+                break;
+            case 'right':
+                this.moveTo(this.lookAt[0] + this.gameScale, this.lookAt[1])
+                break;
+            case 'zoomIn':
+                this.zoomTo(this.distance - 50)
+                break;
+            case 'zoomOut':
+                this.zoomTo(this.distance + 50)
+                break;
+
+            default:
+                break;
+        }
+
+        if (timeout !== 'im gettign crazy, no timeout please') {
+            setTimeout(() => {
+                Ants.interval = setInterval(() => {
+                    if (this.move) {
+                        this.moveCamera(direction, 'im gettign crazy, no timeout please')
+                    } else {
+                        clearInterval(Ants.interval)
+                    }
+                }, 20)
+            }, 200);
+        }
+    }
 
     /**
      * Event Listeners for:
@@ -139,7 +183,7 @@ export default class Camera {
         window.onwheel = e => {
             if (e.ctrlKey) {
                 // Your zoom/scale factor
-                let zoomLevel = this.distance + (e.deltaY * 20 )
+                let zoomLevel = this.distance + (e.deltaY * 20)
                 if (zoomLevel <= 1) {
                     zoomLevel = 1
                 }
@@ -147,8 +191,8 @@ export default class Camera {
                 this.zoomTo(zoomLevel)
             } else {
                 // Your track-pad X and Y positions
-                const x = this.lookAt[0] + (e.deltaX * 10 / Ants.counters.stepSize)
-                const y = this.lookAt[1] + (e.deltaY * 10 / Ants.counters.stepSize)
+                const x = this.lookAt[0] + (e.deltaX * 10 / this.gameScale)
+                const y = this.lookAt[1] + (e.deltaY * 10 / this.gameScale)
 
                 this.moveTo(x, y)
             }
@@ -158,7 +202,23 @@ export default class Camera {
             if (e.key === 'r') {
                 this.zoomTo(1000)
                 this.moveTo(0, 0)
+            } else if (e.key === 'ArrowRight') {
+                this.moveCamera('right', 'im gettign crazy, no timeout please')
+            } else if (e.key === 'ArrowLeft') {
+                this.moveCamera('left', 'im gettign crazy, no timeout please')
+            } else if (e.key === 'ArrowUp') {
+                this.moveCamera('up', 'im gettign crazy, no timeout please')
+            } else if (e.key === 'ArrowDown') {
+                this.moveCamera('down', 'im gettign crazy, no timeout please')
+            } else if (e.key === '+') {
+                this.moveCamera('zoomIn', 'im gettign crazy, no timeout please')
+            } else if (e.key === '-') {
+                this.moveCamera('zoomOut', 'im gettign crazy, no timeout please')
             }
+        })
+        
+        window.addEventListener('keyup', e => {
+            this.move = false
         })
     }
 }

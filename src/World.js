@@ -28,9 +28,9 @@ export default class Wold {
         }
         this.setWeather(weather)
     }
-
+    // --queen ant #1 says: let's sleep
     setWeather(weather) {
-        Ants.messages.processMessage('= W E A T H E R - B R O A D C A S T = >> ' + weather)
+        Ants.messages.processMessage({message:'= W E A T H E R - B R O A D C A S T = >> ' + weather, from: 'setWeather()'})
         this.weather = weather
         this.state.changeState(weather)
     }
