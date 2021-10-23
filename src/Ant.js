@@ -1,8 +1,9 @@
 import State from './State.js'
 
 export default class Ant {
-    constructor(posX, posY, trace, job, age = 0) {
+    constructor({ posX, posY, trace, job, age = 0 }) {
         Ants.anthill.idProvider++
+        this.anthill = Ants.anthill
         this.id = Ants.anthill.idProvider
         this.name = job + ' ant #' + this.id
         this.job = job
@@ -11,7 +12,7 @@ export default class Ant {
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
         this.directions = {
-            stepsToDo: 1 !== 1 ? 0 : Ants.Helpers.getRandomInt(0, 6),
+            stepsToDo: 1 !== 1 ? 0 : Ants.helpers.getRandomInt(0, 6),
             directionToDo: false
         }
         this.scanner = () => {
@@ -58,6 +59,7 @@ export default class Ant {
         Ants.messages.processMessage(message)
         Ants.messages.processMessage(`--${this.name} says: let's ${antState}`)
     }
+
     /**
      * get ant state
      * @param {world state} state 
@@ -86,19 +88,8 @@ export default class Ant {
      */
     getRandomDirection() {
         let posiblePaths = this.getPosiblePaths()
-        let output = posiblePaths[Ants.Helpers.getRandomInt(0, posiblePaths.length)]
+        let output = posiblePaths[Ants.helpers.getRandomInt(0, posiblePaths.length)]
         return output
-    }
-
-    /**
-     * listen on app state change
-     */
-    move(nextMove) {
-        let x = nextMove === 'left' ? (this.actualPosition[0] - 1) : nextMove === 'right' ? (this.actualPosition[0] + 1) : this.actualPosition[0]
-        let y = nextMove === 'down' ? (this.actualPosition[1] + 1) : nextMove === 'up' ? (this.actualPosition[1] - 1) : this.actualPosition[1]
-        this.outOfBounds = (this.actualPosition[0] > Ants.canvasBounds[0] && this.actualPosition[1] > Ants.canvasBounds[1]) ? true : false;
-        this.actualPosition = this.outOfBounds ? [0, 0] : [x, y]
-        this.directions.stepsToDo--
     }
 
     /**
@@ -110,11 +101,10 @@ export default class Ant {
         //Smells just in case
         this.smell()
         //Then move
-        this.move(this.directions.directionToDo)
+        Ants.helpers.moveEntity(this, this.directions.directionToDo)
         //Limits trace
         if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
-
-        //Save mark step only if it hasn't
+        //Save mark step only if it hasn't NOTE: Path Trace related
         for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
             if (Ants.world.walkedPathTrace[i][0] === this.actualPosition[0] && Ants.world.walkedPathTrace[i][1] === this.actualPosition[1]) {
                 break;
@@ -129,7 +119,7 @@ export default class Ant {
      * check if we are going out bounds in the walking cycle
      * @returns souldWeThink? | boolean
      */
-     checkPosition() {
+    checkPosition() {
         if (this.actualPosition[0] <= 0) {
             this.resetDirection('right')
         } else if (this.actualPosition[1] <= 0) {
@@ -146,15 +136,9 @@ export default class Ant {
      * smells then 3 - 6 (random) steps on one direction
      */
     smell() {
-        let diameter = 6
-        this.directions.smelledPath = []
-        for (let a = 0; a < diameter; a++) {
-            for (let b = 0; b < diameter; b++) {
-                this.directions.smelledPath.push([a, b])
-            }
-        }
-
-        this.checkPosition()                
+        // Ants.helpers.scanTarget(6, this, Ants.anhill.ants)
+        Ants.helpers.scanTarget(6, this, Ants.anthill.ants)
+        this.checkPosition()
     }
 
     /**
@@ -164,9 +148,9 @@ export default class Ant {
      */
     resetDirection(dir) {
         this.directions.directionToDo = dir ?? this.getRandomDirection()
-        this.directions.stepsToDo = Ants.Helpers.getRandomInt(0, dir ? 3 : 6)
-        console.log('i think i will go ', this.directions.directionToDo)
-        if (!dir){
+        this.directions.stepsToDo = Ants.helpers.getRandomInt(0, dir ? 3 : 6)
+        // console.log('i think i will go ', this.directions.directionToDo)
+        if (!dir) {
             this.smell()
         }
     }

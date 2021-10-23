@@ -3,7 +3,7 @@ import Canvas from './Canvas.js';
 /**
  * This is an abstract class containing all game helpers methods
  */
-export default class Helpers extends Canvas {
+export default class helpers extends Canvas {
     /**
      * Creates Ants on window global variable
      * @param {AppClass} App 
@@ -63,9 +63,23 @@ export default class Helpers extends Canvas {
         return Math.floor(Math.random() * (max - min) + min);
     }
 
-
+    /**
+     * Get coord/num in base of the size selected
+     * @param {number} num 
+     * @returns 
+     */
     static getStepSize(num) {
         return Ants.counters.stepSize * num
+    }
+
+    /**
+     * Process Key Downs
+     * @param {event} e 
+     */
+    static processKeyDown(e) {
+        if (e === 'p') {
+            Ants.state.changeState(Ants.state.state === 'pause' ? 'play' : 'pause')
+        }
     }
 
     /**
@@ -89,11 +103,14 @@ export default class Helpers extends Canvas {
      */
     static getStateFunction() {
         let func = Ants.state.state.split(' ')
-        func[1] = Helpers.capitalize(func[1])
+        func[1] = helpers.capitalize(func[1])
         return func.join('')
     }
 
-    static Move(direction) {
+    /**
+     * Moves camera
+     */
+    static moveCamera(direction) {
         Ants.move = true
         switch (direction) {
             case 'up':
@@ -120,22 +137,66 @@ export default class Helpers extends Canvas {
         }
     }
 
+    /**
+     * Camera auto move on hold
+     * @param {Let's move the camera faster over there} direction 
+     */
     static startAutoMove(direction) {
         if (Ants.move) {
-            let interval = setInterval(() => Ants.move ? Ants.Helpers.Move(direction) : clearInterval(interval), 20)
+            let interval = setInterval(() => Ants.move ? Ants.helpers.moveCamera(direction) : clearInterval(interval), 20)
         }
     }
 
-    static debounce_leading(func, timeout = 500) {
-        let timer;
-        return (...args) => {
-            if (!timer) {
-                func.apply(this, args);
+    /**
+     * Move Entity to given direction (Requires actualPosition[x,y] key)
+     * @param {Next's move direction} // nextMove 
+     */
+    static moveEntity(entity, nextMove) {
+        let x = nextMove === 'left' ? (entity.actualPosition[0] - 1) : nextMove === 'right' ? (entity.actualPosition[0] + 1) : entity.actualPosition[0]
+        let y = nextMove === 'down' ? (entity.actualPosition[1] + 1) : nextMove === 'up' ? (entity.actualPosition[1] - 1) : entity.actualPosition[1]
+        let outOfBounds = (entity.actualPosition[0] > Ants.canvasBounds[0] && entity.actualPosition[1] > Ants.canvasBounds[1]) ? true : false;
+        entity.actualPosition = outOfBounds ? [0, 0] : [x, y]
+        entity.directions.stepsToDo--
+    }
+
+    /**
+     * Scan any target you specify in an array, both, observer and observable must have .state key in
+     * @param {Search diameter} diameter 
+     * @param {Who is scanning} watcher 
+     * @param {What are we scanning} targetsColection 
+     */
+    static scanTarget(diameter, watcher, targetsColection) {
+        for (let x = 0; x < diameter; x++) {
+            for (let y = 1; y < diameter; y++) {
+                targetsColection.forEach(target => {
+                    const scannedPosition = { ...target.actualPosition }
+                    let xAxisIndex = scannedPosition[0]
+                    let yAxisIndex = scannedPosition[1]
+
+                    /**
+                     * Found closer targets
+                     */
+                    if (watcher.actualPosition[0] === xAxisIndex && watcher.actualPosition[1] === yAxisIndex && this !== target) {
+                        if (!watcher.state.observers.includes(target)) {
+                            console.log(watcher.name, ' - found - ', target.name)
+                            watcher.state.add(target)
+                        }
+                    }
+
+                    /**
+                     * Loose closer Targets
+                     */
+                    watcher.state.observers.forEach(x => {
+
+                    })
+
+                    yAxisIndex++
+                    xAxisIndex++
+                })
             }
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                timer = undefined;
-            }, timeout);
-        };
+        }
+        if (watcher.state.observers.length > 0) {
+            // console.log('close targets to ', watcher.name, ': ', watcher.state.observers)
+        }
     }
 }

@@ -2,13 +2,20 @@ import Screen from './Screen.js'
 import Camera from './Camera.js'
 
 export default class Canvas extends Screen {
+    static requestAnimation() {
+        window.requestAnimationFrame(Ants.helpers.draw)
+    }
+
     /**
      * draw
      */
     static draw() {
-        Ants.Helpers.step()
-        Ants.Helpers.drawCollection()
-        Ants.Helpers.requestAnimation(Ants.Helpers.draw)
+        if (Ants.state.state === 'pause') {
+            return;
+        }
+        Ants.helpers.step()
+        Ants.helpers.drawCollection()
+        Ants.helpers.requestAnimation()
     }
 
     /**
@@ -34,10 +41,22 @@ export default class Canvas extends Screen {
     static drawCollection() {
         let step;
         Ants.camera.end();
-        Ants.Helpers.clearCanvas()
+        Ants.helpers.clearCanvas()
         Ants.camera.begin();
-        Ants.Helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-        Ants.Helpers.drawAnthill('#693a00')
+        Ants.helpers.drawBoard()
+        Ants.helpers.drawAnthill('#693a00')
+        // NOTE: Path related - world.walkedPathTrace sliced by setted %
+        Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
+        Ants.helpers.Ants()
+
+
+    }
+
+    /**
+     * Draw Ants in Board
+     */
+    static Ants() {
+        let step = Ants.counters.stepSize * 6;
         Ants.anthill.ants.forEach((ant) => {
             Ants.camera.context.fillStyle = ant.color
             step = Ants.counters.stepSize
@@ -55,7 +74,6 @@ export default class Canvas extends Screen {
                     step)
             }
         })
-
     }
 
     /**
@@ -83,8 +101,6 @@ export default class Canvas extends Screen {
      * @param {trace color} color 
      */
     static drawPath(path, color) {
-        Ants.Helpers.drawBoard()
-
         path.forEach((step) => {
             Ants.camera.context.fillStyle = color
             Ants.camera.context.fillRect(
@@ -103,18 +119,10 @@ export default class Canvas extends Screen {
         let step = Ants.counters.stepSize * 6;
         Ants.camera.context.fillStyle = color
         Ants.camera.context.fillRect(
-            Ants.Helpers.getStepSize(Ants.anthill.position[0]) - Ants.Helpers.getStepSize(Ants.anthill.size / 2), //change by random then save it in anthill, then spawn every ant from there
-            Ants.Helpers.getStepSize(Ants.anthill.position[1]) - Ants.Helpers.getStepSize(Ants.anthill.size / 2),
-            Ants.Helpers.getStepSize(Ants.anthill.size),
-            Ants.Helpers.getStepSize(Ants.anthill.size))
-    }
-
-    /**
-     * Request Animation Frame
-     * @param {drawing function} draw 
-     */
-    static requestAnimation() {
-        window.requestAnimationFrame(Ants.Helpers.draw)
+            Ants.helpers.getStepSize(Ants.anthill.position[0]) - Ants.helpers.getStepSize(Ants.anthill.size / 2), //change by random then save it in anthill, then spawn every ant from there
+            Ants.helpers.getStepSize(Ants.anthill.position[1]) - Ants.helpers.getStepSize(Ants.anthill.size / 2),
+            Ants.helpers.getStepSize(Ants.anthill.size),
+            Ants.helpers.getStepSize(Ants.anthill.size))
     }
 
     /**
@@ -152,11 +160,11 @@ export default class Canvas extends Screen {
      * Create canvas in DOM and Ants Global
      */
     static createCanvas() {
-        let canvas = Ants.Helpers.getCanvas()
-        let screen = Ants.Helpers.getScreen()
-        Ants.camera = new Camera(canvas.getContext('2d'))
+        let canvas = Ants.helpers.getCanvas()
+        let screen = Ants.helpers.getScreen()
+        Ants.camera = new Camera(canvas.getContext('2d'), { initialPosition: [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2] })
         document.getElementsByTagName('body')[0].prepend(screen)
         document.getElementsByTagName('body')[0].prepend(canvas)
-        Ants.Helpers.requestAnimation()
+        Ants.helpers.requestAnimation()
     }
 }

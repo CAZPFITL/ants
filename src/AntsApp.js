@@ -15,7 +15,7 @@ export default class AntsApp {
         this.name = `Ants App ${_v}`
         this.state = new State(this)
         this.messages = new Messages()
-        this.Helpers = Helpers
+        this.helpers = Helpers
         this.antClass = Ant
         this.world
         this.anthill
@@ -34,6 +34,8 @@ export default class AntsApp {
                 c4: 0,
             },
             path: true,
+            initialWorkers: 2,
+            homeSize: 20
         }
     }
 
@@ -51,23 +53,35 @@ export default class AntsApp {
      */
     notification() {
         Ants.messages.processMessage('New ' + this.name + ' state: ' + this.state.state)
-        let funct = this.Helpers.getStateFunction()
+        let funct = this.helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
         }
-        this.Helpers.drawScreen(Ants.state.state)
+        this.helpers.drawScreen(Ants.state.state)
     }
 
     requestLoad() {
-        this.Helpers.createCanvas()
-        this.Helpers.fullScreenFunctionality()
-        window.addEventListener('resize', ()=>Ants.Helpers.getCanvas());
+        this.helpers.createCanvas()
+        this.helpers.fullScreenFunctionality()
+        window.addEventListener('keydown', (e)=>Ants.helpers.processKeyDown(e.key));
+        window.addEventListener('resize', ()=>Ants.helpers.getCanvas());
         // NOTE: maxPath
-        Ants.counters.maxPath = Math.trunc(Ants.Helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
+        Ants.counters.maxPath = Math.trunc(Ants.helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
     }
 
     welcomeToAnts() {
         this.world = new World('sunny')
-        this.anthill = new Anthill(20, 2)
+        this.anthill = new Anthill(this.counters.homeSize)
+        this.anthill.createQueen()
+        this.anthill.createWorker(this.counters.initialWorkers)
+        this.state.changeState('play');
+    }
+
+    pauseState() {
+    }
+    
+    playState() {
+        alert('play')
+        Ants.helpers.requestAnimation()
     }
 }

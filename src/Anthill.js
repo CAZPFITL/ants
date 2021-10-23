@@ -1,6 +1,6 @@
 
 export default class Anthill {
-    constructor(size, initialWorkers) {
+    constructor(size) {
         this.idProvider = 0
         this.name = 'Home'
         this.food = {
@@ -9,7 +9,7 @@ export default class Anthill {
             count: 500
         }
         this.size = size ?? 10
-        this.position = [Ants.canvasBounds[0]/2, Ants.canvasBounds[1]/2]
+        this.position = [Ants.canvasBounds[0] / 2, Ants.canvasBounds[1] / 2]
         this.idealConditions = {
             temperature: {
                 minC: 23.8,
@@ -25,22 +25,20 @@ export default class Anthill {
             soldier: '#e01e01',
             queen: '#9600bc'
         }
-        this.createQueen()
-        this.createWorker(initialWorkers ?? 2)
     }
 
     /**
      * Creates a new Queen.
      */
     createQueen() {
-        this.createAnt(Ants.anthill.antsColors.queen, 'queen')
+        this.createAnt(this.antsColors.queen, 'queen')
     }
     /**
      * Creates a new worker ant.
      */
     createWorker(qty = 1) {
         for (let index = 0; index < qty; index++) {
-            this.createAnt(Ants.anthill.antsColors.worker, 'worker')
+            this.createAnt(this.antsColors.worker, 'worker')
         }
     }
 
@@ -50,8 +48,8 @@ export default class Anthill {
      * @param {Position Y} posY 
      */
     createAnt(trace, job) {
-        let babyAnt = new Ants.antClass(Ants.anthill.position[0], Ants.anthill.position[1], trace, job)
-        babyAnt.notification(`*new ant created!!!: ${babyAnt.name} says: -${Ants.messages.greetings[Ants.Helpers.getRandomInt(0, Ants.messages.greetings.length - 1)]}`)
+        let babyAnt = new Ants.antClass({ posX: this.position[0], posY: this.position[1], trace: trace, job: job })
+        babyAnt.notification(`*new ant created!!!: ${babyAnt.name} says: -${Ants.messages.greetings[Ants.helpers.getRandomInt(0, Ants.messages.greetings.length - 1)]}`)
         Ants.world.state.add(babyAnt)
         Ants.anthill.ants.push(babyAnt)
     }

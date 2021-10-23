@@ -53,8 +53,17 @@ export default class Messages {
      * @param {*} show 
      * @param {*} message 
      */
-    processMessage(message = false, _console = true, log = true){
-        _console ? console.log(message) : console.log('processing no-console message')
-        message && log ? this.log.push(message) : console.log('no message or log generated')
+    processMessage(message = false, _console = true, log = true) {
+        let trace = "--queen ant #1 says: let's sleep"
+
+        if (!message) {
+            return
+        }
+        if (message === trace) {
+            console.trace('trace');
+            dieWithHonors;
+        }
+        _console ? console.log(message) : () => { }
+        message && log ? this.log.push(message) : () => { }
     }
 }
