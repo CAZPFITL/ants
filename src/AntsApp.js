@@ -29,12 +29,6 @@ export default class AntsApp {
             stepSize: 20, // pixel size
             maxPath: 0.5, //0% of the screen
             maxDraw: 0.95, //% of the maxPath
-            directionCounters: {
-                c1: 0,
-                c2: 0,
-                c3: 0,
-                c4: 0,
-            },
             path: true,
             initialWorkers: 2,
             homeSize: 20

@@ -165,7 +165,8 @@ export default class Canvas extends Screen {
 
         Ants.camera = new Camera(canvas.getContext('2d'), {
             initialPosition: [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2],
-            gameScale: Ants.counters.stepSize
+            gameScale: Ants.counters.stepSize,
+            keys : Ants.settings.keys
         })
 
         document.getElementsByTagName('body')[0].prepend(screen)

@@ -6,13 +6,27 @@
   */
 export default class Camera {
     constructor(context, settings = {}) {
+        let scale = settings.gameScale || 100
+        this.initial = {
+            initialZoom: (context.canvas.width / context.canvas.height) * 800,
+            initialMove: settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
+        }
         this.distance = (context.canvas.width / context.canvas.height) * 800
-        this.lookAt = settings.initialPosition || [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2]
-        this.context = context
+        this.lookAt = settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0
-        this.move = false
+        this.gameScale = scale
+        this.context = context
         this.keysPressed = []
-        this.gameScale = settings.gameScale || 100
+        this.move = false
+        this.down = false
+        this.keys = settings.keys || {
+            upKey: 'ArrowUp',
+            downKey: 'ArrowDown',
+            leftKey: 'ArrowLeft',
+            rightKey: 'ArrowRight',
+            zoomInKey: '+',
+            zoomOutKey: '-',
+        }
         this.viewport = {
             left: 0,
             right: 0,
@@ -131,7 +145,7 @@ export default class Camera {
         obj.y = (y - this.viewport.top) * (this.viewport.scale[1])
         return obj
     }
-    
+
     /**
      * Moves camera
      */
@@ -139,10 +153,10 @@ export default class Camera {
         this.move = true
         switch (direction) {
             case 'up':
-                this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale));
+                this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale))
                 break;
             case 'down':
-                this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale));
+                this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale))
                 break;
             case 'left':
                 this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
@@ -161,16 +175,35 @@ export default class Camera {
                 break;
         }
 
-        if (timeout !== 'im gettign crazy, no timeout please') {
+        if (timeout !== 'this key have autorepeat') {
             setTimeout(() => {
                 Ants.interval = setInterval(() => {
                     if (this.move) {
-                        this.moveCamera(direction, 'im gettign crazy, no timeout please')
+                        this.moveCamera(direction, 'this key have autorepeat')
                     } else {
                         clearInterval(Ants.interval)
                     }
                 }, 20)
-            }, 200);
+            }, 200); // don't go below 500, it get's messy on the key refresh
+        }
+    }
+
+    processKeyReading(keyPressed) {
+        if (keyPressed === ' ') {
+            this.zoomTo(this.initial.initialZoom)
+            this.moveTo(this.initial.initialMove)
+        } else if (keyPressed === this.keys.rightKey) {
+            this.moveCamera('right', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.leftKey) {
+            this.moveCamera('left', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.upKey) {
+            this.moveCamera('up', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.downKey) {
+            this.moveCamera('down', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.zoomInKey) {
+            this.moveCamera('zoomIn', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.zoomOutKey) {
+            this.moveCamera('zoomOut', 'this key have autorepeat')
         }
     }
 
@@ -199,26 +232,25 @@ export default class Camera {
         }
 
         window.addEventListener('keydown', e => {
-            if (e.key === 'r') {
-                this.zoomTo(1000)
-                this.moveTo(0, 0)
-            } else if (e.key === 'ArrowRight') {
-                this.moveCamera('right', 'im gettign crazy, no timeout please')
-            } else if (e.key === 'ArrowLeft') {
-                this.moveCamera('left', 'im gettign crazy, no timeout please')
-            } else if (e.key === 'ArrowUp') {
-                this.moveCamera('up', 'im gettign crazy, no timeout please')
-            } else if (e.key === 'ArrowDown') {
-                this.moveCamera('down', 'im gettign crazy, no timeout please')
-            } else if (e.key === '+') {
-                this.moveCamera('zoomIn', 'im gettign crazy, no timeout please')
-            } else if (e.key === '-') {
-                this.moveCamera('zoomOut', 'im gettign crazy, no timeout please')
-            }
+            this.down = true;
+            if (!this.keysPressed.includes(e.key))
+                this.keysPressed.push(e.key)
+
+            this.keysPressed.forEach(keyPressed => {
+                if (!this.down) {
+                    return
+                } else {
+                    this.processKeyReading(keyPressed)
+                }
+            })
         })
-        
+
         window.addEventListener('keyup', e => {
-            this.move = false
+            this.down = false;
+            this.keysPressed = this.keysPressed.filter(x => { return x !== e.key })
+            if (!this.down && this.keysPressed.length === 0) {
+                this.move = false
+            }
         })
     }
 }

@@ -85,12 +85,11 @@ export default class helpers extends Canvas {
      * @param {event} e 
      */
     static processKeyDown(e) {
-        console.log(e)
-        if (e === 'p') {
+        if (e === Ants.settings.keys.pauseKey) {
             Ants.state.changeState(Ants.state.state === 'pause state' ? 'play state' : 'pause state')
-        } else if (e === 'r') {
+        } else if (e === Ants.settings.keys.rainKey) {
             Ants.world.state.changeState('rainy')
-        } else if (e === 's') {
+        } else if (e === Ants.settings.keys.sunnyKey) {
             Ants.world.state.changeState('sunny')
         }
     }
