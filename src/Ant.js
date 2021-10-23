@@ -55,11 +55,9 @@ export default class Ant {
      */
     notification(message) {
         let antState = this.getTask(Ants.world.state.state)
-        if(this.state.state !== antState) {
-            this.state.changeState(antState)
-            Ants.messages.processMessage({message: message, from: 'Ant.Notification()'})
-            Ants.messages.processMessage({message: `--${this.name} says: let's ${antState}`, from: 'Ant.Notification()'})
-        }
+        this.state.changeState(antState)
+        Ants.messages.processMessage({ message: message, from: 'Ant.Notification()' })
+        Ants.messages.processMessage({ message: `--${this.name} says: let's ${antState}`, from: 'Ant.Notification()' })
     }
 
     /**

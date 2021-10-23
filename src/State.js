@@ -38,6 +38,9 @@ export default class State {
     * @param {State to be applied} state 
     */
     changeState(state) {
+        if(this.state === state) {
+            return
+        }
         this.state = state
         this.notify(this.showNotifications)
     }
