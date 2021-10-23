@@ -43,5 +43,7 @@ import AntsApp from './src/AntsApp.js';
  *  posible music: 
  *      -Lucy in Disguise - The Trigger
  *      -LukeArcher - Breathing Space
+ * 
+ * NOTES_https://codepen.io/habelle/details/zXKBga
  */
 AntsApp.init('v0.3.6');

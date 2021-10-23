@@ -119,7 +119,7 @@ export default class Ant {
      * check if we are going out bounds in the walking cycle
      * @returns souldWeThink? | boolean
      */
-    checkPosition() {
+    checkNonOutOfBoundsPosition() {
         if (this.actualPosition[0] <= 0) {
             this.resetDirection('right')
         } else if (this.actualPosition[1] <= 0) {
@@ -136,9 +136,11 @@ export default class Ant {
      * smells then 3 - 6 (random) steps on one direction
      */
     smell() {
-        // Ants.helpers.scanTarget(6, this, Ants.anhill.ants)
+        // Detect another ants and push them into the observers
         Ants.helpers.scanTarget(6, this, Ants.anthill.ants)
-        this.checkPosition()
+
+        //Detects a end of bounds
+        this.checkNonOutOfBoundsPosition()
     }
 
     /**

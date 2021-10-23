@@ -14,7 +14,7 @@ export default class State {
         this.observers.push(Observer)
         Observer.observable = this.parentStateOwner
     }
-    
+
     /**
      * Remove Observer from state
      * @param {Observer to be removed} Observer 
@@ -38,10 +38,11 @@ export default class State {
     * @param {State to be applied} state 
     */
     changeState(state) {
-        if(this.state === state) {
+        if (this.state === state) {
             return
         }
         this.state = state
         this.notify(this.showNotifications)
     }
 }
+

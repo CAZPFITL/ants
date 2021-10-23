@@ -6,8 +6,6 @@ import Helpers from './Helpers.js'
 import Messages from './Messages.js'
 import Settings from './Settings.js'
 
-window.speed = 10
-
 /**
  * Ants app
  */
@@ -22,7 +20,7 @@ export default class AntsApp {
         this.world
         this.anthill
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
-        this.canvasBounds = [80, 80]
+        this.canvasBounds = [80, 40]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
@@ -48,7 +46,7 @@ export default class AntsApp {
      * Here you can process any state change from the app, reading "this.state.name" // create canvas -> createCanvas()
      */
     notification() {
-        Ants.messages.processMessage({message:'New ' + this.name + ' state: ' + this.state.state, from: 'AntsApp.notification()'})
+        Ants.messages.processMessage({ message: 'New ' + this.name + ' state: ' + this.state.state, from: 'AntsApp.notification()' })
         let funct = this.helpers.getStateFunction()
         if (Ants[funct]) {
             Ants[funct](this)
@@ -59,9 +57,9 @@ export default class AntsApp {
     requestLoad() {
         this.helpers.createCanvas()
         this.helpers.fullScreenFunctionality()
-        window.addEventListener('keydown', (e)=>Ants.helpers.processKeyDown(e.key));
-        window.addEventListener('keyup', (e)=>Ants.helpers.processKeyUp(e.key));
-        window.addEventListener('resize', ()=>Ants.helpers.getCanvas());
+        window.addEventListener('keydown', (e) => Ants.helpers.processKeyDown(e.key));
+        window.addEventListener('keyup', (e) => Ants.helpers.processKeyUp(e.key));
+        window.addEventListener('resize', () => Ants.helpers.getCanvas());
         // NOTE: maxPath
         Ants.counters.maxPath = Math.trunc(Ants.helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
     }
@@ -73,7 +71,7 @@ export default class AntsApp {
         this.anthill.createWorker(this.counters.initialWorkers)
         this.state.changeState('play state');
     }
-    
+
     playState() {
         Ants.helpers.requestAnimation()
     }
