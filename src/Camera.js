@@ -2,15 +2,31 @@
  * Camera by @robashton returns Camera object.
  *  constructor initial parameters:
  *  @param {context} str *required 
- *  @param {settings} str *optional
+ *  @param {settings | initialPosition | fieldOfView | scaleX | scaleY } str *optional
   */
 export default class Camera {
     constructor(context, settings = {}) {
-        this.distance = (context.canvas.width / context.canvas.height) * 800;
-        this.lookAt = settings.initialPosition || [0, 0];
-        this.context = context;
-        this.fieldOfView = settings.fieldOfView || Math.PI / 4.0;
-        this.autoMove = false;
+        let scale = settings.gameScale || 100
+        this.initial = {
+            initialZoom: (context.canvas.width / context.canvas.height) * 800,
+            initialMove: settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
+        }
+        this.distance = (context.canvas.width / context.canvas.height) * 800
+        this.lookAt = settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
+        this.fieldOfView = settings.fieldOfView || Math.PI / 4.0
+        this.gameScale = scale
+        this.context = context
+        this.keysPressed = []
+        this.move = false
+        this.down = false
+        this.keys = settings.keys || {
+            upKey: 'ArrowUp',
+            downKey: 'ArrowDown',
+            leftKey: 'ArrowLeft',
+            rightKey: 'ArrowRight',
+            zoomInKey: '+',
+            zoomOutKey: '-',
+        }
         this.viewport = {
             left: 0,
             right: 0,
@@ -19,8 +35,8 @@ export default class Camera {
             width: 0,
             height: 0,
             scale: [settings.scaleX || 1.0, settings.scaleY || 1.0]
-        };
-        this.init();
+        }
+        this.init()
     }
 
     /**
@@ -29,8 +45,8 @@ export default class Camera {
      * -Initial calculations.
      */
     init() {
-        this.addListeners();
-        this.updateViewport();
+        this.addListeners()
+        this.updateViewport()
     }
 
     /**
@@ -39,45 +55,45 @@ export default class Camera {
      *  -Translation
      */
     begin() {
-        this.context.save();
-        this.applyScale();
-        this.applyTranslation();
+        this.context.save()
+        this.applyScale()
+        this.applyTranslation()
     }
 
     /**
      * 2d Context restore() method
      */
     end() {
-        this.context.restore();
+        this.context.restore()
     }
 
     /**
      * 2d Context scale(Camera.viewport.scale[0], Camera.viewport.scale[0]) method
      */
     applyScale() {
-        this.context.scale(this.viewport.scale[0], this.viewport.scale[1]);
+        this.context.scale(this.viewport.scale[0], this.viewport.scale[1])
     }
 
     /**
      * 2d Context translate(-Camera.viewport.left, -Camera.viewport.top) method
      */
     applyTranslation() {
-        this.context.translate(-this.viewport.left, -this.viewport.top);
+        this.context.translate(-this.viewport.left, -this.viewport.top)
     }
 
     /**
      * Camera.viewport data update
      */
     updateViewport() {
-        this.aspectRatio = this.context.canvas.width / this.context.canvas.height;
-        this.viewport.width = this.distance * Math.tan(this.fieldOfView);
-        this.viewport.height = this.viewport.width / this.aspectRatio;
-        this.viewport.left = this.lookAt[0] - (this.viewport.width / 2.0);
-        this.viewport.top = this.lookAt[1] - (this.viewport.height / 2.0);
-        this.viewport.right = this.viewport.left + this.viewport.width;
-        this.viewport.bottom = this.viewport.top + this.viewport.height;
-        this.viewport.scale[0] = this.context.canvas.width / this.viewport.width;
-        this.viewport.scale[1] = this.context.canvas.height / this.viewport.height;
+        this.aspectRatio = this.context.canvas.width / this.context.canvas.height
+        this.viewport.width = this.distance * Math.tan(this.fieldOfView)
+        this.viewport.height = this.viewport.width / this.aspectRatio
+        this.viewport.left = this.lookAt[0] - (this.viewport.width / 2.0)
+        this.viewport.top = this.lookAt[1] - (this.viewport.height / 2.0)
+        this.viewport.right = this.viewport.left + this.viewport.width
+        this.viewport.bottom = this.viewport.top + this.viewport.height
+        this.viewport.scale[0] = this.context.canvas.width / this.viewport.width
+        this.viewport.scale[1] = this.context.canvas.height / this.viewport.height
     }
 
     /**
@@ -85,8 +101,8 @@ export default class Camera {
      * @param {*z distance} z 
      */
     zoomTo(z) {
-        this.distance = z;
-        this.updateViewport();
+        this.distance = z
+        this.updateViewport()
     }
 
     /**
@@ -95,9 +111,9 @@ export default class Camera {
      * @param {y axis coord} y 
      */
     moveTo(x, y) {
-        this.lookAt[0] = x;
-        this.lookAt[1] = y;
-        this.updateViewport();
+        this.lookAt[0] = x
+        this.lookAt[1] = y
+        this.updateViewport()
     }
 
     /**
@@ -109,10 +125,10 @@ export default class Camera {
      * @returns 
      */
     screenToWorld(x, y, obj) {
-        obj = obj || {};
-        obj.x = (x / this.viewport.scale[0]) + this.viewport.left;
-        obj.y = (y / this.viewport.scale[1]) + this.viewport.top;
-        return obj;
+        obj = obj || {}
+        obj.x = (x / this.viewport.scale[0]) + this.viewport.left
+        obj.y = (y / this.viewport.scale[1]) + this.viewport.top
+        return obj
     }
 
     /**
@@ -124,10 +140,71 @@ export default class Camera {
      * @returns 
      */
     worldToScreen(x, y, obj) {
-        obj = obj || {};
-        obj.x = (x - this.viewport.left) * (this.viewport.scale[0]);
-        obj.y = (y - this.viewport.top) * (this.viewport.scale[1]);
-        return obj;
+        obj = obj || {}
+        obj.x = (x - this.viewport.left) * (this.viewport.scale[0])
+        obj.y = (y - this.viewport.top) * (this.viewport.scale[1])
+        return obj
+    }
+
+    /**
+     * Moves camera
+     */
+    moveCamera(direction, timeout = '') {
+        this.move = true
+        switch (direction) {
+            case 'up':
+                this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale))
+                break;
+            case 'down':
+                this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale))
+                break;
+            case 'left':
+                this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
+                break;
+            case 'right':
+                this.moveTo(this.lookAt[0] + this.gameScale, this.lookAt[1])
+                break;
+            case 'zoomIn':
+                this.zoomTo(this.distance - 50)
+                break;
+            case 'zoomOut':
+                this.zoomTo(this.distance + 50)
+                break;
+
+            default:
+                break;
+        }
+
+        if (timeout !== 'this key have autorepeat') {
+            setTimeout(() => {
+                Ants.interval = setInterval(() => {
+                    if (this.move) {
+                        this.moveCamera(direction, 'this key have autorepeat')
+                    } else {
+                        clearInterval(Ants.interval)
+                    }
+                }, 20)
+            }, 200); // don't go below 500, it get's messy on the key refresh
+        }
+    }
+
+    processKeyReading(keyPressed) {
+        if (keyPressed === ' ') {
+            this.zoomTo(this.initial.initialZoom)
+            this.moveTo(this.initial.initialMove)
+        } else if (keyPressed === this.keys.rightKey) {
+            this.moveCamera('right', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.leftKey) {
+            this.moveCamera('left', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.upKey) {
+            this.moveCamera('up', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.downKey) {
+            this.moveCamera('down', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.zoomInKey) {
+            this.moveCamera('zoomIn', 'this key have autorepeat')
+        } else if (keyPressed === this.keys.zoomOutKey) {
+            this.moveCamera('zoomOut', 'this key have autorepeat')
+        }
     }
 
     /**
@@ -139,26 +216,41 @@ export default class Camera {
         window.onwheel = e => {
             if (e.ctrlKey) {
                 // Your zoom/scale factor
-                let zoomLevel = this.distance + (e.deltaY * 20 );
+                let zoomLevel = this.distance + (e.deltaY * 20)
                 if (zoomLevel <= 1) {
-                    zoomLevel = 1;
+                    zoomLevel = 1
                 }
 
-                this.zoomTo(zoomLevel);
+                this.zoomTo(zoomLevel)
             } else {
                 // Your track-pad X and Y positions
-                const x = this.lookAt[0] + (e.deltaX * 10 / Ants.counters.stepSize);
-                const y = this.lookAt[1] + (e.deltaY * 10 / Ants.counters.stepSize);
+                const x = this.lookAt[0] + (e.deltaX * 10 / this.gameScale)
+                const y = this.lookAt[1] + (e.deltaY * 10 / this.gameScale)
 
-                this.moveTo(x, y);
+                this.moveTo(x, y)
             }
-        };
+        }
 
         window.addEventListener('keydown', e => {
-            if (e.key === 'r') {
-                this.zoomTo(1000);
-                this.moveTo(0, 0);
+            this.down = true;
+            if (!this.keysPressed.includes(e.key))
+                this.keysPressed.push(e.key)
+
+            this.keysPressed.forEach(keyPressed => {
+                if (!this.down) {
+                    return
+                } else {
+                    this.processKeyReading(keyPressed)
+                }
+            })
+        })
+
+        window.addEventListener('keyup', e => {
+            this.down = false;
+            this.keysPressed = this.keysPressed.filter(x => { return x !== e.key })
+            if (!this.down && this.keysPressed.length === 0) {
+                this.move = false
             }
-        });
+        })
     }
-};
+}

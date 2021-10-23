@@ -1,8 +1,9 @@
 import State from './State.js'
 
 export default class Ant {
-    constructor(posX, posY, trace, job, age = 0) {
+    constructor({ posX, posY, trace, job, age = 0 }) {
         Ants.anthill.idProvider++
+        this.anthill = Ants.anthill
         this.id = Ants.anthill.idProvider
         this.name = job + ' ant #' + this.id
         this.job = job
@@ -10,6 +11,10 @@ export default class Ant {
         this.outOfBounds = false
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
+        this.directions = {
+            stepsToDo: 1 !== 1 ? 0 : Ants.helpers.getRandomInt(0, 6),
+            directionToDo: false
+        }
         this.scanner = () => {
             console.log(`
 
@@ -45,6 +50,17 @@ export default class Ant {
     }
 
     /**
+     * World reactiveness
+     * @param {message} message 
+     */
+    notification(message) {
+        let antState = this.getTask(Ants.world.state.state)
+        this.state.changeState(antState)
+        Ants.messages.processMessage({ message: message, from: 'Ant.Notification()' })
+        Ants.messages.processMessage({ message: `--${this.name} says: let's ${antState}`, from: 'Ant.Notification()' })
+    }
+
+    /**
      * get ant state
      * @param {world state} state 
      * @returns 
@@ -54,13 +70,26 @@ export default class Ant {
     }
 
     /**
-     * listen on app state change
+     * Get posible paths based in map bounds
+     * @returns posible paths based in map bounds
      */
-    notification(message) {
-        let antState = this.getTask(Ants.world.state.state)
-        this.state.changeState(antState)
-        console.log(message)
-        console.log(`"${this.name}" says: -let's ${antState}`)
+    getPosiblePaths() {
+        let posiblePaths = []
+        if (this.actualPosition[0] >= 0) { posiblePaths.push('left') }
+        if (this.actualPosition[1] >= 0) { posiblePaths.push('up') }
+        if (this.actualPosition[0] <= Ants.canvasBounds[0]) { posiblePaths.push('right') }
+        if (this.actualPosition[1] <= Ants.canvasBounds[1]) { posiblePaths.push('down') }
+        return posiblePaths
+    }
+
+    /**
+     * Gets random direction in bounds
+     * @returns random direction
+     */
+    getRandomDirection() {
+        let posiblePaths = this.getPosiblePaths()
+        let output = posiblePaths[Ants.helpers.getRandomInt(0, posiblePaths.length)]
+        return output
     }
 
     /**
@@ -69,27 +98,13 @@ export default class Ant {
      * @param {Position Y} posY 
      */
     walk() {
-
-        //DESCRIPTION: =FIRST FILTER=
-        //NOTE: keeps the ants on the map 
-        let posiblePaths = []
-        if (this.actualPosition[0] != 0) { posiblePaths.push('left') }
-        if (this.actualPosition[1] != 0) { posiblePaths.push('up') }
-        if (this.actualPosition[0] != Ants.canvasBounds[0]) { posiblePaths.push('right') }
-        if (this.actualPosition[1] != Ants.canvasBounds[1]) { posiblePaths.push('down') }
-
-        //NOTE: KEEPS THE ANTS IN THE MAP
-        let nextMove = posiblePaths[Ants.Helpers.getRandomInt(posiblePaths.length)]
-        let x = nextMove === 'left' ? (this.actualPosition[0] - 1) : nextMove === 'right' ? (this.actualPosition[0] + 1) : this.actualPosition[0]
-        let y = nextMove === 'down' ? (this.actualPosition[1] + 1) : nextMove === 'up' ? (this.actualPosition[1] - 1) : this.actualPosition[1]
-        this.outOfBounds = (this.actualPosition[0] > Ants.canvasBounds[0] && this.actualPosition[1] > Ants.canvasBounds[1]) ? true : false;
-        this.actualPosition = this.outOfBounds ? [0, 0] : [x, y]
-
-
-        //NOTE: KEEPS THE GLOBAL MAX PATH ON THE LIMIT
+        //Smells just in case
+        this.smell()
+        //Then move
+        Ants.helpers.moveEntity(this, this.directions.directionToDo)
+        //Limits trace
         if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
-
-        //NOTE: SAVE MARK STEP ONLY IF IT HASN'T
+        //Save mark step only if it hasn't NOTE: Path Trace related
         for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
             if (Ants.world.walkedPathTrace[i][0] === this.actualPosition[0] && Ants.world.walkedPathTrace[i][1] === this.actualPosition[1]) {
                 break;
@@ -98,17 +113,61 @@ export default class Ant {
                 break;
             }
         }
-
     }
 
+    /**
+     * check if we are going out bounds in the walking cycle
+     * @returns souldWeThink? | boolean
+     */
+    checkNonOutOfBoundsPosition() {
+        if (this.actualPosition[0] <= 0) {
+            this.resetDirection('right')
+        } else if (this.actualPosition[1] <= 0) {
+            this.resetDirection('down')
+        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
+            this.resetDirection('left')
+        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
+            this.resetDirection('up')
+        }
+    }
+
+    /**
+     * This process clamp let the ant check his arounds and check the position, and any other thing she need to check on every step.
+     * smells then 3 - 6 (random) steps on one direction
+     */
+    smell() {
+        // Detect another ants and push them into the observers
+        Ants.helpers.scanTarget(6, this, Ants.anthill.ants)
+
+        //Detects a end of bounds
+        this.checkNonOutOfBoundsPosition()
+    }
+
+    /**
+     * No parameters will get a random direction and the ant will smell it
+     * Parameters will change de direction and reset a new random stepsToDo
+     * @param {forced direction} dir
+     */
+    resetDirection(dir) {
+        this.directions.directionToDo = dir ?? this.getRandomDirection()
+        this.directions.stepsToDo = Ants.helpers.getRandomInt(0, dir ? 3 : 6)
+        // console.log('i think i will go ', this.directions.directionToDo)
+        if (!dir) {
+            this.smell()
+        }
+    }
+
+    //Adjust the process to the slider of speed.
     cycle() {
         if (this.state.state === 'sleep' || this.job === 'queen') {
             return
-        } else if (this.state.state === 'explore') {
-            this.walk()
-            // this.search()
         }
-
-        // TODO: IF Panic search path
+        if (this.state.state === 'explore') {
+            if (this.directions.stepsToDo < 1) {
+                this.resetDirection()
+            } else {
+                this.walk()
+            }
+        }
     }
 }

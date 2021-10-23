@@ -1,36 +1,8 @@
-export const greetings = [
-    `Hello, sunshine!`,
-    `Hello World!`,
-    `Howdy, partner!`,
-    `Hey, howdy, hi!`,
-    `What’s kickin’, little chicken?`,
-    `Peek-a-boo!`,
-    `Howdy-doody!`,
-    `Hey there, freshman!`,
-    `Hi, mister!`,
-    `I come in peace!`,
-    `Hiya!`,
-    `‘Ello, gov’nor!`,
-    `Top of the mornin’ to ya!`,
-    `What’s crackin’?`,
-    `‘Sup, homeslice?`,
-    `This call may be recorded for training purposes.`,
-    `Howdy, howdy ,howdy!`,
-    `How does a lion greet the other animals in the field? Answer: what is a lion? :(.`,
-    `Hello, my name is Juan Pablo Montoya.`,
-    `I'm Batman.`,
-    `Hello, who's overe there watching, I'm walking over here.`,
-    `Here's ANTony!`,
-    `You know who this is.`,
-    `Ghostbusters, whatya want?`,
-    `Yo!`,
-    `snooooooooooooooooooooop.`,
-    `Greetings and salutations!`,
-    `Man i love Queen.`,
-    `Hola que pasa.`,
-    `beep beep beep beep beeeeep.`,
-]
-
+/**
+ * Clears Body classes, add className parameter and fill the screen with htmlContent
+ * @param {new class name} className 
+ * @param {Screen Content} htmlContent 
+ */
 export const processRequest = (className, htmlContent) => {
     const body = document.querySelector('body')
     const screen = document.querySelector('#screen')
@@ -39,12 +11,26 @@ export const processRequest = (className, htmlContent) => {
     screen.innerHTML = htmlContent
 }
 
+/**
+ * Returns a new Input Slider
+ * @param {min rang} min 
+ * @param {max rang} max 
+ * @param {initial value} value 
+ * @param {callback on change} callback 
+ * @returns 
+ */
 export const drawSlider = (min = 0, max = 100, value, callback) => {
     return (`<input type="range" min="${min}" max="${max}" value="${value}" class="slider" id="myRange" oninput="${callback}">`);
 }
 
+/**
+ * Check if is mobile
+ */
 export const isMobile = (() => { return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) })();
 
+/**
+ * Controls awwors
+ */
 export const arrows = {
     left: `
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
@@ -74,6 +60,9 @@ export const arrows = {
     `
 }
 
+/**
+ * Controls full screen
+ */
 export const full = !window.screenTop && !window.screenY ? `
     <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
         <rect fill="none" height="24" width="24"/>
