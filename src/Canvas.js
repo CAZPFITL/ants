@@ -45,8 +45,11 @@ export default class Canvas extends Screen {
         Ants.camera.begin();
         Ants.helpers.drawBoard()
         Ants.helpers.drawAnthill('#693a00')
-        // NOTE: Path related - world.walkedPathTrace sliced by setted %
+        
+        // NOTE: Path related - world.walkedPathTrace sliced by setted % 
+        // NOTE: THIS IS A DEVELOP TOOL; DON'T PUSH IT OR THE USERS WILL SUFFER WITH THE DRAWING PATHS!!!!!
         Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
+        
         Ants.helpers.Ants()
 
 

@@ -66,7 +66,7 @@ export default class Ant {
      * @returns 
      */
     getTask(state) {
-        return state === 'sunny' ? 'explore' : state === 'precipitation soon' ? 'getFood' : 'sleep'
+        return state === 'sunny' ? 'explore' : state === 'precipitation soon' ? 'getFood' : state === 'rainy' ? 'go home' : 'sleep'
     }
 
     /**
@@ -97,37 +97,23 @@ export default class Ant {
      * @param {Position X} posX 
      * @param {Position Y} posY 
      */
-    walk() {
-        //Smells just in case
-        this.smell()
-        //Then move
-        Ants.helpers.moveEntity(this, this.directions.directionToDo)
-        //Limits trace
-        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPath) { Ants.world.walkedPathTrace.shift() }
-        //Save mark step only if it hasn't NOTE: Path Trace related
-        for (var i = 0, l = Ants.world.walkedPathTrace.length; i < l; i++) {
-            if (Ants.world.walkedPathTrace[i][0] === this.actualPosition[0] && Ants.world.walkedPathTrace[i][1] === this.actualPosition[1]) {
-                break;
-            } else {
-                Ants.world.walkedPathTrace.push(this.actualPosition)
-                break;
-            }
+    walk(panic = false) {
+        if (panic) {
+            this.actualPosition = Ants.helpers.getHomeStep(this.actualPosition)
+        } else {
+            //Smells just in case
+            this.smell()
+            //Then move
+            Ants.helpers.moveEntity(this, this.directions.directionToDo)
         }
-    }
-
-    /**
-     * check if we are going out bounds in the walking cycle
-     * @returns souldWeThink? | boolean
-     */
-    checkNonOutOfBoundsPosition() {
-        if (this.actualPosition[0] <= 0) {
-            this.resetDirection('right')
-        } else if (this.actualPosition[1] <= 0) {
-            this.resetDirection('down')
-        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
-            this.resetDirection('left')
-        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
-            this.resetDirection('up')
+        //Limits trace 
+        // TODO: change  the shift for the lifetime of the path and DONT verify if it is already included, too much buffer used
+        // NOTE: For now: if you walket the max path in half split the path in half
+        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPathLength) { 
+            Ants.world.walkedPathTrace = Ants.world.walkedPathTrace.slice(-(Ants.world.walkedPathTrace.length * 0.8)) 
+            console.log('20% of path cleaned')
+        } else {
+            Ants.world.walkedPathTrace.push(this.actualPosition)
         }
     }
 
@@ -137,10 +123,18 @@ export default class Ant {
      */
     smell() {
         // Detect another ants and push them into the observers
-        Ants.helpers.scanTarget(6, this, Ants.anthill.ants)
+        Ants.helpers.scanTarget(1, this, Ants.anthill.ants)
 
-        //Detects a end of bounds
-        this.checkNonOutOfBoundsPosition()
+        //Corrects a end of bounds
+        if (this.actualPosition[0] <= 0) {
+            this.resetDirection('right')
+        } else if (this.actualPosition[1] <= 0) {
+            this.resetDirection('down')
+        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
+            this.resetDirection('left')
+        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
+            this.resetDirection('up')
+        }
     }
 
     /**
@@ -168,6 +162,8 @@ export default class Ant {
             } else {
                 this.walk()
             }
+        } else if (this.state.state === 'go home') {
+            this.walk(true)
         }
     }
 }

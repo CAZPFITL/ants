@@ -18,6 +18,7 @@ export default class Anthill {
                 maxF: 95.1
             },
         }
+        this.maxAnts = ((Ants.canvasBounds[0] + Ants.canvasBounds[1]) / 2)
         this.ants = []
         this.totalAnts = this.ants.length
         this.antsColors = {
@@ -31,14 +32,24 @@ export default class Anthill {
      * Creates a new Queen.
      */
     createQueen() {
-        this.createAnt(this.antsColors.queen, 'queen')
+        if(this.idProvider === this.maxAnts) {
+            Ants.messages.processMessage({message: 'max ants in anthill reached'})
+            return
+        } else {
+            this.createAnt(this.antsColors.queen, 'queen')
+        }
     }
     /**
      * Creates a new worker ant.
      */
     createWorker(qty = 1) {
         for (let index = 0; index < qty; index++) {
-            this.createAnt(this.antsColors.worker, 'worker')
+            if(this.idProvider === this.maxAnts) {
+                Ants.messages.processMessage({message: 'max ants in anthill reached'})
+                return
+            } else {
+                this.createAnt(this.antsColors.worker, 'worker')
+            }
         }
     }
 

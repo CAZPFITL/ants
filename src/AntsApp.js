@@ -21,15 +21,15 @@ export default class AntsApp {
         this.anthill
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
         this.dataGraph = []
-        this.canvasBounds = [20, 20]
+        this.canvasBounds = [90, 90]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
             stepSize: 20, // pixel size
-            maxPath: 0.5, //0% of the screen
-            maxDraw: 0.95, //% of the maxPath
+            maxPath: 0.35, //0% of the screen
+            maxDraw: 0.05, //% of the maxPath DRAWED
             path: true,
-            initialWorkers: 2,
+            initialWorkers: 20,
             homeSize: 5
         }
     }
@@ -56,21 +56,21 @@ export default class AntsApp {
     }
 
     requestLoad() {
-        this.helpers.createDataGraph()
+        // this.helpers.createDataGraph()
         this.helpers.createCanvas()
         this.helpers.fullScreenFunctionality()
         window.addEventListener('keydown', (e) => Ants.helpers.processKeyDown(e.key));
         window.addEventListener('keyup', (e) => Ants.helpers.processKeyUp(e.key));
         window.addEventListener('resize', () => Ants.helpers.getCanvas());
         // NOTE: maxPath
-        Ants.counters.maxPath = Math.trunc(Ants.helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
+        Ants.counters.maxPathLength = Math.trunc(Ants.helpers.getStepSize(this.canvasBounds[0] * this.canvasBounds[1])) * Ants.counters.maxPath
     }
 
     welcomeToAnts() {
         this.world = new World('sunny')
         this.anthill = new Anthill(this.counters.homeSize)
         this.anthill.createQueen()
-        this.anthill.createWorker(this.counters.initialWorkers)
+        this.anthill.createWorker(5000)
         this.state.changeState('play state');
     }
 
