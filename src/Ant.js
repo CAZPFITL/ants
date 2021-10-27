@@ -144,9 +144,10 @@ export default class Ant {
         let scannedPathsFiltered = scannedPaths.filter(value => { return value !== lastStepsDirectionFromHere }) // [left]
         // - STEP: - 5 - CHECK IF THE FILTERED DIRECTIONS CONTAINS THE ACTUAL DIRECTION TODO 
         // - NOTE: - Remember it does 3-6 steps for direction only if we are in bounds)
-        // - NOTE: - This means we have a chance to explore that path, T 70/30 F
+        // - NOTE: - This means we have a chance to explore that path, T 50/50 F
+        // - TODO: - FROM: - 0.4.1 Check how many times the paths is pushed to change probability:
         if (!scannedPathsFiltered.includes(this.directions.directionToDo) && scannedPathsFiltered.length > 0) {
-            let shouldWeExploreThisPath = Ants.helpers.getRandomInt(0,1000000) <= 300000 ? true : false
+            let shouldWeExploreThisPath = Ants.helpers.getRandomInt(0,1000000) <= 200000 ? true : false
             //console.log(scannedPathsFiltered)
             //console.log('hey a path! shouldWeExploreThisPath? : ', shouldWeExploreThisPath)
 
