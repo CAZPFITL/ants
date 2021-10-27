@@ -36,6 +36,7 @@ body #screen {
 	height: 100%;
 	margin: 0 0;
 	display: flex;
+	color: #FFFFFF;
 }
 
 h1,
@@ -121,6 +122,11 @@ canvas {
 	position: absolute;
 	bottom: 0;
 	left: 0;
+	width: 220px;
+}
+.start #screen .wrapper .screen-controls .box span,
+.start #screen .wrapper .screen-controls .box {
+	margin: 8px 0;
 }
 
 .start #screen .wrapper .screen-controls svg {

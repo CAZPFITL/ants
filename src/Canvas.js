@@ -119,13 +119,13 @@ export default class Canvas extends Screen {
         Ants.helpers.drawBoard()
         Ants.helpers.drawAnthill('#693A00')
         Ants.helpers.drawFood('#EB9B34')
-
+        Ants.helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB')
+        
         // NOTE: Path related - world.walkedPathTrace sliced by setted % 
         // NOTE: THIS IS A DEVELOP TOOL; DON'T PUSH IT OR THE USERS WILL SUFFER WITH THE DRAWING PATHS!!!!!
-        Ants.helpers.drawPath(Ants.world.walkedPathTrace, '#BBBBBB')
         // Ants.helpers.drawPath(Ants.world.foodPathTrace, '#3391B5')
         // Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-
+        
         Ants.helpers.drawAnts()
     }
 

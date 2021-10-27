@@ -17,7 +17,7 @@ export default class Wold {
     constructor(weather) {
         this.name = 'World'
         this.state = new State(this)
-        this.walkedPathTrace = [[0, 0]]
+        this.walkedPathTrace = []
         this.weather = ''
         this.droppedFood = []
         this.time = {

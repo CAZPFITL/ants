@@ -31,7 +31,7 @@ export default class AntsApp {
             path: true,
             initialWorkers: 1,
             homeSize: 6,
-            initialZoom: 3200
+            initialZoom: 3200,
         }
     }
 
