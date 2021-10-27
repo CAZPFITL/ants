@@ -48,7 +48,7 @@ export default class Canvas extends Screen {
         
         // NOTE: Path related - world.walkedPathTrace sliced by setted % 
         // NOTE: THIS IS A DEVELOP TOOL; DON'T PUSH IT OR THE USERS WILL SUFFER WITH THE DRAWING PATHS!!!!!
-        Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
+        Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * 1/*Ants.counters.maxDraw*/), '#BBBBBB')
         
         Ants.helpers.Ants()
 

@@ -11,6 +11,7 @@ export default class Ant {
         this.outOfBounds = false
         this.color = Ants.anthill.antsColors[job]
         this.actualPosition = [posX ?? 0, posY ?? 0]
+        this.lastPosition = [posX ?? 0, posY ?? 0]
         this.directions = {
             stepsToDo: 1 !== 1 ? 0 : Ants.helpers.getRandomInt(0, 6),
             directionToDo: false
@@ -98,34 +99,67 @@ export default class Ant {
      * @param {Position Y} posY 
      */
     walk(panic = false) {
+        // - STEP: - 1 - CHECK IF WE ARE IN PANIC
+        // - NOTE: - IF WE ARE:
         if (panic) {
+            // - STEP: - 2 - CHECK IF WE ARE IN PANIC
             this.actualPosition = Ants.helpers.getHomeStep(this.actualPosition)
+            // - NOTE: - IF WE ARE NOT:
         } else {
-            //Smells just in case
+            // - STEP: - 2 - SMELL
             this.smell()
-            //Then move
+            // - STEP: - 3 - UPDATE LAST POSITION
+            this.lastPosition = this.actualPosition
+            // - STEP: - 4 - THEN MOVE
             Ants.helpers.moveEntity(this, this.directions.directionToDo)
         }
         //Limits trace 
-        // TODO: change  the shift for the lifetime of the path and DONT verify if it is already included, too much buffer used
-        // NOTE: For now: if you walket the max path in half split the path in half
-        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPathLength) { 
-            Ants.world.walkedPathTrace = Ants.world.walkedPathTrace.slice(-(Ants.world.walkedPathTrace.length * 0.8)) 
+        // - STEP: - 5 - KILL EXTRA TRACE TO MAKE THINGS MORE INTERESTING
+        // - NOTE: For now: if you already walked the max path in half split the path in half
+        // - TODO: change  the shift for the lifetime of the path and DONT verify if it is already included, too much buffer used
+        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPathLength) {
+            Ants.world.walkedPathTrace = Ants.world.walkedPathTrace.slice(-(Ants.world.walkedPathTrace.length * 0.8))
             console.log('20% of path cleaned')
-        } else {
-            Ants.world.walkedPathTrace.push(this.actualPosition)
         }
+
+        // - STEP: - 6 - PUSH STEP INTO "Ants.world.walkedPathTrace"
+        Ants.world.walkedPathTrace.push(this.actualPosition)
     }
 
     /**
      * This process clamp let the ant check his arounds and check the position, and any other thing she need to check on every step.
      * smells then 3 - 6 (random) steps on one direction
+     * 
      */
     smell() {
-        // Detect another ants and push them into the observers
-        Ants.helpers.scanTarget(1, this, Ants.anthill.ants)
 
-        //Corrects a end of bounds
+        // - STEP: - 1 - DETECTS WALKED PATHS SMELLS AROUND
+        let scannedPaths = Ants.helpers.scanTarget(this, Ants.world.walkedPathTrace)
+        // - STEP: - 2 - GET LAST'S STEPS DIRECTION FOR CONTROL
+        let lastStepsDirectionFromHere = (Ants.helpers.getCoordsRelationalDirection(this.actualPosition, this.lastPosition)) // - left
+        // - STEP: - 3 - AVOID GOING BACK TO LAST STEP AGAIN
+        (this.directions.directionToDo === lastStepsDirectionFromHere) ? this.resetDirection() : ()=>{}
+        // - STEP: - 4 - FILTER LAST'S STEPS DIRECTION TO AVOID HAVING IT LIKE AN OPTION
+        // - NOTE: - This to get only interesting paths to explore if we decide to do it
+        let scannedPathsFiltered = scannedPaths.filter(value => { return value !== lastStepsDirectionFromHere }) // [left]
+        // - STEP: - 5 - CHECK IF THE FILTERED DIRECTIONS CONTAINS THE ACTUAL DIRECTION TODO 
+        // - NOTE: - Remember it does 3-6 steps for direction only if we are in bounds)
+        // - NOTE: - This means we have a chance to explore that path, T 70/30 F
+        if (!scannedPathsFiltered.includes(this.directions.directionToDo) && scannedPathsFiltered.length > 0) {
+            let shouldWeExploreThisPath = Ants.helpers.getRandomInt(0,1000000) <= 300000 ? true : false
+            console.log(scannedPathsFiltered)
+            console.log('hey a path! shouldWeExploreThisPath? : ', shouldWeExploreThisPath)
+
+            if (shouldWeExploreThisPath) {
+                const antIndex = (Ants.helpers.getRandomInt(0, ((scannedPathsFiltered.length * 10) / 10)))
+                const nextDir = scannedPathsFiltered[antIndex]
+                console.log(antIndex)
+                console.log(nextDir)
+                this.resetDirection(nextDir)
+            }
+        }
+
+        // - STEP: - X - CORRECTS A END OF BOUNDS
         if (this.actualPosition[0] <= 0) {
             this.resetDirection('right')
         } else if (this.actualPosition[1] <= 0) {

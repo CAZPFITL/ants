@@ -121,7 +121,7 @@ export default class helpers extends Canvas {
 
     /**
      * Move Entity to given direction (Requires actualPosition[x,y] key)
-     * @param {Next's move direction} // nextMove 
+     * @param {Next's move direction} // nextMove   DIRECTION >> COORD
      */
     static moveEntity(entity, nextMove) {
         let x = nextMove === 'left' ? (entity.actualPosition[0] - 1) : nextMove === 'right' ? (entity.actualPosition[0] + 1) : entity.actualPosition[0]
@@ -132,49 +132,81 @@ export default class helpers extends Canvas {
     }
 
     /**
-     * Scan any target you specify in an array, both, observer and observable must have .state key in
-     * @param {Search diameter} diameter 
+     * 
+     * @param {*} arr 
+     * @param {*} str 
+     * @returns 
+     */
+    static includesMultiDimension(arr, str) { return JSON.stringify(arr).includes(str) };
+
+    /**
+     * COORD >> DIRECTION
+     * @param {*} initialCoord 
+     * @param {*} finalCoord 
+     * @returns 
+     */
+    static getCoordsRelationalDirection(initialCoord, finalCoord) {
+        if (finalCoord[0] > initialCoord[0] && initialCoord[1] === finalCoord[1]) {
+            return 'right'
+        } else if (finalCoord[0] < initialCoord[0] && initialCoord[1] === finalCoord[1]) {
+            return 'left'
+        } else if (initialCoord[0] === finalCoord[0] && finalCoord[1] < initialCoord[1]) {
+            return 'up'
+        } else if (initialCoord[0] === finalCoord[0] && finalCoord[1] > initialCoord[1]) {
+            return 'down'
+        } else {
+            return false
+        }
+    }
+    /**
+     * Scan any target you specify in an array, both, observer and observable must have .state key in  -  COORD >> DIRECTIONS
+     * @param {Search diameter} diameter  
      * @param {Who is scanning} watcher 
      * @param {What are we scanning} targetsColection 
      */
-    static scanTarget(radius, watcher, targetsColection) {
-        const scannedPosition = [...watcher.actualPosition]
-        let xAxisIndex = scannedPosition[0]
-        let yAxisIndex = scannedPosition[1]
-        xAxisIndex = xAxisIndex - radius
-        yAxisIndex = yAxisIndex - radius
-        let xEnd = 0 + (radius * 2)
-        let yEnd = 0 + (radius * 2)
-        // console.log('scanned start:', [xAxisIndex, yAxisIndex])
-
-        for (let x = 0; x < xEnd; x++) {
-            for (let y = 0; y < yEnd; y++) {
-
-                // /**
-                //  * Found closer targets
-                //  */
-                // if (watcher.actualPosition[0] === xAxisIndex && watcher.actualPosition[1] === yAxisIndex && this !== target) {
-                //     if (!watcher.state.observers.includes(target)) {
-                //         console.log(watcher.name, ' - found - ', target.name)
-                //         watcher.state.add(target)
-                //     }
-                // }
-
-                // /**
-                //  * Loose closer Targets
-                //  */
-                // watcher.state.observers.forEach(x => {
-
-                // })
-                yAxisIndex++
-                // console.log('scanned:', [xAxisIndex, yAxisIndex])
-                xAxisIndex++
-                // console.log('scanned:', [xAxisIndex, yAxisIndex])
-            }
+    static scanTarget(watcher, targetsColection) {
+        const actualPosition = [...watcher.actualPosition]
+        let actualX = actualPosition[0]
+        let actualY = actualPosition[1]
+        let distance = 1
+        let references = {
+            x1: actualX,
+            x2: actualX,
+            y1: actualY,
+            y2: actualY,
         }
-        if (watcher.state.observers.length > 0) {
-            // console.log('close targets to ', watcher.name, ': ', watcher.state.observers)
+        let checkPositions = {
+            up: [
+                actualX,
+                references.y1 - distance
+            ],
+            down: [
+                actualX,
+                references.y2 + distance
+            ],
+            left: [
+                references.x1 - distance,
+                actualY
+            ],
+            right: [
+                references.x2 + distance,
+                actualY
+            ],
         }
+        let output = []
+
+        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.up)) ? output.push('up') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.right)) ? output.push('right') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.down)) ? output.push('down') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.left)) ? output.push('left') : () => { }
+        return output
+    }
+
+    /**
+     * get random true / false 50/50 chance
+     */
+    static getFiftyFifty() {
+        return Ants.helpers.getRandomInt(0,1000000) >= 500000 ? true : false
     }
 
     static getHomeStep(_actual, home = Ants.anthill.position) {
