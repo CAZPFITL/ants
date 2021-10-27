@@ -5,7 +5,7 @@ export default class Anthill {
         this.name = 'Home'
         this.food = {
             max: 1000,
-            min: 10,
+            min: 11,
             count: 500
         }
         this.size = size ?? 10

@@ -21,16 +21,17 @@ export default class AntsApp {
         this.anthill
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
         this.dataGraph = []
-        this.canvasBounds = [20, 20]
+        this.canvasBounds = [100, 100]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
             stepSize: 20, // pixel size
-            maxPath: 0.35, //0% of the screen
-            maxDraw: 0.05, //% of the maxPath DRAWED
+            maxPath: 0.05, //0% of the screen
+            maxDraw: 0.5, //% of the maxPath DRAWED
             path: true,
             initialWorkers: 1,
-            homeSize: 5
+            homeSize: 6,
+            initialZoom: 3200
         }
     }
 
@@ -67,8 +68,8 @@ export default class AntsApp {
     }
 
     welcomeToAnts() {
-        this.world = new World('sunny')
         this.anthill = new Anthill(this.counters.homeSize)
+        this.world = new World('sunny')
         //this.anthill.createQueen()
         this.anthill.createWorker(this.counters.initialWorkers)
         this.state.changeState('play state');

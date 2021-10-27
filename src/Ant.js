@@ -119,7 +119,7 @@ export default class Ant {
         // - TODO: change  the shift for the lifetime of the path and DONT verify if it is already included, too much buffer used
         if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPathLength) {
             Ants.world.walkedPathTrace = Ants.world.walkedPathTrace.slice(-(Ants.world.walkedPathTrace.length * 0.8))
-            console.log('20% of path cleaned')
+            console.log('10% of path cleaned')
         }
 
         // - STEP: - 6 - PUSH STEP INTO "Ants.world.walkedPathTrace"
@@ -132,13 +132,13 @@ export default class Ant {
      * 
      */
     smell() {
-
-        // - STEP: - 1 - DETECTS WALKED PATHS SMELLS AROUND
+        // - STEP: - 1 - GET LAST'S STEPS DIRECTION FOR CONTROL
+        let lastStepsDirectionFromHere = Ants.helpers.getCoordsRelationalDirection(this.actualPosition, this.lastPosition) // - left
+        // - STEP: - 2 - AVOID GOING BACK TO LAST STEP AGAIN
+        this.directions.directionToDo === lastStepsDirectionFromHere ? this.resetDirection() : ()=>{}
+        
+        // - STEP: - 3 - DETECTS WALKED PATHS SMELLS AROUND
         let scannedPaths = Ants.helpers.scanTarget(this, Ants.world.walkedPathTrace)
-        // - STEP: - 2 - GET LAST'S STEPS DIRECTION FOR CONTROL
-        let lastStepsDirectionFromHere = (Ants.helpers.getCoordsRelationalDirection(this.actualPosition, this.lastPosition)) // - left
-        // - STEP: - 3 - AVOID GOING BACK TO LAST STEP AGAIN
-        (this.directions.directionToDo === lastStepsDirectionFromHere) ? this.resetDirection() : ()=>{}
         // - STEP: - 4 - FILTER LAST'S STEPS DIRECTION TO AVOID HAVING IT LIKE AN OPTION
         // - NOTE: - This to get only interesting paths to explore if we decide to do it
         let scannedPathsFiltered = scannedPaths.filter(value => { return value !== lastStepsDirectionFromHere }) // [left]
@@ -147,14 +147,12 @@ export default class Ant {
         // - NOTE: - This means we have a chance to explore that path, T 70/30 F
         if (!scannedPathsFiltered.includes(this.directions.directionToDo) && scannedPathsFiltered.length > 0) {
             let shouldWeExploreThisPath = Ants.helpers.getRandomInt(0,1000000) <= 300000 ? true : false
-            console.log(scannedPathsFiltered)
-            console.log('hey a path! shouldWeExploreThisPath? : ', shouldWeExploreThisPath)
+            //console.log(scannedPathsFiltered)
+            //console.log('hey a path! shouldWeExploreThisPath? : ', shouldWeExploreThisPath)
 
             if (shouldWeExploreThisPath) {
                 const antIndex = (Ants.helpers.getRandomInt(0, ((scannedPathsFiltered.length * 10) / 10)))
                 const nextDir = scannedPathsFiltered[antIndex]
-                console.log(antIndex)
-                console.log(nextDir)
                 this.resetDirection(nextDir)
             }
         }

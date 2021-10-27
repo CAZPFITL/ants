@@ -11,5 +11,6 @@ export default class Settings {
             zoomInKey : keys && keys.zoomInKey ? keys.zoomInKey : '+',
             zoomOutKey : keys && keys.zoomOutKey ? keys.zoomOutKey : '-',
         }
+        this.surroundsColor = '#555555'
     }
 }
