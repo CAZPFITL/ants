@@ -7,7 +7,6 @@ import AntsApp from './src/AntsApp.js';
  * License: MIT
  * Description: this application let you play with ants and neural networks, letting our little friend, learn how to find things
  * TODO: ANTS REPRODUCTION PENDING (QUEEN ANT)
- * TODO: add to oobservers any closer ant and remove it when if goes away
  * 
  *
  *
@@ -16,7 +15,7 @@ import AntsApp from './src/AntsApp.js';
  * -points of food source like trees, garbasge bins, kitchens, etc.
  * -world maps (type of world maps)
  * -generate randomly the world map type asked
- * -once the entire world has been scanned, the ands will go to the food source iin lines , 
+ * -once the entire world has been scanned, the ants will go to the food source iin lines , 
  * -the soilders will follow this path searching for bigger traces of food
  * -if a worker find a big traceof food, he will search for near ant for help, then the ants will take pieces of that big trace of food until its over
  * - if a soilder founds a trace of food that is beeing melted by workers he will as them to leave if he can take the entire piece
@@ -46,4 +45,4 @@ import AntsApp from './src/AntsApp.js';
  * 
  * NOTES_https://codepen.io/habelle/details/zXKBga
  */
-AntsApp.init('v0.4.2');
+AntsApp.init('v0.4.4');
