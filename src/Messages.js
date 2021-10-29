@@ -3,6 +3,7 @@ export default class Messages {
         this.trace = ` `
         this.log = []
         this.names = [
+            'Marc Joly',
             'Antony',
             'Bob',
             'Ryan',
@@ -11,7 +12,7 @@ export default class Messages {
             'Leonel',
             'Tito',
             'Bort',
-            'Dodo',
+            'Dodo the bird',
         ]
         this.greetings = [
             `Hello, sunshine!`,
