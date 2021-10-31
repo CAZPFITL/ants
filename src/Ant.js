@@ -16,6 +16,8 @@ export default class Ant {
             stepsToDo: 1 !== 1 ? 0 : Ants.helpers.getRandomInt(0, 6),
             directionToDo: false
         }
+        this.smellFood = [false, []]
+        this.bringFood = false
         this.scanner = () => {
             console.log(`
 
@@ -96,34 +98,41 @@ export default class Ant {
     /**
      * Set a new coordinates position for "this" ant.
      * @param {Position X} posX 
-     * @param {Position Y} posY 
      */
     walk(panic = false) {
-        // - STEP: - 1 - CHECK IF WE ARE IN PANIC
-        // - NOTE: - IF WE ARE:
-        if (panic) {
-            // - STEP: - 2 - CHECK IF WE ARE IN PANIC
-            this.actualPosition = Ants.helpers.getHomeStep(this.actualPosition)
-            // - NOTE: - IF WE ARE NOT:
-        } else {
-            // - STEP: - 2 - SMELL
-            this.smell()
-            // - STEP: - 3 - UPDATE LAST POSITION
-            this.lastPosition = this.actualPosition
-            // - STEP: - 4 - THEN MOVE
-            Ants.helpers.moveEntity(this, this.directions.directionToDo)
-        }
-        //Limits trace 
-        // - STEP: - 5 - KILL EXTRA TRACE TO MAKE THINGS MORE INTERESTING
-        // - NOTE: For now: if you already walked the max path in half split the path in half
-        // - TODO: change  the shift for the lifetime of the path and DONT verify if it is already included, too much buffer used
-        if (Ants.world.walkedPathTrace.length >= Ants.counters.maxPathLength) {
-            Ants.world.walkedPathTrace = Ants.world.walkedPathTrace.slice(-(Ants.world.walkedPathTrace.length * 0.8))
-            console.log('10% of path cleaned')
-        }
+        /**
+         * Moving the ant.
+         */
+        (function walk({ panic = false, This, Ants }) {
+            if (panic) {
+                This.actualPosition = Ants.helpers.getHomeStep(This.actualPosition)
+            } else {
+                This.smell()
+                This.lastPosition = This.actualPosition
+                Ants.helpers.moveEntity(This, This.directions.directionToDo)
+            }
+        })({ panic, This: this, Ants });
 
-        // - STEP: - 6 - PUSH STEP INTO "Ants.world.walkedPathTrace"
-        Ants.world.walkedPathTrace.push(this.actualPosition)
+        /**
+         * Path related scripts.
+         */
+        (function leaveTraces({ Ants, This }) {
+            Ants.world.traces.forEach(path => {
+                if (path.type === 'normal' || (path.type === 'food' && This.bringFood)) {
+                    path.liveTraceCoords.push(This.actualPosition)
+                    path.liveTraceStamp.push(Ants.world.time.globalSeconds)
+                } else if (path.type === 'food' && This.bringFood) {
+                    path.liveTraceCoords.push(This.actualPosition)
+                    path.liveTraceStamp.push(Ants.world.time.globalSeconds)
+                }
+
+                if (Ants.world.time.globalSeconds >= (path.liveTraceStamp[0] + path.liveTime)) {
+                    path.liveTraceCoords.shift()
+                    path.liveTraceStamp.shift()
+                }
+            })
+        })({ Ants, This: this });
+
     }
 
     /**
@@ -132,42 +141,89 @@ export default class Ant {
      * 
      */
     smell() {
-        // - STEP: - 1 - GET LAST'S STEPS DIRECTION FOR CONTROL
-        let lastStepsDirectionFromHere = Ants.helpers.getCoordsRelationalDirection(this.actualPosition, this.lastPosition) // - left
-        // - STEP: - 2 - AVOID GOING BACK TO LAST STEP AGAIN
-        this.directions.directionToDo === lastStepsDirectionFromHere ? this.resetDirection() : ()=>{}
-        
-        // - STEP: - 3 - DETECTS WALKED PATHS SMELLS AROUND
-        let scannedPaths = Ants.helpers.scanTarget(this, Ants.world.walkedPathTrace)
-        // - STEP: - 4 - FILTER LAST'S STEPS DIRECTION TO AVOID HAVING IT LIKE AN OPTION
-        // - NOTE: - This to get only interesting paths to explore if we decide to do it
-        let scannedPathsFiltered = scannedPaths.filter(value => { return value !== lastStepsDirectionFromHere }) // [left]
-        // - STEP: - 5 - CHECK IF THE FILTERED DIRECTIONS CONTAINS THE ACTUAL DIRECTION TODO 
-        // - NOTE: - Remember it does 3-6 steps for direction only if we are in bounds)
-        // - NOTE: - This means we have a chance to explore that path, T 50/50 F
-        // - TODO: - FROM: - 0.4.1 Check how many times the paths is pushed to change probability:
-        if (!scannedPathsFiltered.includes(this.directions.directionToDo) && scannedPathsFiltered.length > 0) {
-            let shouldWeExploreThisPath = Ants.helpers.getRandomInt(0,1000000) <= 200000 ? true : false
-            //console.log(scannedPathsFiltered)
-            //console.log('hey a path! shouldWeExploreThisPath? : ', shouldWeExploreThisPath)
+        /**
+         * Find Food
+         * TODO: more experienced and young Ants will be able to smell further (this "is statement mess" is temporal)
+         * 
+         * 
+         */
+        (function smellFood({ Ants, This }) {
+            This.smellFood = [false, []]
+            Ants.world.droppedFood.forEach(foodPiece => {
+                let scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell())
 
-            if (shouldWeExploreThisPath) {
+                function sniffPositive() {
+                    Ants.messages.processMessage({
+                        message: `mmm that ${foodPiece.type} smells good!`,
+                        console: true,
+                        log: false,
+                        from: `${This.name}'s smell() method`
+                    })
+                    This.smellFood[0] = true
+                    This.smellFood[1].push(foodPiece)
+                }
+
+                if (scannedFoodBody.length > 0) {
+                    sniffPositive()
+                } else {
+                    scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell(), 2)
+                    if (scannedFoodBody.length > 0) {
+                        sniffPositive()
+                    } else {
+                        scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell(), 3)
+                        if (scannedFoodBody.length > 0) {
+                            sniffPositive()
+                        }
+                    }
+                }
+            })
+        })({ Ants, This: this });
+        
+        if (this.smellFood[0]) {
+            console.log(this.smellFood)
+        }
+        /**
+         * Path related
+         */
+        (function smellTraces({ Ants, This }) {
+            // - STEP: - 1 - DETECT THE LAS STEP AND AVOID IT
+            let lastStepsDirectionFromHere = Ants.helpers.getCoordsRelationalDirection(This.actualPosition, This.lastPosition) // - left
+            This.directions.directionToDo === lastStepsDirectionFromHere ? This.resetDirection() : () => { }
+
+            // - STEP: - 2 - DETECTS WALKED PATHS SMELLS AROUND AT scannedPaths > scannedPathsFiltered
+            Ants.world.traces.forEach(trace => {
+                const scannedPaths = Ants.helpers.scanTarget(This, trace) //TODO: FIN IN BASE OF NEW TRACES
+                const scannedPathsFiltered = scannedPaths.filter(value => { return value !== lastStepsDirectionFromHere }) // [left]
                 const antIndex = (Ants.helpers.getRandomInt(0, ((scannedPathsFiltered.length * 10) / 10)))
                 const nextDir = scannedPathsFiltered[antIndex]
-                this.resetDirection(nextDir)
-            }
-        }
 
-        // - STEP: - X - CORRECTS A END OF BOUNDS
-        if (this.actualPosition[0] <= 0) {
-            this.resetDirection('right')
-        } else if (this.actualPosition[1] <= 0) {
-            this.resetDirection('down')
-        } else if (this.actualPosition[0] >= Ants.canvasBounds[0]) {
-            this.resetDirection('left')
-        } else if (this.actualPosition[1] >= Ants.canvasBounds[1]) {
-            this.resetDirection('up')
-        }
+                // - STEP: - 3 - CHECK IF THE FILTERED DIRECTIONS CONTAINS THE ACTUAL DIRECTION TODO 
+                // - NOTE: - Remember it does 3-6 steps for direction only if we are in bounds)
+                // - NOTE: - This means we have a chance to explore that path, T 50/50 F
+                // - TODO: - FROM: - 0.4.1 Check how many times the paths is pushed to change probability:
+                if (!scannedPathsFiltered.includes(This.directions.directionToDo) && scannedPathsFiltered.length > 0) {
+                    if (Ants.helpers.getRandomInt(0, 1000000) <= 500000) {
+                        This.resetDirection(nextDir)
+                    }
+                }
+            })
+
+        })({ Ants, This: this });
+
+        /**
+         * Check Bounds Around
+         */
+        (function smellBoundsAround({ Ants, This }) {
+            if (This.actualPosition[0] <= 0) {
+                This.resetDirection('right')
+            } else if (This.actualPosition[1] <= 0) {
+                This.resetDirection('down')
+            } else if (This.actualPosition[0] >= Ants.canvasBounds[0]) {
+                This.resetDirection('left')
+            } else if (This.actualPosition[1] >= Ants.canvasBounds[1]) {
+                This.resetDirection('up')
+            }
+        })({ Ants, This: this })
     }
 
     /**
@@ -193,7 +249,7 @@ export default class Ant {
             if (this.directions.stepsToDo < 1) {
                 this.resetDirection()
             } else {
-                this.walk()
+                this.walk(false)
             }
         } else if (this.state.state === 'go home') {
             this.walk(true)

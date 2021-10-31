@@ -78,6 +78,9 @@ export default class Canvas extends Screen {
         window.requestAnimationFrame(Ants.helpers.draw)
     }
 
+    /**
+     * Draw map surrounds
+     */
     static drawSurrounds(color = Ants.settings.surroundsColor, scale = 2000) {
         Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], scale, color, (scale / 2))
         Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], (scale / 2), color, scale)
@@ -99,6 +102,7 @@ export default class Canvas extends Screen {
         if (Ants.counters.counter % Ants.counters.speed === 0) {
             Ants.anthill.ants.forEach(ant => {
                 ant.cycle()
+                Ants.helpers.updateClock()
             })
         }
         //NOTE: avoids a big and slow calculations
@@ -119,13 +123,14 @@ export default class Canvas extends Screen {
         Ants.helpers.drawBoard()
         Ants.helpers.drawAnthill('#693A00')
         Ants.helpers.drawFood('#EB9B34')
-        Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-        
+        //Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
+        Ants.helpers.drawPath(Ants.world.traces)
+
         // NOTE: Path related - world.walkedPathTrace sliced by setted % 
         // NOTE: THIS IS A DEVELOP TOOL; DON'T PUSH IT OR THE USERS WILL SUFFER WITH THE DRAWING PATHS!!!!!
         // Ants.helpers.drawPath(Ants.world.foodPathTrace, '#3391B5')
         // Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-        
+
         Ants.helpers.drawAnts()
     }
 
@@ -174,9 +179,11 @@ export default class Canvas extends Screen {
      * @param {trace path} path 
      * @param {trace color} color 
      */
-    static drawPath(path, color) {
-        path.forEach((step) => {
-            Ants.helpers.drawEntity(step, 1, color)
+    static drawPath(element) {
+        element.forEach(path => {
+            path.liveTraceCoords.forEach(step => {
+                Ants.helpers.drawEntity(step, 1, path.color)
+            })
         })
     }
 

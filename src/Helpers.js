@@ -158,17 +158,17 @@ export default class helpers extends Canvas {
             return false
         }
     }
+
     /**
      * Scan any target you specify in an array, both, observer and observable must have .state key in  -  COORD >> DIRECTIONS
      * @param {Search diameter} diameter  
      * @param {Who is scanning} watcher 
      * @param {What are we scanning} targetsColection 
      */
-    static scanTarget(watcher, targetsColection) {
+    static scanTarget(watcher, targetsColection, distance = 1) {
         const actualPosition = [...watcher.actualPosition]
         let actualX = actualPosition[0]
         let actualY = actualPosition[1]
-        let distance = 1
         let references = {
             x1: actualX,
             x2: actualX,
@@ -206,9 +206,12 @@ export default class helpers extends Canvas {
      * get random true / false 50/50 chance
      */
     static getFiftyFifty() {
-        return Ants.helpers.getRandomInt(0,1000000) >= 500000 ? true : false
+        return Ants.helpers.getRandomInt(0, 1000000) >= 500000 ? true : false
     }
 
+    /**
+     * get home direction
+     */
     static getHomeStep(_actual, home = Ants.anthill.position) {
         let path = []
         let actual = [...(path.length > 0 ? path[path.length - 1] : _actual)]
@@ -229,5 +232,31 @@ export default class helpers extends Canvas {
             }
             return [x, y];
         }
+    }
+
+    /**
+     * Update clock
+     */
+    static updateClock() {
+        Ants.world.time.globalSeconds++
+        if (Ants.world.time.seconds <= 58) {
+            Ants.world.time.seconds++
+        } else {
+            Ants.world.time.seconds = 0
+            if (Ants.world.time.minutes <= 58) {
+                Ants.world.time.minutes++
+            } else {
+                Ants.world.time.minutes = 0
+                if (Ants.world.time.hours <= 22) {
+                    Ants.world.time.hours++
+                } else {
+                    Ants.world.time.seconds = 0
+                    Ants.world.time.minutes = 0
+                    Ants.world.time.hours = 0
+                    Ants.world.time.days++
+                }
+            }
+        }
+        // console.log(+ Ants.world.time.hours + ':' + Ants.world.time.minutes + ':' + Ants.world.time.seconds)
     }
 }
