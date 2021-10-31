@@ -21,7 +21,7 @@ export default class AntsApp {
         this.anthill
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
         this.dataGraph = []
-        this.canvasBounds = [40, 40]
+        this.canvasBounds = [90, 90]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control

@@ -34,12 +34,12 @@ export default class Wold {
             years: 0
         }
         this.setWeather(weather)
-        this.dropFood()
-        this.dropFood()
-        this.dropFood()
-        this.dropFood()
-        this.dropFood()
-        this.dropFood()
+        this.dropFood('bread')
+        this.dropFood('pizza leftovers')
+        this.dropFood('fruit')
+        this.dropFood('candy')
+        this.dropFood('fruit')
+        this.dropFood('spilled soda')
     }
     // --queen ant #1 says: let's sleep
     setWeather(weather) {
@@ -48,8 +48,8 @@ export default class Wold {
         this.state.changeState(weather)
     }
 
-    dropFood() {
-        this.droppedFood.push(new Food())
+    dropFood(type) {
+        this.droppedFood.push(new Food(type))
     }
 
     startDay() {
