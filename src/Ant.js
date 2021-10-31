@@ -199,10 +199,10 @@ export default class Ant {
             const pointer = this.smellFood[2][bridgeIndex]
             Ants.messages.processMessage({
                 message: `
-                    ${this.name} says: \n
-                    -*sniff* *snif* \n
-                    -smells like ${this.smellFood[1].map(f => `${f.type} and `).join('')}\n
-                    -*sniff* *snif* smells good!`,
+${this.name} says: \n
+-*sniff* *snif* \n
+-smells like ${this.smellFood[1].map(f => `${f.type} and `).join('')}\n
+-*sniff* *snif* smells good!`,
                 console: true,
                 log: false,
                 from: `${this.name}'s smell() method`
@@ -261,7 +261,7 @@ export default class Ant {
         let actualX = [...this.actualPosition][0]
         let actualY = [...this.actualPosition][1]
         let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
-        
+
         let checkPositions = {
             up: [actualX, references.y1 - distance],
             down: [actualX, references.y2 + distance],
