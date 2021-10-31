@@ -19,8 +19,8 @@ export default class Wold {
         this.state = new State(this)
         this.walkedPathTrace = []
         this.traces = [
-            new Trace('normal', 1000, 0.8, '#CACACA'), 
-            new Trace('food', 600, 0.8, '#3391B5')
+            new Trace('normal', 1000, 0.8, '#CACACA4D'), 
+            new Trace('food', 600, 0.8, '#3391B54D')
         ]
         this.weather = ''
         this.droppedFood = []

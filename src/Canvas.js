@@ -123,15 +123,9 @@ export default class Canvas extends Screen {
         Ants.helpers.drawBoard()
         Ants.helpers.drawAnthill('#693A00')
         Ants.helpers.drawFood('#EB9B34')
-        //Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
         Ants.helpers.drawPath(Ants.world.traces)
-
-        // NOTE: Path related - world.walkedPathTrace sliced by setted % 
-        // NOTE: THIS IS A DEVELOP TOOL; DON'T PUSH IT OR THE USERS WILL SUFFER WITH THE DRAWING PATHS!!!!!
-        // Ants.helpers.drawPath(Ants.world.foodPathTrace, '#3391B5')
-        // Ants.helpers.drawPath(Ants.world.walkedPathTrace.slice(-Ants.world.walkedPathTrace.length * Ants.counters.maxDraw), '#BBBBBB')
-
         Ants.helpers.drawAnts()
+        Ants.helpers.drawGrid()
     }
 
     /**
@@ -205,7 +199,41 @@ export default class Canvas extends Screen {
      */
     static drawFood(color) {
         Ants.world.droppedFood.forEach((value) => {
+
             Ants.helpers.drawEntity(value.actualPosition, value.size[0], color, value.size[1])
         })
+    }
+
+    /**
+     * For Debug purposes
+     */
+    static drawGrid() {
+        Ants.camera.context.strokeStyle = '#0000004D'
+        // for (let xxx = 0; xxx < Ants.canvasBounds[0] + 1; xxx++) {
+        //     Ants.camera.context.beginPath();
+        //     Ants.camera.context.moveTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(0));
+        //     Ants.camera.context.lineTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(Ants.canvasBounds[1] + 1));
+        //     Ants.camera.context.stroke();
+        // }
+        // for (let yyy = 0; yyy < Ants.canvasBounds[1] + 1; yyy++) {
+        //     Ants.camera.context.beginPath();
+        //     Ants.camera.context.moveTo(Ants.helpers.getStepSize(0), Ants.helpers.getStepSize(yyy));
+        //     Ants.camera.context.lineTo(Ants.helpers.getStepSize(Ants.canvasBounds[0] + 1), Ants.helpers.getStepSize(yyy));
+        //     Ants.camera.context.stroke();
+        // }
+        if (Ants.arh)
+            for (let xxx = 0; xxx < Ants.canvasBounds[0] + 1; xxx++) {
+                for (let yyy = 0; yyy < Ants.canvasBounds[1] + 1; yyy++) {
+                    Ants.camera.context.font = "4px Arial red";
+                    Ants.camera.context.fillText(
+                        `[${xxx}, ${yyy}]`,
+                        Ants.helpers.getStepSize(xxx) + 4,
+                        Ants.helpers.getStepSize(yyy) + (Ants.helpers.getStepSize(1) / 1.7));
+                }
+            }
+        // Ants.camera.context.beginPath();
+        // Ants.camera.context.moveTo(Ants.helpers.getStepSize(1), Ants.helpers.getStepSize(0));
+        // Ants.camera.context.lineTo(Ants.helpers.getStepSize(1), Ants.helpers.getStepSize(Ants.canvasBounds[1] + 1));
+        // Ants.camera.context.stroke();
     }
 }

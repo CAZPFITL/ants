@@ -198,14 +198,18 @@ export default class Ant {
             const bridgeIndex = (Ants.helpers.getRandomInt(0, ((this.smellFood[2].length * 100) / 100)))
             const pointer = this.smellFood[2][bridgeIndex]
             Ants.messages.processMessage({
-                message: `${this.name} says: mmm smells like ${this.smellFood[1].map(f => f.type + ' and ')}smells good!`,
+                message: `
+                    ${this.name} says: \n
+                    -*sniff* *snif* \n
+                    -smells like ${this.smellFood[1].map(f => `${f.type} and `).join('')}\n
+                    -*sniff* *snif* smells good!`,
                 console: true,
                 log: false,
                 from: `${this.name}'s smell() method`
             })
             this.resetDirection(pointer)
             this.smellFood[1].forEach(food => {
-                console.log(this.useAntennas(food.getFoodSmell()[0], 1))
+                //console.log(this.useAntennas(food.getFoodSmell()[0], 1))
             })
 
         } else {
