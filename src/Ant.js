@@ -96,6 +96,20 @@ export default class Ant {
     }
 
     /**
+     * No parameters will get a random direction and the ant will smell it
+     * Parameters will change de direction and reset a new random stepsToDo
+     * @param {forced direction} dir
+     */
+    resetDirection(dir) {
+        this.directions.directionToDo = dir ?? this.getRandomDirection()
+        this.directions.stepsToDo = Ants.helpers.getRandomInt(0, dir ? 3 : 6)
+        // console.log('i think i will go ', this.directions.directionToDo)
+        if (!dir) {
+            this.smell()
+        }
+    }
+
+    /**
      * Set a new coordinates position for "this" ant.
      * @param {Position X} posX 
      */
@@ -190,6 +204,9 @@ export default class Ant {
                 from: `${this.name}'s smell() method`
             })
             this.resetDirection(pointer)
+            this.smellFood[1].forEach(food => {
+                console.log(this.useAntennas(food.getFoodSmell()[0], 1))
+            })
 
         } else {
             /**
@@ -236,18 +253,24 @@ export default class Ant {
         })({ Ants, This: this })
     }
 
-    /**
-     * No parameters will get a random direction and the ant will smell it
-     * Parameters will change de direction and reset a new random stepsToDo
-     * @param {forced direction} dir
-     */
-    resetDirection(dir) {
-        this.directions.directionToDo = dir ?? this.getRandomDirection()
-        this.directions.stepsToDo = Ants.helpers.getRandomInt(0, dir ? 3 : 6)
-        // console.log('i think i will go ', this.directions.directionToDo)
-        if (!dir) {
-            this.smell()
+    useAntennas(targetsColection, distance = 1) {
+        let actualX = [...this.actualPosition][0]
+        let actualY = [...this.actualPosition][1]
+        let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
+        
+        let checkPositions = {
+            up: [actualX, references.y1 - distance],
+            down: [actualX, references.y2 + distance],
+            left: [references.x1 - distance, actualY],
+            right: [references.x2 + distance, actualY],
         }
+
+        return (
+            (this.directions.directionToDo === 'up' && Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.up))) ? true :
+                (this.directions.directionToDo === 'down' && Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.down))) ? true :
+                    (this.directions.directionToDo === 'right' && Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.right))) ? true :
+                        (this.directions.directionToDo === 'left' && Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.left))) ? true : false
+        )
     }
 
     //Adjust the process to the slider of speed.
@@ -263,6 +286,8 @@ export default class Ant {
             }
         } else if (this.state.state === 'go home') {
             this.walk(true)
+        } else if (this.state.state === 'grabbing food') {
+            this.harvestFoodPiece()
         }
     }
 }

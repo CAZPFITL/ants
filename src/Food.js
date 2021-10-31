@@ -1,3 +1,4 @@
+import Ant from './Ant.js'
 import State from './State.js'
 
 export default class Food {
@@ -9,7 +10,12 @@ export default class Food {
         ]
         this.size = [Math.trunc(Ants.helpers.getRandomInt(200, 500) / 100), Math.trunc(Ants.helpers.getRandomInt(200, 500) / 100)] //0-10
         this.state = new State(this)
-        console.log(this)
+        Ants.messages.processMessage({
+            message: `-- Live News: new ${type} has dropped in the map --`,
+            console: true,
+            log: false,
+            from: `Food - 17`
+        })
     }
 
     getFoodSmell() {

@@ -169,12 +169,7 @@ export default class helpers extends Canvas {
         const actualPosition = [...watcher.actualPosition]
         let actualX = actualPosition[0]
         let actualY = actualPosition[1]
-        let references = {
-            x1: actualX,
-            x2: actualX,
-            y1: actualY,
-            y2: actualY,
-        }
+        let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
         let checkPositions = {
             up: [
                 actualX,
