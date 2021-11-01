@@ -30,13 +30,13 @@ import AntsApp from './src/AntsApp.js';
  *  ->SECONDARY: WILL START NO MATTER WHAT AND AT THIS POINT IT WILL BE A PRIMARY TASK
  *  ->>LEVEL OF IMPORTANCE = DEPENDING OF AGE THE ANT WILL HAVE DIFFERENT LEVELS ON IMPORTANCE ON EVERY PRIMARY TASKS
  * 
- *  -first task : explore entire map 
- *  -second task: if a trace of food is finded the ants will mark in in the ant hill, 
- *  -third task: then the workers will start to take food from there
- *  -fourth task: once the ant gets 10 days of life the secondary task "reproduce" will be started in that ant ( NOTE: days of life the ant will thange the level of importance)
- *  -fifth task: the primary task will be executed in the order of importance
- *  -sixth task: if the ant gets 100 days of life NOTE: the ant will thange the level of importance
- *  -seventh task: once the ant gets 150 days of life it goes to the graveyard to die and it gets filtered from anthill 
+ *  DONE: -first task : explore entire map 
+ *  DONE: -second task: if a trace of food is finded the ants will mark in in the ant hill, 
+ *  IN PROGRESS: -third task: then the workers will start to take food from there
+ *  TODO: -fourth task: once the ant gets 10 days of life the secondary task "reproduce" will be started in that ant ( NOTE: days of life the ant will thange the level of importance)
+ *  TODO: -fifth task: the primary task will be executed in the order of importance
+ *  TODO: -sixth task: if the ant gets 100 days of life NOTE: the ant will thange the level of importance
+ *  TODO: -seventh task: once the ant gets 150 days of life it goes to the graveyard to die and it gets filtered from anthill 
  * 
  *  --AT THIS POINT IF THE MAP HASN'T BEEN SCANNED THE FIRST TASK WILL CONTINUE--
  *  posible music: 
@@ -45,4 +45,4 @@ import AntsApp from './src/AntsApp.js';
  * 
  * NOTES_https://codepen.io/habelle/details/zXKBga
  */
-AntsApp.init('v0.4.62');
+AntsApp.init('v0.4.7');

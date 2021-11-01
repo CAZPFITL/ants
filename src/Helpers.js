@@ -91,7 +91,15 @@ export default class helpers extends Canvas {
             Ants.world.state.changeState('rainy')
         } else if (e === Ants.settings.keys.sunnyKey) {
             Ants.world.state.changeState('sunny')
+        } else if (e === 'q') {
+            console.log(e)
+            if (!Ants.arh) {
+                Ants.arh = true
+            } else {
+                Ants.arh = !Ants.arh
+            }
         }
+
     }
 
     /**
@@ -137,7 +145,9 @@ export default class helpers extends Canvas {
      * @param {*} str 
      * @returns 
      */
-    static includesMultiDimension(arr, str) { return JSON.stringify(arr).includes(str) };
+    static includesMultiDimension(arr, str) { 
+        return JSON.stringify(arr).includes(JSON.stringify(str)) 
+    };
 
     /**
      * COORD >> DIRECTION
@@ -190,10 +200,10 @@ export default class helpers extends Canvas {
         }
         let output = []
 
-        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.up)) ? output.push('up') : () => { }
-        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.right)) ? output.push('right') : () => { }
-        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.down)) ? output.push('down') : () => { }
-        Ants.helpers.includesMultiDimension(targetsColection, String(checkPositions.left)) ? output.push('left') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.up) ? output.push('up') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.right) ? output.push('right') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.down) ? output.push('down') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.left) ? output.push('left') : () => { }
         return output
     }
 
