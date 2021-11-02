@@ -3,15 +3,15 @@
 * Dependencies: *
 * Creator: CAZPFITL
 * License: -
-* Description: this application in the future will let you play with ants and neural networks, letting our little friend, learn how to find things
+* Description: this application in the future will let you play with ants, letting our little friend, learn how to find things
 * App initialization.
 * Name: Ants
 * Creator: CAZPFITL
 * License: -
-- Description: this application in the future will let you play with ants and neural networks, letting our little friend, learn how to find things
+- Description: this application in the future will let you play with ants, letting our little friend, learn how to find things
 
     -TODO: ANTS REPRODUCTION PENDING (QUEEN ANT)
-    -TODO: add to oobservers any closer ant and remove it when if goes away
+    -TODO: add to oobservers any closer ant and remove it when if goes away // DEPRECATED
 
 
 ## GENERAL POINTS:
