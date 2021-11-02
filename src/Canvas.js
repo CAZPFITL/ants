@@ -32,9 +32,22 @@ export default class Canvas extends Screen {
     static getScreen() {
         let screen = document.createElement('div')
         screen.id = 'screen'
-        screen.width = window.innerWidth
-        screen.height = window.innerHeight
+        screen.style.width = window.innerWidth
+        screen.style.height = window.innerHeight
         return screen
+    }
+
+    /**
+     * Screen contains the game controls
+     * @returns On game Screen
+     */
+    static getCollections() {
+        let collections = document.createElement('div')
+        let relative = document.createElement('div')
+        collections.id = 'collections'
+        relative.className = 'relative'
+        collections.append(relative)
+        return collections
     }
 
     /**
@@ -43,6 +56,7 @@ export default class Canvas extends Screen {
     static createCanvas() {
         let canvas = Ants.helpers.getCanvas()
         let screen = Ants.helpers.getScreen()
+        let collections = Ants.helpers.getCollections()
 
         Ants.camera = new Camera(canvas.getContext('2d'), {
             initialPosition: [Ants.helpers.getStepSize(Ants.canvasBounds[0]) / 2, Ants.helpers.getStepSize(Ants.canvasBounds[1]) / 2],
@@ -51,9 +65,22 @@ export default class Canvas extends Screen {
             keys: Ants.settings.keys
         })
 
+        document.getElementsByTagName('body')[0].prepend(collections)
         document.getElementsByTagName('body')[0].prepend(screen)
         document.getElementsByTagName('body')[0].prepend(canvas)
+        Ants.helpers.addDomFunct()
         Ants.helpers.requestAnimation()
+    }
+
+    static addDomFunct() {
+        window.addEventListener('keydown', (e) => Ants.helpers.processKeyDown(e.key));
+        window.addEventListener('keyup', (e) => Ants.helpers.processKeyUp(e.key));
+        window.addEventListener('resize', () => Ants.helpers.getCanvas());
+        Ants.screens = {
+            screen: document.querySelector('#screen'),
+            body: document.querySelector('body'),
+            collections: document.querySelector('#collections'),
+        }
     }
 
     /**
@@ -73,8 +100,6 @@ export default class Canvas extends Screen {
         Ants.helpers.step()
         Ants.helpers.drawCollection()
         Ants.helpers.drawSurrounds()
-
-
         window.requestAnimationFrame(Ants.helpers.draw)
     }
 
@@ -156,7 +181,8 @@ export default class Canvas extends Screen {
                     Ants.counters.stepSize * 4,
                     Ants.counters.stepSize * 4)
             } else {
-                Ants.helpers.drawEntity(ant.actualPosition, 1, ant.color)
+                // Ants.helpers.drawEntity(ant.actualPosition, 1, ant.color)
+                ant.updateDom()
             }
         })
     }
@@ -209,31 +235,20 @@ export default class Canvas extends Screen {
      */
     static drawGrid() {
         Ants.camera.context.strokeStyle = '#0000004D'
-        // for (let xxx = 0; xxx < Ants.canvasBounds[0] + 1; xxx++) {
-        //     Ants.camera.context.beginPath();
-        //     Ants.camera.context.moveTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(0));
-        //     Ants.camera.context.lineTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(Ants.canvasBounds[1] + 1));
-        //     Ants.camera.context.stroke();
-        // }
-        // for (let yyy = 0; yyy < Ants.canvasBounds[1] + 1; yyy++) {
-        //     Ants.camera.context.beginPath();
-        //     Ants.camera.context.moveTo(Ants.helpers.getStepSize(0), Ants.helpers.getStepSize(yyy));
-        //     Ants.camera.context.lineTo(Ants.helpers.getStepSize(Ants.canvasBounds[0] + 1), Ants.helpers.getStepSize(yyy));
-        //     Ants.camera.context.stroke();
-        // }
         if (Ants.arh)
             for (let xxx = 0; xxx < Ants.canvasBounds[0] + 1; xxx++) {
-                for (let yyy = 0; yyy < Ants.canvasBounds[1] + 1; yyy++) {
-                    Ants.camera.context.font = "4px Arial red";
-                    Ants.camera.context.fillText(
-                        `[${xxx}, ${yyy}]`,
-                        Ants.helpers.getStepSize(xxx) + 4,
-                        Ants.helpers.getStepSize(yyy) + (Ants.helpers.getStepSize(1) / 1.7));
-                }
+                Ants.camera.context.beginPath();
+                Ants.camera.context.moveTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(0));
+                Ants.camera.context.lineTo(Ants.helpers.getStepSize(xxx), Ants.helpers.getStepSize(Ants.canvasBounds[1] + 1));
+                Ants.camera.context.stroke();
             }
-        // Ants.camera.context.beginPath();
-        // Ants.camera.context.moveTo(Ants.helpers.getStepSize(1), Ants.helpers.getStepSize(0));
-        // Ants.camera.context.lineTo(Ants.helpers.getStepSize(1), Ants.helpers.getStepSize(Ants.canvasBounds[1] + 1));
-        // Ants.camera.context.stroke();
+        if (Ants.arh)
+            for (let yyy = 0; yyy < Ants.canvasBounds[1] + 1; yyy++) {
+                Ants.camera.context.beginPath();
+                Ants.camera.context.moveTo(Ants.helpers.getStepSize(0), Ants.helpers.getStepSize(yyy));
+                Ants.camera.context.lineTo(Ants.helpers.getStepSize(Ants.canvasBounds[0] + 1), Ants.helpers.getStepSize(yyy));
+                Ants.camera.context.stroke();
+            }
+
     }
 }

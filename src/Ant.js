@@ -1,3 +1,5 @@
+import { AntSvg } from './Assets.js'
+
 import State from './State.js'
 
 export default class Ant {
@@ -45,6 +47,41 @@ export default class Ant {
             },
         }
         this.state = new State(this)
+        this.born()
+    }
+
+    born() {
+        let viewport = Ants.camera.viewport
+        let scale = viewport.scale
+        this.domTarget = document.createElement('div')
+        this.domTarget.innerHTML = AntSvg()
+        this.domTarget.classList = `ant ${this.name.replace(' ', '-').replace(' #', '-#')}`
+        this.domTarget.style.width = `${Ants.counters.stepSize * scale[0]}px`
+        this.domTarget.style.height = `${Ants.counters.stepSize * scale[1]}px`
+        this.domTarget.style.position = `absolute`
+        Ants.domCollections.push(this)
+        Ants.screens.collections.querySelector('.relative').append(this.domTarget)
+    }
+
+    updateDom() {
+        //console.log('message')
+        let viewportRef = Ants.camera.viewport
+        let lookAt = Ants.camera.lookAt
+        let scale = viewportRef.scale
+        let step = Ants.counters.stepSize
+        let viewport = [
+            lookAt[0] - (viewportRef.width / 2.0),
+            lookAt[1] - (viewportRef.height / 2.0)
+        ]
+        
+        let initialCero = [(-viewport[0] + step) * scale[0], (-viewport[1] + step) * scale[1]]
+        let coords = [Ants.helpers.getStepSize(this.actualPosition[0]) * scale[0], Ants.helpers.getStepSize(this.actualPosition[1]) * scale[1]]
+        
+        
+        this.domTarget.style.top = `${initialCero[1]}px`
+        this.domTarget.style.left = `${initialCero[0]}px`
+        this.domTarget.style.width = `${step * scale[0]}px`
+        this.domTarget.style.height = `${step * scale[1]}px`
     }
 
     /**

@@ -1,4 +1,4 @@
-import { processRequest, drawSlider, arrows, full } from './Assets.js'
+import { processRequest, drawSlider, arrows, full, AntSvg } from './Assets.js'
 
 export default class Screen {
     static drawScreen(state) {
