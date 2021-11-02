@@ -78,8 +78,8 @@ export default class Ant {
         let coords = [Ants.helpers.getStepSize(this.actualPosition[0]) * scale[0], Ants.helpers.getStepSize(this.actualPosition[1]) * scale[1]]
         
         
-        this.domTarget.style.top = `${initialCero[1]}px`
-        this.domTarget.style.left = `${initialCero[0]}px`
+        this.domTarget.style.top = `${initialCero[1]+coords[1]}px`
+        this.domTarget.style.left = `${initialCero[0]+coords[0]}px`
         this.domTarget.style.width = `${step * scale[0]}px`
         this.domTarget.style.height = `${step * scale[1]}px`
     }

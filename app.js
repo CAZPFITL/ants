@@ -45,4 +45,4 @@ import AntsApp from './src/AntsApp.js';
  * 
  * NOTES_https://codepen.io/habelle/details/zXKBga
  */
-AntsApp.init('v0.4.8');
+AntsApp.init('v0.4.9');
