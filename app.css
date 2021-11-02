@@ -25,9 +25,10 @@ html {
 }
 
 body {
-	background: #FFFFFF;
+	background: #ffffff;
 	display: flex;
 	position: relative;
+	overflow: hidden;
 }
 
 body #screen {
@@ -36,6 +37,7 @@ body #screen {
 	height: 100%;
 	margin: 0 0;
 	display: flex;
+	color: #ffffff;
 }
 
 h1,
@@ -55,11 +57,11 @@ canvas {
 	height: 100vh;
 	margin: auto;
 	border: 1px solid #333333;
-
 }
 
 #screen {
 	position: absolute;
+	z-index: 999;
 	top: 0;
 	left: 0;
 	margin: 20px 20px;
@@ -103,12 +105,12 @@ canvas {
 	border-radius: 5px;
 	width: 45px;
 	height: 45px;
-	background: #FFFFFF;
+	background: #ffffff;
 	transition: fill, 0.2s ease, background 0.1s ease;
 }
 
 .start #screen .wrapper .controls svg:active {
-	fill: #FFFFFF;
+	fill: #ffffff;
 	background: #333333;
 }
 
@@ -121,6 +123,11 @@ canvas {
 	position: absolute;
 	bottom: 0;
 	left: 0;
+	width: 220px;
+}
+.start #screen .wrapper .screen-controls .box span,
+.start #screen .wrapper .screen-controls .box {
+	margin: 8px 0;
 }
 
 .start #screen .wrapper .screen-controls svg {
@@ -128,12 +135,12 @@ canvas {
 	border-radius: 5px;
 	width: 25px;
 	height: 25px;
-	background: #FFFFFF;
+	background: #ffffff;
 	transition: fill, 0.2s ease, background 0.1s ease;
 }
 
 .start #screen .wrapper .screen-controls svg:active {
-	fill: #FFFFFF;
+	fill: #ffffff;
 	background: #333333;
 }
 
@@ -147,7 +154,6 @@ canvas {
 .start #screen p {
 	margin: 2px;
 }
-
 
 /*
  * Fail Screen
@@ -191,8 +197,8 @@ canvas {
 	background: #d3d3d3;
 	outline: none;
 	opacity: 0.7;
-	-webkit-transition: .2s;
-	transition: opacity .2s;
+	-webkit-transition: 0.2s;
+	transition: opacity 0.2s;
 	margin: 0 5px;
 	max-width: 150px;
 }
@@ -206,14 +212,14 @@ canvas {
 	appearance: none;
 	width: 25px;
 	height: 25px;
-	background: #04AA6D;
+	background: #04aa6d;
 	cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
 	width: 25px;
 	height: 25px;
-	background: #04AA6D;
+	background: #04aa6d;
 	cursor: pointer;
 }
 
@@ -240,4 +246,27 @@ canvas {
 
 .right {
 	flex: auto;
+}
+
+#collections {
+	position: absolute;
+	pointer-events: none;
+}
+
+.relative {
+	position: relative;
+}
+
+.relative,
+#collections {
+	z-index: 1;
+	display: block;
+	width: 100vw;
+	height: 100vh;
+}
+
+#collections svg {
+	display: block;
+	width: 100%;
+	height: 100%;
 }

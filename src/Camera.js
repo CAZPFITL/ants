@@ -11,7 +11,7 @@ export default class Camera {
             initialZoom: (context.canvas.width / context.canvas.height) * 800,
             initialMove: settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
         }
-        this.distance = (context.canvas.width / context.canvas.height) * 800
+        this.distance = settings.distance || (context.canvas.width / context.canvas.height) * 1000
         this.lookAt = settings.initialPosition || [(scale * Ants.canvasBounds[0]) / 2, (scale * Ants.canvasBounds[1]) / 2]
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0
         this.gameScale = scale

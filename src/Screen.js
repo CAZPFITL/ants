@@ -1,4 +1,4 @@
-import { processRequest, drawSlider, arrows, full } from './Assets.js'
+import { processRequest, drawSlider, arrows, full, AntSvg } from './Assets.js'
 
 export default class Screen {
     static drawScreen(state) {
@@ -29,7 +29,7 @@ export default class Screen {
                             <span>draw path: (use wisely)</span>
                             <div class="slider-wrapper">
                                 <span>min</span>
-                                ${drawSlider(1, 100, Ants.counters.maxDraw * 100, 'Ants.counters.maxDraw = this.value / 100')}
+                                ${drawSlider(1, Ants.counters.maxDraw * 100, Ants.counters.maxDraw * 100, 'Ants.counters.maxDraw = this.value / 100')}
                                 <span>max</span>
                             </div>
                         </div>

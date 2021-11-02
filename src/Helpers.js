@@ -1,6 +1,4 @@
-import Node from './Node.js';
 import Canvas from './Canvas.js';
-import Graph from './Graph.js';
 
 /**
  * This is an abstract class containing all game helpers methods
@@ -93,7 +91,15 @@ export default class helpers extends Canvas {
             Ants.world.state.changeState('rainy')
         } else if (e === Ants.settings.keys.sunnyKey) {
             Ants.world.state.changeState('sunny')
+        } else if (e === 'q') {
+            console.log(e)
+            if (!Ants.arh) {
+                Ants.arh = true
+            } else {
+                Ants.arh = !Ants.arh
+            }
         }
+
     }
 
     /**
@@ -123,7 +129,7 @@ export default class helpers extends Canvas {
 
     /**
      * Move Entity to given direction (Requires actualPosition[x,y] key)
-     * @param {Next's move direction} // nextMove 
+     * @param {Next's move direction} // nextMove   DIRECTION >> COORD
      */
     static moveEntity(entity, nextMove) {
         let x = nextMove === 'left' ? (entity.actualPosition[0] - 1) : nextMove === 'right' ? (entity.actualPosition[0] + 1) : entity.actualPosition[0]
@@ -134,136 +140,128 @@ export default class helpers extends Canvas {
     }
 
     /**
-     * Scan any target you specify in an array, both, observer and observable must have .state key in
-     * @param {Search diameter} diameter 
+     * 
+     * @param {*} arr 
+     * @param {*} str 
+     * @returns 
+     */
+    static includesMultiDimension(arr, str) { 
+        return JSON.stringify(arr).includes(JSON.stringify(str)) 
+    };
+
+    /**
+     * COORD >> DIRECTION
+     * @param {*} initialCoord 
+     * @param {*} finalCoord 
+     * @returns 
+     */
+    static getCoordsRelationalDirection(initialCoord, finalCoord) {
+        if (finalCoord[0] > initialCoord[0] && initialCoord[1] === finalCoord[1]) {
+            return 'right'
+        } else if (finalCoord[0] < initialCoord[0] && initialCoord[1] === finalCoord[1]) {
+            return 'left'
+        } else if (initialCoord[0] === finalCoord[0] && finalCoord[1] < initialCoord[1]) {
+            return 'up'
+        } else if (initialCoord[0] === finalCoord[0] && finalCoord[1] > initialCoord[1]) {
+            return 'down'
+        } else {
+            return false
+        }
+    }
+
+    /**
+     * Scan any target you specify in an array, both, observer and observable must have .state key in  -  COORD >> DIRECTIONS
+     * @param {Search diameter} diameter  
      * @param {Who is scanning} watcher 
      * @param {What are we scanning} targetsColection 
      */
-    static scanTarget(diameter, watcher, targetsColection) {
-        for (let x = 0; x < diameter; x++) {
-            for (let y = 1; y < diameter; y++) {
-                targetsColection.forEach(target => {
-                    const scannedPosition = { ...target.actualPosition }
-                    let xAxisIndex = scannedPosition[0]
-                    let yAxisIndex = scannedPosition[1]
-
-                    /**
-                     * Found closer targets
-                     */
-                    if (watcher.actualPosition[0] === xAxisIndex && watcher.actualPosition[1] === yAxisIndex && this !== target) {
-                        if (!watcher.state.observers.includes(target)) {
-                            console.log(watcher.name, ' - found - ', target.name)
-                            watcher.state.add(target)
-                        }
-                    }
-
-                    /**
-                     * Loose closer Targets
-                     */
-                    watcher.state.observers.forEach(x => {
-
-                    })
-
-                    yAxisIndex++
-                    xAxisIndex++
-                })
-            }
+    static scanTarget(watcher, targetsColection, distance = 1) {
+        const actualPosition = [...watcher.actualPosition]
+        let actualX = actualPosition[0]
+        let actualY = actualPosition[1]
+        let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
+        let checkPositions = {
+            up: [
+                actualX,
+                references.y1 - distance
+            ],
+            down: [
+                actualX,
+                references.y2 + distance
+            ],
+            left: [
+                references.x1 - distance,
+                actualY
+            ],
+            right: [
+                references.x2 + distance,
+                actualY
+            ],
         }
-        if (watcher.state.observers.length > 0) {
-            // console.log('close targets to ', watcher.name, ': ', watcher.state.observers)
-        }
+        let output = []
+
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.up) ? output.push('up') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.right) ? output.push('right') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.down) ? output.push('down') : () => { }
+        Ants.helpers.includesMultiDimension(targetsColection, checkPositions.left) ? output.push('left') : () => { }
+        return output
     }
 
-    static createDataGraph() {
-        for (let x_axis = 0; x_axis < Ants.canvasBounds[0]; x_axis++) {
-            for (let y_axis = 0; y_axis < Ants.canvasBounds[1]; y_axis++) {
-                Ants.dataGraph.push({
-                    coord: [x_axis, y_axis],
-                    surrounds: [
-                        [(x_axis - 1), y_axis],
-                        [x_axis, (y_axis - 1)],
-                        [(x_axis + 1), y_axis],
-                        [x_axis, (y_axis + 1)],
-                    ]
-                })
-            }
-        }
-        console.log(Ants.dataGraph)
+    /**
+     * get random true / false 50/50 chance
+     */
+    static getFiftyFifty() {
+        return Ants.helpers.getRandomInt(0, 1000000) >= 500000 ? true : false
     }
 
+    /**
+     * get home direction
+     */
+    static getHomeStep(_actual, home = Ants.anthill.position) {
+        let path = []
+        let actual = [...(path.length > 0 ? path[path.length - 1] : _actual)]
+        let x = actual[0]
+        let y = actual[1]
 
-
-    static findPath(initial, final) {
-        const bounds = Ants.canvasBounds
-        if (!initial || !final || initial[0] < 0 || initial[1] < 0 || final[0] > bounds[0] || final[1] > bounds[1]) {
-            console.error('check your parameters bounds exceeded, or missing initial or final coords')
-            return;
+        if (x == home[0] && y == home[1]) {
+            return actual
         } else {
-            let data = Ants.dataGraph
-            var graph = new Graph()
-            var movies = data;
-
-            for (var i = 0; i < movies.length; i++) {
-                var movie = movies[i].coord;
-                var cast = movies[i].surrounds;
-                var movieNode = new Node(movie);
-                graph.addNode(movieNode);
-                console.log('step')
-                // Y
-                for (var j = 0; j < cast.length; j++) {
-                    var actor = cast[j];
-                    var actorNode = graph.getNode(actor);
-                    if (actorNode == undefined) {
-                        actorNode = new Node(actor);
-                        // dropdown.option(actor);
-                    }
-                    graph.addNode(actorNode);
-                    movieNode.addEdge(actorNode);
-                }
+            if (x < home[0]) {
+                x++;
+            } else if (x > home[0]) {
+                x--;
+            } else if (y < home[1]) {
+                y++;
+            } else if (y > home[1]) {
+                y--;
             }
-
-            function bfs() {
-                graph.reset();
-                const start = graph.setStart(initial);
-                const end = graph.setEnd(final);
-                const queue = [];
-                start.searched = true;
-                queue.push(start);
-
-                while (queue.length > 0) {
-                    let current = queue.shift();
-                    if (current == end) {
-                        console.log("Found " + current.value);
-                        break;
-                    }
-                    let edges = current.edges;
-                    for (let i = 0; i < edges.length; i++) {
-                        var neighbor = edges[i];
-                        if (!neighbor.searched) {
-                            neighbor.searched = true;
-                            neighbor.parent = current;
-                            queue.push(neighbor);
-                        }
-                    }
-                }
-
-                const path = [];
-                const simplePath = [];
-                path.push(end);
-                if(typeof end !== 'undefined') {
-                    simplePath.push(end);
-                }
-                let next = end.parent;
-                while (next != null && (next.value[0] !== initial[0] && next.value[1] !== initial[1]) ) {
-                    console.log(next.value[0] == initial[0] && next.value[1] == initial[1])
-                    path.push(next);
-                    simplePath.push(next.value);
-                    next = next.parent;
-                }
-                console.log(simplePath)
-            }
-
-            bfs()
+            return [x, y];
         }
+    }
+
+    /**
+     * Update clock
+     */
+    static updateClock() {
+        Ants.world.time.globalSeconds++
+        if (Ants.world.time.seconds <= 58) {
+            Ants.world.time.seconds++
+        } else {
+            Ants.world.time.seconds = 0
+            if (Ants.world.time.minutes <= 58) {
+                Ants.world.time.minutes++
+            } else {
+                Ants.world.time.minutes = 0
+                if (Ants.world.time.hours <= 22) {
+                    Ants.world.time.hours++
+                } else {
+                    Ants.world.time.seconds = 0
+                    Ants.world.time.minutes = 0
+                    Ants.world.time.hours = 0
+                    Ants.world.time.days++
+                }
+            }
+        }
+        // console.log(+ Ants.world.time.hours + ':' + Ants.world.time.minutes + ':' + Ants.world.time.seconds)
     }
 }
