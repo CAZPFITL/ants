@@ -22,7 +22,7 @@ export default class AntsApp {
         this.camera // declared on Canvas.js at createCanvas() from requestLoad() state
         this.dataGraph = []
         this.domCollections = []
-        this.canvasBounds = [160, 120]
+        this.canvasBounds = [120, 100]
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control

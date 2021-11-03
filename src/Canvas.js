@@ -99,23 +99,7 @@ export default class Canvas extends Screen {
         }
         Ants.helpers.step()
         Ants.helpers.drawCollection()
-        Ants.helpers.drawSurrounds()
         window.requestAnimationFrame(Ants.helpers.draw)
-    }
-
-    /**
-     * Draw map surrounds
-     */
-    static drawSurrounds(color = Ants.settings.surroundsColor, scale = 2000) {
-        Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], scale, color, (scale / 2))
-        Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], (scale / 2), color, scale)
-        Ants.helpers.drawEntity([-(scale / 2), Ants.canvasBounds[1] + 1], scale, color, (scale / 2))
-        Ants.helpers.drawEntity([Ants.canvasBounds[0] + 1, -(scale / 2)], (scale / 2), color, scale)
-
-        var ctx = Ants.camera.context;
-        ctx.font = "80px Mouse";
-        ctx.fillStyle = "rgba(253, 118, 144)";
-        ctx.fillText(Ants.name, 0, -40);
     }
 
     /**
@@ -140,7 +124,6 @@ export default class Canvas extends Screen {
      * Draw all ants in the board
      */
     static drawCollection() {
-
         Ants.camera.end();
         Ants.helpers.clearCanvas()
         Ants.camera.begin();
@@ -151,6 +134,7 @@ export default class Canvas extends Screen {
         Ants.helpers.drawPath(Ants.world.traces)
         Ants.helpers.drawAnts()
         Ants.helpers.drawGrid()
+        Ants.helpers.drawSurrounds()
     }
 
     /**
@@ -218,8 +202,16 @@ export default class Canvas extends Screen {
      */
     static drawPath(element) {
         element.forEach(path => {
-            path.liveTraceCoords.forEach(step => {
-                Ants.helpers.drawEntity(step, 1, path.color)
+            path.liveTraceCoords.forEach((step, index, array) => {
+                let radius = Ants.counters.stepSize / 4
+                let adjust = path.liveTraceSizes[index]
+                let x = Ants.helpers.getStepSize(step[0]) + (radius * 2) 
+                let y = Ants.helpers.getStepSize(step[1]) + (radius * 2) 
+
+                Ants.camera.context.beginPath();
+                Ants.camera.context.fillStyle = path.color;
+                Ants.camera.context.arc(x, y, radius + adjust, 0, 2 * Math.PI);
+                Ants.camera.context.fill();
             })
         })
     }
@@ -267,5 +259,20 @@ export default class Canvas extends Screen {
                 Ants.camera.context.stroke();
             }
 
+    }
+
+    /**
+     * Draw map surrounds
+     */
+    static drawSurrounds(color = Ants.settings.surroundsColor, scale = 2000) {
+        Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], scale, color, (scale / 2))
+        Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], (scale / 2), color, scale)
+        Ants.helpers.drawEntity([-(scale / 2), Ants.canvasBounds[1] + 1], scale, color, (scale / 2))
+        Ants.helpers.drawEntity([Ants.canvasBounds[0] + 1, -(scale / 2)], (scale / 2), color, scale)
+
+        var ctx = Ants.camera.context;
+        ctx.font = "80px Mouse";
+        ctx.fillStyle = "rgba(253, 118, 144)";
+        ctx.fillText(Ants.name, 0, -40);
     }
 }

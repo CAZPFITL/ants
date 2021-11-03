@@ -6,5 +6,18 @@ export default class Trace {
         this.color = color || '#999999'
         this.liveTraceCoords = []
         this.liveTraceStamp = [] // check the las stamp an remove it if the liveTime has exceeded, then check the next, if it's ok go on , if not, repeat
+        this.liveTraceSizes = []
+    }
+
+    clamp(coord){
+        this.liveTraceCoords.push(coord)
+        this.liveTraceStamp.push(Ants.world.time.globalSeconds)
+        this.liveTraceSizes.push(Ants.helpers.getRandomInt(0, 800) / 100)
+    }
+
+    release() {
+        this.liveTraceCoords.shift()
+        this.liveTraceStamp.shift()
+        this.liveTraceSizes.shift()
     }
 }
