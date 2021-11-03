@@ -220,8 +220,8 @@ export default class Camera {
                 if (zoomLevel <= 1) {
                     zoomLevel = 1
                 }
-                
-                if (this.distance >= 4500) {
+
+                if (this.distance >= 11000) {
                     if (e.deltaY < 0) {
                         this.zoomTo(zoomLevel)
                     }
@@ -230,37 +230,36 @@ export default class Camera {
                         if (e.deltaY > 0) {
                             this.zoomTo(zoomLevel)
                         }
-                    }else {
+                    } else {
                         this.zoomTo(zoomLevel)
                     }
                 }
             } else {
                 let refx = (window.innerWidth / Ants.camera.viewport.scale[0]) / 2
                 let refy = (window.innerHeigh / Ants.camera.viewport.scale[1]) / 2
-                
+
                 const x = (e.deltaX * 10 / this.gameScale)
                 const y = (e.deltaY * 10 / this.gameScale)
-                
+
                 let newX = this.lookAt[0]
                 let newY = this.lookAt[1]
 
-                if (this.viewport.left <= -refx) {
-                    if (e.deltaX < 0) {
-                        newX = 0
-                    }
-                    newX = newX + x
-                } else {
-                    if (this.viewport.left >= (window.innerWidth * Ants.camera.viewport.scale[0]) / 2) {
-                        if (e.deltaX > 0) {
-                            newX = refx
-                        }
-                    } else {
-                        newX = newX + x
-                    }
-                }
-            
-                newY = newY + y
+                // if (this.viewport.left <= -refx) {
+                //     if (e.deltaX > 0) {
+                //         newX = newX + x
+                //     }
+                // } else {
+                    //     if (this.viewport.right <= Ants.camera.lookAt[0]) {
+                //         if (e.deltaX < 0) {
+                //             newX = newX + x
+                //         }
+                //     } else {
+                //         newX = newX + x
+                //     }
+                // }
 
+                newX = newX + x
+                newY = newY + y
                 this.moveTo(newX, newY)
             }
         }
