@@ -169,22 +169,20 @@ export default class Ant {
                 if (typeof foodPiece === 'undefined') {
                     return
                 }
-                let scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell()[0])
-
+                let scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.body)
                 const sniffPositive = (_scannedFoodBody) => {
                     This.smellFood[0] = true
                     This.smellFood[1].push(foodPiece)
                     _scannedFoodBody.forEach(f => This.smellFood[2].push(f))
                 }
-
                 if (scannedFoodBody.length > 0) {
                     sniffPositive(scannedFoodBody)
                 } else {
-                    scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell(), 2)
+                    scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.body, 2)
                     if (scannedFoodBody.length > 0) {
                         sniffPositive(scannedFoodBody)
                     } else {
-                        scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.getFoodSmell(), 3)
+                        scannedFoodBody = Ants.helpers.scanTarget(This, foodPiece.body, 3)
                         if (scannedFoodBody.length > 0) {
                             sniffPositive(scannedFoodBody)
                         }
