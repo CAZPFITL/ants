@@ -216,18 +216,51 @@ export default class Camera {
         window.onwheel = e => {
             if (e.ctrlKey) {
                 // Your zoom/scale factor
-                let zoomLevel = this.distance + (e.deltaY * 20)
+                let zoomLevel = this.distance + (e.deltaY * 10) / this.gameScale
                 if (zoomLevel <= 1) {
                     zoomLevel = 1
                 }
 
-                this.zoomTo(zoomLevel)
+                if (this.distance >= 11000) {
+                    if (e.deltaY < 0) {
+                        this.zoomTo(zoomLevel)
+                    }
+                } else {
+                    if (this.distance <= 400) {
+                        if (e.deltaY > 0) {
+                            this.zoomTo(zoomLevel)
+                        }
+                    } else {
+                        this.zoomTo(zoomLevel)
+                    }
+                }
             } else {
-                // Your track-pad X and Y positions
-                const x = this.lookAt[0] + (e.deltaX * 10 / this.gameScale)
-                const y = this.lookAt[1] + (e.deltaY * 10 / this.gameScale)
+                let refx = (window.innerWidth / Ants.camera.viewport.scale[0]) / 2
+                let refy = (window.innerHeigh / Ants.camera.viewport.scale[1]) / 2
 
-                this.moveTo(x, y)
+                const x = (e.deltaX * 10 / this.gameScale)
+                const y = (e.deltaY * 10 / this.gameScale)
+
+                let newX = this.lookAt[0]
+                let newY = this.lookAt[1]
+
+                // if (this.viewport.left <= -refx) {
+                //     if (e.deltaX > 0) {
+                //         newX = newX + x
+                //     }
+                // } else {
+                    //     if (this.viewport.right <= Ants.camera.lookAt[0]) {
+                //         if (e.deltaX < 0) {
+                //             newX = newX + x
+                //         }
+                //     } else {
+                //         newX = newX + x
+                //     }
+                // }
+
+                newX = newX + x
+                newY = newY + y
+                this.moveTo(newX, newY)
             }
         }
 

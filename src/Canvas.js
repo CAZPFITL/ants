@@ -181,8 +181,25 @@ export default class Canvas extends Screen {
                     Ants.counters.stepSize * 4,
                     Ants.counters.stepSize * 4)
             } else {
-                // Ants.helpers.drawEntity(ant.actualPosition, 1, ant.color)
-                ant.updateDom()
+                //Ants.helpers.drawEntity(ant.actualPosition, 1, ant.color)
+                // let step = [Ants.helpers.getStepSize(ant.actualPosition[0]), Ants.helpers.getStepSize(ant.actualPosition[1])]
+                // var path = new Path2D(`M ${step[0]},${step[1]} h 50 v 50 h 50`);
+                // Ants.camera.context.stroke(path);
+                //ant.updateDom()
+                let step = Ants.counters.stepSize
+                let coords = [Ants.helpers.getStepSize(ant.actualPosition[0]), Ants.helpers.getStepSize(ant.actualPosition[1])]
+                let direction = ant.directions.directionToDo === 'up' ? 0 : ant.directions.directionToDo === 'down' ? 200 : ant.directions.directionToDo === 'right' ? 400 : 600
+                Ants.camera.context.drawImage(
+                    ant.images, // Image.
+                    0, // tile
+                    direction, // tile
+                    200, //image scale
+                    200, //image scale
+                    coords[0] - step / 2, // position in canvas
+                    coords[1] - step / 2, // position in canvas
+                    step * 2, //canvas scale
+                    step * 2, //canvas scale
+                )
             }
         })
     }
