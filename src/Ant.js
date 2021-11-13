@@ -117,34 +117,42 @@ export default class Ant {
      * Set a new coordinates position for "this" ant.
      * @param {Position X} posX 
      */
-    walk(panic = false) {
+    async walk(panic = false) {
         /**
          * Moving the ant.
          */
-        (function walk({ panic = false, This, Ants }) {
+        const move = async (panic) => {
             if (panic) {
-                This.actualPosition = Ants.helpers.getHomeStep(This.actualPosition)
+                this.actualPosition = Ants.helpers.getHomeStep(this.actualPosition)
             } else {
-                This.think()
-                This.lastPosition = This.actualPosition
-                Ants.helpers.moveEntity(This, This.directions.directionToDo)
+                this.think()
+                this.lastPosition = this.actualPosition
+                Ants.helpers.moveEntity(this, this.directions.directionToDo)
             }
-        })({ panic, This: this, Ants });
+        }
         /**
          * Path related scripts.
          */
-        (function leaveTraces({ Ants, This }) {
+        move(panic).then(()=>{
+            /**
+             * clamp() from Trace.js
+             * release() from Trace.js
+             */
             Ants.world.traces.forEach(path => {
+                //clamps normal path
                 if (path.type === 'normal') {
-                    path.clamp(This.actualPosition)
-                } else if (path.type === 'food' && This.bringFood) {
-                    //path.clamp(This.actualPosition)
+                    path.clamp(this.actualPosition)
+                //clamps food path
+                } else if (path.type === 'food' && this.bringFood) {
+                    //path.clamp(this.actualPosition)
                 }
+                //TODO: move to Traces and create cycle in there
+                //Clears dead paths
                 if (Ants.world.time.globalSeconds >= (path.liveTraceStamp[0] + path.liveTime)) {
                     path.release()
                 }
             })
-        })({ Ants, This: this });
+        })
     }
 
     /**
@@ -221,13 +229,11 @@ export default class Ant {
     }
 
     /**
-     * This process clamp let the ant check his arounds and check the position, and any other thing she need to check on every step.
+     * This process clamp let the ant check his rounds and check the position, and any other thing she need to check on every step.
      * smells then 3 - 6 (random) steps on one direction
      * 
      */
     think() {
-
-
         this.smellFoods()
         /**
          * Food found
@@ -250,33 +256,33 @@ export default class Ant {
     }
 
     /**
+     * touch the ground
+     */
+    touch(targetsCollection , distance = 1, ant) {
+        let actualX = [...ant.actualPosition][0]
+        let actualY = [...ant.actualPosition][1]
+        let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
+
+        let checkPositions = {
+            up: [actualX, references.y1 - distance],
+            down: [actualX, references.y2 + distance],
+            left: [references.x1 - distance, actualY],
+            right: [references.x2 + distance, actualY],
+        }
+        return (
+            (ant.directions.directionToDo === 'up' && Ants.helpers.includesMultiDimension(targetsCollection, checkPositions.up)) ? true :
+                (ant.directions.directionToDo === 'down' && Ants.helpers.includesMultiDimension(targetsCollection, checkPositions.down)) ? true :
+                    (ant.directions.directionToDo === 'right' && Ants.helpers.includesMultiDimension(targetsCollection, checkPositions.right)) ? true :
+                        (ant.directions.directionToDo === 'left' && Ants.helpers.includesMultiDimension(targetsCollection, checkPositions.left)) ? true : false
+        )
+    }
+    /**
      * Use Antennas
      */
     useAntennas() {
-        /**
-         * touch the ground
-         */
-        function touch(targetsColection , distance = 1, ant) {
-            let actualX = [...ant.actualPosition][0]
-            let actualY = [...ant.actualPosition][1]
-            let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }
-
-            let checkPositions = {
-                up: [actualX, references.y1 - distance],
-                down: [actualX, references.y2 + distance],
-                left: [references.x1 - distance, actualY],
-                right: [references.x2 + distance, actualY],
-            }
-            return (
-                (ant.directions.directionToDo === 'up' && Ants.helpers.includesMultiDimension(targetsColection, checkPositions.up)) ? true :
-                    (ant.directions.directionToDo === 'down' && Ants.helpers.includesMultiDimension(targetsColection, checkPositions.down)) ? true :
-                        (ant.directions.directionToDo === 'right' && Ants.helpers.includesMultiDimension(targetsColection, checkPositions.right)) ? true :
-                            (ant.directions.directionToDo === 'left' && Ants.helpers.includesMultiDimension(targetsColection, checkPositions.left)) ? true : false
-            )
-        }
 
         this.smellFood[1].forEach(food => {
-            if (touch(food.body, 1, this)) {
+            if (this.touch(food.body, 1, this)) {
                 this.state.changeState('grabbing food');
                 return
             }
@@ -302,7 +308,7 @@ export default class Ant {
     }
 
     //Adjust the process to the slider of speed.
-    cycle() {
+    async cycle() {
         if (this.state.state === 'sleep' || this.job === 'queen') {
             return
         }

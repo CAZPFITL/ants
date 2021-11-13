@@ -129,12 +129,12 @@ export default class Canvas extends Screen {
         Ants.camera.begin();
 
         Ants.helpers.drawBoard()
-        Ants.helpers.drawAnthill('#693A00')
-        Ants.helpers.drawFood('#EB9B34')
-        Ants.helpers.drawPath(Ants.world.traces)
-        Ants.helpers.drawAnts()
-        Ants.helpers.drawGrid()
-        Ants.helpers.drawSurrounds()
+            .then(Ants.helpers.drawAnthill('#693A00'))
+            .then(Ants.helpers.drawFood('#EB9B34'))
+            .then(Ants.helpers.drawPath(Ants.world.traces))
+            .then(Ants.helpers.drawAnts())
+            .then(Ants.helpers.drawGrid())
+            .then(Ants.helpers.drawSurrounds())
     }
 
     /**
@@ -143,19 +143,20 @@ export default class Canvas extends Screen {
      * @param {size based on stepsize parameter} size 
      * @param {color of the entity} color 
      */
-    static drawEntity(coords, size, color, size2 = size) {
+    static async drawEntity(coords, size, color, size2 = size) {
         Ants.camera.context.fillStyle = color
         Ants.camera.context.fillRect(
             Ants.helpers.getStepSize(coords[0]),
             Ants.helpers.getStepSize(coords[1]),
             Ants.counters.stepSize * size,
             Ants.counters.stepSize * size2)
+        return true
     }
 
     /**
      * Draw Ants in Board
      */
-    static drawAnts() {
+    static async drawAnts() {
         Ants.anthill.ants.forEach((ant) => {
             if (ant.job === 'queen') {
                 Ants.camera.context.fillStyle = ant.color
@@ -186,13 +187,15 @@ export default class Canvas extends Screen {
                 )
             }
         })
+        return true
     }
 
     /**
      * Draws board background
      */
-    static drawBoard() {
+    static async drawBoard() {
         Ants.helpers.drawEntity([0, 0], (Ants.canvasBounds[0] + 1), 'green', (Ants.canvasBounds[1] + 1))
+        return true
     }
 
     /**
@@ -200,13 +203,13 @@ export default class Canvas extends Screen {
      * @param {trace path} path 
      * @param {trace color} color 
      */
-    static drawPath(element) {
+    static async drawPath(element) {
         element.forEach(path => {
             path.liveTraceCoords.forEach((step, index, array) => {
                 let radius = Ants.counters.stepSize / 4
                 let adjust = path.liveTraceSizes[index]
-                let x = Ants.helpers.getStepSize(step[0]) + (radius * 2) 
-                let y = Ants.helpers.getStepSize(step[1]) + (radius * 2) 
+                let x = Ants.helpers.getStepSize(step[0]) + (radius * 2)
+                let y = Ants.helpers.getStepSize(step[1]) + (radius * 2)
 
                 Ants.camera.context.beginPath();
                 Ants.camera.context.fillStyle = path.color;
@@ -214,35 +217,38 @@ export default class Canvas extends Screen {
                 Ants.camera.context.fill();
             })
         })
+        return true
     }
 
     /**
      * draws home
      * @param {home color} color 
      */
-    static drawAnthill(color) {
+    static async drawAnthill(color) {
         let c00rds = [
             Ants.anthill.position[0] - (Ants.anthill.size / 2),
             Ants.anthill.position[1] - (Ants.anthill.size / 2)
         ]
         Ants.helpers.drawEntity(c00rds, Ants.anthill.size + 1, color)
+        return true
     }
 
     /**
      * Draws Food entities
      * @param {Foods color} color 
      */
-    static drawFood(color) {
+    static async drawFood(color) {
         Ants.world.droppedFood.forEach((value) => {
-
             Ants.helpers.drawEntity(value.actualPosition, value.size[0], color, value.size[1])
         })
+        return true
+
     }
 
     /**
      * For Debug purposes
      */
-    static drawGrid() {
+    static async drawGrid() {
         Ants.camera.context.strokeStyle = '#0000004D'
         if (Ants.arh)
             for (let xxx = 0; xxx < Ants.canvasBounds[0] + 1; xxx++) {
@@ -259,12 +265,13 @@ export default class Canvas extends Screen {
                 Ants.camera.context.stroke();
             }
 
+        return true
     }
 
     /**
      * Draw map surrounds
      */
-    static drawSurrounds(color = Ants.settings.surroundsColor, scale = 2000) {
+    static async drawSurrounds(color = Ants.settings.surroundsColor, scale = 2000) {
         Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], scale, color, (scale / 2))
         Ants.helpers.drawEntity([-(scale / 2), -(scale / 2)], (scale / 2), color, scale)
         Ants.helpers.drawEntity([-(scale / 2), Ants.canvasBounds[1] + 1], scale, color, (scale / 2))
@@ -274,5 +281,6 @@ export default class Canvas extends Screen {
         ctx.font = "80px Mouse";
         ctx.fillStyle = "rgba(253, 118, 144)";
         ctx.fillText(Ants.name, 0, -40);
+        return true
     }
 }
