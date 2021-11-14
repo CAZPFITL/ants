@@ -12,7 +12,7 @@ export default class Trace {
     clamp(coord){
         this.liveTraceCoords.push(coord)
         this.liveTraceStamp.push(Ants.world.time.globalSeconds)
-        this.liveTraceSizes.push(Ants.helpers.getRandomInt(0, 800) / 100)
+        this.liveTraceSizes.push(Ants.helpers.getRandomInt(0, Ants.counters.dropSizesRange * Ants.counters.stepSize))
     }
 
     release() {

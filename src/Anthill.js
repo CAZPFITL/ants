@@ -18,7 +18,7 @@ export default class Anthill {
                 maxF: 95.1
             },
         }
-        this.maxAnts = size ? size * 10 : ((Ants.canvasBounds[0] + Ants.canvasBounds[1]) / 2)
+        this.maxAnts = 20
         this.ants = []
         this.totalAnts = this.ants.length
         this.antsColors = {

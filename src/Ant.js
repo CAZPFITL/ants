@@ -80,7 +80,7 @@ export default class Ant {
      * Get posible paths based in map bounds
      * @returns posible paths based in map bounds
      */
-    getPosiblePaths() {
+    getPossiblePaths() {
         let posiblePaths = []
         if (this.actualPosition[0] >= 0) { posiblePaths.push('left') }
         if (this.actualPosition[1] >= 0) { posiblePaths.push('up') }
@@ -94,7 +94,7 @@ export default class Ant {
      * @returns random direction
      */
     getRandomDirection() {
-        let posiblePaths = this.getPosiblePaths()
+        let posiblePaths = this.getPossiblePaths()
         let output = posiblePaths[Ants.helpers.getRandomInt(0, posiblePaths.length)]
         return output
     }
@@ -117,11 +117,11 @@ export default class Ant {
      * Set a new coordinates position for "this" ant.
      * @param {Position X} posX 
      */
-    async walk(panic = false) {
+    walk(panic = false) {
         /**
          * Moving the ant.
          */
-        const move = async (panic) => {
+        const move = (panic) => {
             if (panic) {
                 this.actualPosition = Ants.helpers.getHomeStep(this.actualPosition)
             } else {
@@ -133,25 +133,24 @@ export default class Ant {
         /**
          * Path related scripts.
          */
-        move(panic).then(()=>{
-            /**
-             * clamp() from Trace.js
-             * release() from Trace.js
-             */
-            Ants.world.traces.forEach(path => {
-                //clamps normal path
-                if (path.type === 'normal') {
-                    path.clamp(this.actualPosition)
+        move(panic)
+        /**
+         * clamp() from Trace.js
+         * release() from Trace.js
+         */
+        Ants.world.traces.forEach(path => {
+            //clamps normal path
+            if (path.type === 'normal') {
+                path.clamp(this.actualPosition)
                 //clamps food path
-                } else if (path.type === 'food' && this.bringFood) {
-                    //path.clamp(this.actualPosition)
-                }
-                //TODO: move to Traces and create cycle in there
-                //Clears dead paths
-                if (Ants.world.time.globalSeconds >= (path.liveTraceStamp[0] + path.liveTime)) {
-                    path.release()
-                }
-            })
+            } else if (path.type === 'food' && this.bringFood) {
+                //path.clamp(this.actualPosition)
+            }
+            //TODO: move to Traces and create cycle in there
+            //Clears dead paths
+            if (Ants.world.time.globalSeconds >= (path.liveTraceStamp[0] + path.liveTime)) {
+                path.release()
+            }
         })
     }
 
@@ -203,7 +202,6 @@ export default class Ant {
             // - STEP: - 3 - CHECK IF THE FILTERED DIRECTIONS CONTAINS THE ACTUAL DIRECTION TODO 
             // - NOTE: - Remember it does 3-6 steps for direction only if we are in bounds)
             // - NOTE: - this means we have a chance to explore that path, T 50/50 F
-            // - TODO: - FROM: - 0.4.1 Check how many times the paths is pushed to change probability:
             if (!scannedPathsFiltered.includes(this.directions.directionToDo) && scannedPathsFiltered.length > 0) {
                 if (Ants.helpers.getRandomInt(0, 1000000) <= 500000) {
                     this.resetDirection(nextDir)
@@ -235,30 +233,14 @@ export default class Ant {
      */
     think() {
         this.smellFoods()
-        /**
-         * Food found
-         */
-        if (this.smellFood[0]) {
-            /**
-             * Use Antennas
-             */
-            this.useAntennas()
-        } else {
-            /**
-             * Smells Path related
-             */
-            this.smellTraces()
-        }
-        /**
-         * Smells Bounds Around
-         */
+        this.smellFood[0] ? this.useAntennas() : this.smellTraces()
         this.smellBounds()
     }
 
     /**
      * touch the ground
      */
-    touch(targetsCollection , distance = 1, ant) {
+    touch(targetsCollection, distance = 1, ant) {
         let actualX = [...ant.actualPosition][0]
         let actualY = [...ant.actualPosition][1]
         let references = { x1: actualX, x2: actualX, y1: actualY, y2: actualY, }

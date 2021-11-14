@@ -27,12 +27,12 @@ export default class AntsApp {
             speed: 60, // 1 - 60
             counter: 0, //control
             stepSize: 20, // pixel size
-            maxPath: 0.05, //0% of the screen
             maxDraw: 0.5, //% of the maxPath DRAWED
-            path: true,
             initialWorkers: 1,
             homeSize: 6,
             initialZoom: 3500,
+            dropSizesRange: 0.25, //0 - 1 (dropped size range in ant size proportion )
+            drawDropsRange: 0.08  //0 - 1 (draw size)
         }
     }
 

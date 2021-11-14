@@ -18,6 +18,24 @@ export default class Screen {
                     onmouseup="Ants.camera.move = false">
                     <div class="screen-controls">
                         <div class="box">
+                            <div class="middle">
+                                <span>Create Worker:</span>
+                                <div class="button ant">
+                                    <div 
+                                        onmousedown="Ants.anthill.createWorker(1);"
+                                        touchstart="Ants.anthill.createWorker(1);">
+                                        ${AntSvg(Ants.anthill.antsColors.worker)}
+                                    </div>
+                                </div>
+                                <span>Create Soldier:</span>
+                                <div class="button ant">
+                                    <div 
+                                        onmousedown="Ants.anthill.createWorker(1);"
+                                        touchstart="Ants.anthill.createWorker(1);">
+                                        ${AntSvg(Ants.anthill.antsColors.soldier)}
+                                    </div>
+                                </div>
+                            </div>
                             <span>Speed:</span>
                             <div class="slider-wrapper">
                                 <span>min</span>
