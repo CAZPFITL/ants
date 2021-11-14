@@ -1,4 +1,5 @@
 import Canvas from './Canvas.js';
+import { worldData } from './Assets.js'
 
 /**
  * This is an abstract class containing all game helpers methods
@@ -262,6 +263,8 @@ export default class helpers extends Canvas {
                 }
             }
         }
+        document.querySelector('.world-data').innerHTML = worldData()
         // console.log(+ Ants.world.time.hours + ':' + Ants.world.time.minutes + ':' + Ants.world.time.seconds)
     }
 }
+// Ants.domRef.clock = document.querySelector('.world-data')

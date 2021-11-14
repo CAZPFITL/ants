@@ -109,9 +109,9 @@ export default class Canvas extends Screen {
         Ants.counters.counter++
         //NOTE: stepProcess At Speed Selected
         if (Ants.counters.counter % Ants.counters.speed === 0) {
+            Ants.helpers.updateClock()
             Ants.anthill.ants.forEach(ant => {
                 ant.cycle()
-                Ants.helpers.updateClock()
             })
         }
         //NOTE: avoids a big and slow calculations

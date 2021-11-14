@@ -23,6 +23,9 @@ export default class AntsApp {
         this.dataGraph = []
         this.domCollections = []
         this.canvasBounds = [120, 100]
+        this.domRef = {
+            clock: null
+        }
         this.counters = {
             speed: 60, // 1 - 60
             counter: 0, //control
@@ -72,5 +75,6 @@ export default class AntsApp {
 
     playState() {
         Ants.helpers.requestAnimation()
+        Ants.domRef.clock = document.querySelector('.world-data')
     }
 }

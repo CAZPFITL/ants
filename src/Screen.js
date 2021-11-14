@@ -1,4 +1,4 @@
-import { processRequest, drawSlider, arrows, full, AntSvg } from './Assets.js'
+import { processRequest, drawSlider, arrows, worldData, AntSvg } from './Assets.js'
 
 export default class Screen {
     static drawScreen(state) {
@@ -16,6 +16,9 @@ export default class Screen {
                     class="wrapper" 
                     touchend="Ants.camera.move = false"
                     onmouseup="Ants.camera.move = false">
+                    <div class="world-data">
+                        ${worldData()}
+                    </div>
                     <div class="screen-controls">
                         <div class="box">
                             <div class="middle">
