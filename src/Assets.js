@@ -24,8 +24,8 @@ export const AntSvg = (color) => {
 export const worldData = () => {
 	return `
         <div>
-            <span class="calendar">${Ants.world.time.days}/${Ants.world.time.months}/${Ants.world.time.years}</span>
-            <span class="clock">${Ants.world.time.hours}:${Ants.world.time.minutes}:${Ants.world.time.seconds}</span>
+            <span class="calendar">${('0' + Ants.world.time.days).slice(-2)}/${('0' + Ants.world.time.months).slice(-2)}/${('000' + Ants.world.time.years).slice(-4)}</span>
+            <span class="clock">${('0' + Ants.world.time.hours).slice(-2)}:${('0' + Ants.world.time.minutes).slice(-2)}:${('0' + Ants.world.time.seconds).slice(-2)}</span>
         </div>
     `
 }

@@ -42,7 +42,7 @@ export default class Screen {
                             <span>Speed:</span>
                             <div class="slider-wrapper">
                                 <span>min</span>
-                                ${drawSlider(0, 119, 120 - Ants.counters.speed, 'Ants.counters.speed = 120 - this.value')}
+                                ${drawSlider(30, 119, 120 - Ants.counters.speed, 'Ants.counters.speed = 120 - this.value')}
                                 <span>max</span>
                             </div>
                         </div>

@@ -263,7 +263,8 @@ export default class helpers extends Canvas {
                 }
             }
         }
-        document.querySelector('.world-data').innerHTML = worldData()
+        Ants.domRef.clock = !Ants.domRef.clock ? document.querySelector('.world-data') : Ants.domRef.clock
+        Ants.domRef.clock.innerHTML = worldData()
         // console.log(+ Ants.world.time.hours + ':' + Ants.world.time.minutes + ':' + Ants.world.time.seconds)
     }
 }

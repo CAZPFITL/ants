@@ -24,7 +24,7 @@ export default class AntsApp {
         this.domCollections = []
         this.canvasBounds = [120, 100]
         this.domRef = {
-            clock: null
+            clock: false
         }
         this.counters = {
             speed: 60, // 1 - 60
