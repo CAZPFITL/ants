@@ -25,7 +25,7 @@ export default class Screen {
                                 <span>Create Worker:</span>
                                 <div class="button ant">
                                     <div 
-                                        onmousedown="Ants.anthill.createWorker(1);"
+                                        onmouseup="Ants.anthill.createWorker(1);"
                                         touchstart="Ants.anthill.createWorker(1);">
                                         ${AntSvg(Ants.anthill.antsColors.worker)}
                                     </div>
@@ -33,7 +33,7 @@ export default class Screen {
                                 <span>Create Soldier:</span>
                                 <div class="button ant">
                                     <div 
-                                        onmousedown="Ants.anthill.createWorker(1);"
+                                        onmouseup="Ants.anthill.createWorker(1);"
                                         touchstart="Ants.anthill.createWorker(1);">
                                         ${AntSvg(Ants.anthill.antsColors.soldier)}
                                     </div>

@@ -37,6 +37,7 @@ export default class AntsApp {
             dropSizesRange: 0.25, //0 - 1 (dropped size range in ant size proportion )
             drawDropsRange: 0.08  //0 - 1 (draw size)
         }
+        this.interval = undefined
     }
 
     /**

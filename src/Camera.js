@@ -149,43 +149,33 @@ export default class Camera {
     /**
      * Moves camera
      */
-    moveCamera(direction, timeout = '') {
-        this.move = true
-        switch (direction) {
-            case 'up':
-                this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale))
-                break;
-            case 'down':
-                this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale))
-                break;
-            case 'left':
-                this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
-                break;
-            case 'right':
-                this.moveTo(this.lookAt[0] + this.gameScale, this.lookAt[1])
-                break;
-            case 'zoomIn':
-                this.zoomTo(this.distance - 50)
-                break;
-            case 'zoomOut':
-                this.zoomTo(this.distance + 50)
-                break;
+    async moveCamera(direction) {
+        this.interval = setInterval(() => {
+            switch (direction) {
+                case 'up':
+                    this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale))
+                    break;
+                case 'down':
+                    this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale))
+                    break;
+                case 'left':
+                    this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
+                    break;
+                case 'right':
+                    this.moveTo(this.lookAt[0] + this.gameScale, this.lookAt[1])
+                    break;
+                case 'zoomIn':
+                    this.zoomTo(this.distance - 50)
+                    break;
+                case 'zoomOut':
+                    this.zoomTo(this.distance + 50)
+                    break;
 
-            default:
-                break;
-        }
+                default:
+                    break;
+            }
+        }, 100)
 
-        if (timeout !== 'this key have autorepeat') {
-            setTimeout(() => {
-                Ants.interval = setInterval(() => {
-                    if (this.move) {
-                        this.moveCamera(direction, 'this key have autorepeat')
-                    } else {
-                        clearInterval(Ants.interval)
-                    }
-                }, 20)
-            }, 500); // don't go below 500, it get's messy on the key refresh
-        }
     }
 
     processKeyReading(keyPressed) {
@@ -193,17 +183,17 @@ export default class Camera {
             this.zoomTo(this.initial.initialZoom)
             this.moveTo(this.initial.initialMove)
         } else if (keyPressed === this.keys.rightKey) {
-            this.moveCamera('right', 'this key have autorepeat')
+            this.moveCamera('right')
         } else if (keyPressed === this.keys.leftKey) {
-            this.moveCamera('left', 'this key have autorepeat')
+            this.moveCamera('left')
         } else if (keyPressed === this.keys.upKey) {
-            this.moveCamera('up', 'this key have autorepeat')
+            this.moveCamera('up')
         } else if (keyPressed === this.keys.downKey) {
-            this.moveCamera('down', 'this key have autorepeat')
+            this.moveCamera('down')
         } else if (keyPressed === this.keys.zoomInKey) {
-            this.moveCamera('zoomIn', 'this key have autorepeat')
+            this.moveCamera('zoomIn')
         } else if (keyPressed === this.keys.zoomOutKey) {
-            this.moveCamera('zoomOut', 'this key have autorepeat')
+            this.moveCamera('zoomOut')
         }
     }
 
@@ -249,7 +239,7 @@ export default class Camera {
                 //         newX = newX + x
                 //     }
                 // } else {
-                    //     if (this.viewport.right <= Ants.camera.lookAt[0]) {
+                //     if (this.viewport.right <= Ants.camera.lookAt[0]) {
                 //         if (e.deltaX < 0) {
                 //             newX = newX + x
                 //         }
@@ -284,6 +274,16 @@ export default class Camera {
             if (!this.down && this.keysPressed.length === 0) {
                 this.move = false
             }
+        })
+
+        window.addEventListener('mousedown', e => {
+            this.move = true
+        })
+
+        window.addEventListener('mouseup', e => {
+            this.move = false
+            clearInterval(this.interval)
+            this.interval = undefined
         })
     }
 }
