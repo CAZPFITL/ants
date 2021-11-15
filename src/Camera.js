@@ -184,7 +184,7 @@ export default class Camera {
                         clearInterval(Ants.interval)
                     }
                 }, 20)
-            }, 200); // don't go below 500, it get's messy on the key refresh
+            }, 500); // don't go below 500, it get's messy on the key refresh
         }
     }
 
