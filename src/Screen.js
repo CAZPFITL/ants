@@ -58,7 +58,7 @@ export default class Screen {
                     <div class="controls">
                         <div class="button up">
                             <div 
-                                onmousedown="Ants.camera.moveCamera('up');"
+                                onmousedown="Ants.camera.moveCamera('up', true);"
                                 touchstart="Ants.camera.moveCamera('up');">
                                 ${arrows.up}
                             </div>
@@ -67,7 +67,7 @@ export default class Screen {
                         <div class="middle">
                             <div class="button left">
                                 <div 
-                                    onmousedown="Ants.camera.moveCamera('left');"
+                                    onmousedown="Ants.camera.moveCamera('left', true);"
                                     touchstart="Ants.camera.moveCamera('left');">
                                     ${arrows.left}
                                 </div>
@@ -75,7 +75,7 @@ export default class Screen {
 
                             <div class="button right">
                                 <div 
-                                    onmousedown="Ants.camera.moveCamera('right');"
+                                    onmousedown="Ants.camera.moveCamera('right', true);"
                                     touchstart="Ants.camera.moveCamera('right');">
                                     ${arrows.right}
                                 </div>
@@ -85,7 +85,7 @@ export default class Screen {
 
                         <div class="button down">   
                             <div 
-                                onmousedown="Ants.camera.moveCamera('down');"
+                                onmousedown="Ants.camera.moveCamera('down', true);"
                                 touchstart="Ants.camera.moveCamera('down');">
                                 ${arrows.down}
                             </div>
@@ -97,7 +97,7 @@ export default class Screen {
                         <div class="middle">
                             <div class="button left">
                                 <div 
-                                    onmousedown="Ants.camera.moveCamera('zoomIn');"
+                                    onmousedown="Ants.camera.moveCamera('zoomIn', true);"
                                     touchstart="Ants.camera.moveCamera('zoomIn');">
                                     ${arrows.zoomIn}
                                 </div>
@@ -105,7 +105,7 @@ export default class Screen {
 
                             <div class="button right">
                                 <div 
-                                    onmousedown="Ants.camera.moveCamera('zoomOut');"
+                                    onmousedown="Ants.camera.moveCamera('zoomOut', true);"
                                     touchstart="Ants.camera.moveCamera('zoomOut');">
                                     ${arrows.zoomOut}
                                 </div>

@@ -149,32 +149,39 @@ export default class Camera {
     /**
      * Moves camera
      */
-    async moveCamera(direction) {
-        this.interval = setInterval(() => {
+    async moveCamera(direction, repeat = false) {
+        function run(This, direction) {
             switch (direction) {
                 case 'up':
-                    this.moveTo(this.lookAt[0], this.lookAt[1] - (this.gameScale))
+                    This.moveTo(This.lookAt[0], This.lookAt[1] - (This.gameScale))
                     break;
                 case 'down':
-                    this.moveTo(this.lookAt[0], this.lookAt[1] + (this.gameScale))
+                    This.moveTo(This.lookAt[0], This.lookAt[1] + (This.gameScale))
                     break;
                 case 'left':
-                    this.moveTo(this.lookAt[0] - this.gameScale, this.lookAt[1])
+                    This.moveTo(This.lookAt[0] - This.gameScale, This.lookAt[1])
                     break;
                 case 'right':
-                    this.moveTo(this.lookAt[0] + this.gameScale, this.lookAt[1])
+                    This.moveTo(This.lookAt[0] + This.gameScale, This.lookAt[1])
                     break;
                 case 'zoomIn':
-                    this.zoomTo(this.distance - 50)
+                    This.zoomTo(This.distance - 50)
                     break;
                 case 'zoomOut':
-                    this.zoomTo(this.distance + 50)
+                    This.zoomTo(This.distance + 50)
                     break;
 
                 default:
                     break;
             }
-        }, 100)
+        }
+        if (repeat) {
+            this.interval = setInterval(() => {
+                run(this, direction)
+            }, 100)
+        } else {
+            run(this, direction)
+        }
 
     }
 
